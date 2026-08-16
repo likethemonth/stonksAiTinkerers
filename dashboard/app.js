@@ -267,7 +267,7 @@ function electrifyPolyline(points, seed) {
   return { jagged, straight };
 }
 
-function renderMainChart(previousFinal = null) {
+function renderMainChart() {
   const { company, item } = current();
   const final = activeFinal(item);
   const history = metricHistory();
@@ -332,21 +332,22 @@ function renderMainChart(previousFinal = null) {
   const errors = history.map(row => row.record?.error).filter(value => Number.isFinite(value));
   if (errors.length) {
     const gate = item.methodMetrics?.[selectedMethod]?.gate;
+    const errorUnit = gate?.kind === "mae" || item.unit === "%" ? "PP" : "%";
     const errorTop = bottom + 50;
     const errorBottom = viewHeight - 58;
     const errorMax = Math.max(...errors, gate?.threshold || 0, 1) * 1.2;
     history.forEach((row, index) => {
       if (!Number.isFinite(row.record?.error)) return;
       const height = Math.max(2, (row.record.error / errorMax) * (errorBottom - errorTop));
-      addSvg(errorLayer, "rect", { class: `error-period ${gate && row.record.error > gate.threshold ? "failed" : ""}`, x: xHistory(index) - 9, y: errorBottom - height, width: 18, height });
-      addSvg(labels, "text", { class: `error-value-label ${gate && row.record.error > gate.threshold ? "failed" : ""}`, x: xHistory(index), y: errorBottom + 17 }, row.record.error.toFixed(row.record.error >= 10 ? 1 : 2));
+      const validationState = gate ? (row.record.error <= gate.threshold ? "passed" : "failed") : "neutral";
+      addSvg(errorLayer, "rect", { class: `error-period ${validationState}`, x: xHistory(index) - 9, y: errorBottom - height, width: 18, height });
+      addSvg(labels, "text", { class: `error-value-label ${validationState}`, x: xHistory(index), y: errorBottom + 17 }, `${row.record.error.toFixed(row.record.error >= 10 ? 1 : 2)}${errorUnit === "PP" ? "pp" : "%"}`);
     });
     if (gate?.threshold) {
       const gateY = errorBottom - (gate.threshold / errorMax) * (errorBottom - errorTop);
       addSvg(errorLayer, "line", { class: "error-gate", x1: left, x2: historyEnd, y1: gateY, y2: gateY });
       addSvg(labels, "text", { class: "error-gate-label", x: historyEnd, y: gateY - 4 }, `GATE ${gate.threshold}${gate.kind === "mae" ? "PP" : "%"}`);
     }
-    const errorUnit = gate?.kind === "mae" || item.unit === "%" ? "PP" : "%";
     addSvg(labels, "text", { class: "error-strip-label", x: left, y: errorTop - 10 }, `ABSOLUTE ERROR BY PERIOD · ${errorUnit}`);
   }
   const latestHistoryX = xHistory(history.length - 1);
@@ -355,6 +356,15 @@ function renderMainChart(previousFinal = null) {
   if (actualPoints.length) addSvg(labels, "text", { class: "axis-label", x: latestHistoryX + 5, y: actualPoints.at(-1).y + 15 }, "ACTUAL PENDING");
 
   const predictionPoints = [...forecastPoints, { x: liveEnd, y: y(final), value: final }];
+  if (predictionPoints.length) {
+    addSvg(predictionLayer, "path", { class: "prediction-line", d: pathFrom(predictionPoints) });
+    predictionPoints.forEach((point, index) => addSvg(predictionLayer, "circle", {
+      class: `prediction-dot ${index === predictionPoints.length - 1 ? "live" : ""}`,
+      cx: point.x,
+      cy: point.y,
+      r: index === predictionPoints.length - 1 ? 4 : 3,
+    }));
+  }
   const boundaryIndices = Array.from({ length: 5 }, (_, index) => Math.round(index * (predictionPoints.length - 1) / 4));
   currentBoundaries = boundaryIndices.map(pointIndex => predictionPoints[pointIndex]);
   currentLightning = [];
@@ -367,21 +377,6 @@ function renderMainChart(previousFinal = null) {
       segment.paths.push(path);
     });
     currentLightning.push(segment);
-  }
-  if (Number.isFinite(previousFinal) && previousFinal !== final) {
-    const lastSegment = currentLightning.at(-1);
-    const from = lastSegment.straight.map((point, index, points) => index === points.length - 1 ? { ...point, y: y(previousFinal) } : point);
-    lastSegment.paths.forEach(path => path.setAttribute("d", pathFrom(from)));
-    const started = performance.now();
-    const shiftToken = traceToken;
-    const animateShift = now => {
-      if (shiftToken !== traceToken) return;
-      const progress = Math.min(1, (now - started) / 520);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      lastSegment.paths.forEach(path => path.setAttribute("d", interpolatePath(from, lastSegment.straight, eased)));
-      if (progress < 1) requestAnimationFrame(animateShift);
-    };
-    requestAnimationFrame(animateShift);
   }
   boundaryIndices.forEach((pointIndex, index) => {
     const point = predictionPoints[pointIndex];
@@ -403,20 +398,6 @@ function renderMainChart(previousFinal = null) {
   addSvg(labels, "text", { class: "terminal-label final-label", x: liveEnd, y: y(final) - 27 }, `FINAL ${formatValue(final, item.unit)}`);
 }
 
-function renderEngineTable() {
-  const { item } = current();
-  $("#engine-table").innerHTML = engineEntries(item).map(engine => {
-    const available = engine.value != null && engine.weight > 0;
-    const active = available && enabledEngines.has(engine.key);
-    return `<button class="engine-row ${active ? "active" : "off"} ${available ? "" : "unavailable"}" data-engine-toggle="${engine.key}" type="button" aria-pressed="${active}" ${available ? "" : "disabled"}>
-      <span class="engine-switch" aria-hidden="true">${active ? "●" : "○"}</span>
-      <span class="engine-name">${engine.name.replace(" reconstruction", "").replace(" research", "")}</span>
-      <span class="engine-value">${formatValue(engine.value, item.unit, true)}</span>
-      <span class="engine-weight" style="--weight:${active ? engine.weight : 0}%"><i></i><span>${active ? engine.weight.toFixed(0) : 0}%</span></span>
-    </button>`;
-  }).join("");
-}
-
 function renderQuoteAndHeader() {
   const { company, item } = current();
   const final = activeFinal(item);
@@ -436,7 +417,7 @@ function resetTrace() {
   $("#terminal").classList.remove("trace-mode");
   $("#chart-stage").classList.remove("trace-zoom");
   $("#terminal").classList.remove("trace-active");
-  $("#cinematic-reason").classList.remove("visible");
+  hideCinematicReason();
   currentLightning.forEach(segment => segment.paths.forEach(path => {
     path.classList.remove("drawing", "resolved");
     path.setAttribute("d", pathFrom(segment.jagged));
@@ -505,6 +486,7 @@ function showCinematicReason(index) {
   if (!step || !point) return;
 
   const note = $("#cinematic-reason");
+  note.hidden = false;
   $("#cinematic-stage").textContent = step.stage;
   $("#cinematic-count").textContent = `${String(index + 1).padStart(2, "0")} / 05`;
   $("#cinematic-title").textContent = step.title;
@@ -535,7 +517,9 @@ function showCinematicReason(index) {
 }
 
 function hideCinematicReason() {
-  $("#cinematic-reason").classList.remove("visible");
+  const note = $("#cinematic-reason");
+  note.classList.remove("visible");
+  note.hidden = true;
 }
 
 function interpolatePath(from, to, progress) {
@@ -615,12 +599,7 @@ function renderSelection() {
   renderMethodTabs();
   renderMethodInspector();
   renderMainChart();
-  renderEngineTable();
   resetTrace();
-}
-
-function resetEngineSelection() {
-  enabledEngines = new Set(["street", "fundamental", "market"]);
 }
 
 function chooseDefaultMethod() {
@@ -645,7 +624,6 @@ $("#universe-list").addEventListener("click", event => {
   const row = event.target.closest("[data-metric]");
   if (!row || traceRunning) return;
   selectedMetric = Number(row.dataset.metric);
-  resetEngineSelection();
   chooseDefaultMethod();
   renderSelection();
 });
@@ -654,7 +632,6 @@ $("#company-tabs").addEventListener("click", event => {
   if (!tab || traceRunning) return;
   selectedCompany = Number(tab.dataset.companyTab);
   selectedMetric = 0;
-  resetEngineSelection();
   chooseDefaultMethod();
   renderSelection();
 });
@@ -671,21 +648,6 @@ $("#details-control").addEventListener("click", () => {
   if (!traceRunning) $("#method-inspector").classList.toggle("open");
 });
 $("#details-close").addEventListener("click", () => $("#method-inspector").classList.remove("open"));
-$("#engine-table").addEventListener("click", event => {
-  const control = event.target.closest("[data-engine-toggle]");
-  if (!control || control.disabled || traceRunning) return;
-  const key = control.dataset.engineToggle;
-  const { item } = current();
-  const previousFinal = activeFinal(item);
-  const activeAvailable = engineEntries(item).filter(engine => engine.value != null && enabledEngines.has(engine.key));
-  if (enabledEngines.has(key) && activeAvailable.length === 1) return;
-  if (enabledEngines.has(key)) enabledEngines.delete(key); else enabledEngines.add(key);
-  renderUniverse();
-  renderQuoteAndHeader();
-  resetTrace();
-  renderMainChart(previousFinal);
-  renderEngineTable();
-});
 $("#trace-control").addEventListener("click", runTrace);
 $("#cinematic-reason").addEventListener("click", runTrace);
 $("#cinematic-reason").addEventListener("keydown", event => {

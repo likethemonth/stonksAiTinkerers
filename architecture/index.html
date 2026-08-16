@@ -217,9 +217,9 @@
       <div class="shell">
         <figure class="diagram">
             <div class="diagram-scroll">
-              <svg viewBox="0 0 1280 572" role="img" aria-labelledby="diagram-title diagram-desc">
+              <svg viewBox="0 0 1280 706" role="img" aria-labelledby="diagram-title diagram-desc">
                 <title id="diagram-title">Three-Lens Meta-Forecaster data flow</title>
-                <desc id="diagram-desc">Evidence selected at the point-in-time cutoff feeds deterministic extractors and three forecasting engines, which are combined by a source-overlap-aware meta-forecaster into four workbooks, a JSON audit and a run log.</desc>
+                <desc id="diagram-desc">Evidence selected at the point-in-time cutoff feeds deterministic extractors and three forecasting engines, which are combined by a source-overlap-aware meta-forecaster into four workbooks, a JSON audit and a run log. The same path is replayed at 75 historical cutoffs and scored against the figures those companies actually reported.</desc>
                 <defs>
                   <marker id="d-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
                     <path d="M0 0 L10 5 L0 10 z" fill="#111112"></path>
@@ -345,9 +345,23 @@
                 <path class="d-line" d="M1050 275 H1076" marker-end="url(#d-arrow)"></path>
                 <path class="d-line" d="M1050 342 H1076" marker-end="url(#d-arrow)"></path>
                 <circle class="d-node" cx="1050" cy="275" r="3.5"></circle>
+
+                <text class="d-eyebrow" x="4" y="572">06 &#183; VALIDATION &#8212; THE SAME PATH, REPLAYED ON QUARTERS THAT ALREADY REPORTED</text>
+
+                <path class="d-line-dash" d="M1180 512 V544 H90 V544" marker-end="url(#d-arrow-muted)"></path>
+                <path class="d-line-dash" d="M90 544 V584"></path>
+
+                <rect class="d-chip" x="4" y="592" width="1272" height="104"></rect>
+                <text class="d-title" x="24" y="620">forecast.system_backtest</text>
+                <text class="d-body" x="24" y="644">Rewind the cutoff to the day before a closed quarter was reported, run everything above unchanged, and score</text>
+                <text class="d-body" x="24" y="662">the result against the figure the company actually published &#8212; competition formula, seasonal benchmark.</text>
+                <text class="d-mono" x="24" y="684">75 HELD-OUT CELLS &#183; MEAN 0.38 &#183; MEDIAN 0.15 &#183; BEAT THE BENCHMARK ON 68 &#183; 60 CELLS REFUSED &#183; DEERE ABSTAINS</text>
+                <text class="d-warn" x="800" y="620">MEASURED SKILL SHOULD SET ENGINE RELIABILITY</text>
+                <text class="d-warn" x="800" y="638">NOT WIRED &#8212; RELIABILITY IS STILL A CONSTANT</text>
+                <text class="d-mono" x="800" y="662">See 05 / Validation for the per-engine breakdown</text>
               </svg>
             </div>
-            <figcaption>Solid = forecast path · Dashed = outcomes resolved by the cutoff, fed back to score each Street source · Every engine returns value, sigma, citations and reliability, or abstains</figcaption>
+            <figcaption>Solid = forecast path · Dashed = outcomes resolved by the cutoff, fed back to score each Street source and to replay the whole path on history · Every engine returns value, sigma, citations and reliability, or abstains</figcaption>
           </figure>
           <ol class="sr-only">
             <li>Four evidence sources are selected only if dated at or before the cutoff: Street calls, the frozen 1,139-document corpus, physical driver snapshots and a Polymarket price snapshot.</li>
@@ -449,6 +463,92 @@
           <h2>The system is scored on history, not asserted.</h2>
           <p><code>forecast.system_backtest</code> replays the pipeline that writes the twelve submitted numbers. For every closed period it rebuilds the corpus as of the day before the actual was published, then runs the same extractors, calibration, estimators and meta-forecaster the final command runs. Look-ahead is structural: a leak would require a filing to travel backwards in time.</p>
           <p>Scoring uses the competition's own formula &mdash; error divided by the benchmark's, floored and capped at 5.0 &mdash; against a seasonal median year-over-year replay standing in for the Wall Street consensus we are never shown. <strong>Below 1.00 beats a model you could write in twenty lines.</strong></p>
+
+          <figure class="diagram">
+            <div class="diagram-scroll">
+              <svg viewBox="0 0 1280 452" role="img" aria-labelledby="bt-title bt-desc">
+                <title id="bt-title">How the system backtest works</title>
+                <desc id="bt-desc">A closed period is chosen, the corpus is rewound to the day before its actual was published, the identical forecasting pipeline runs, and the result is scored against the reported actual using the competition formula. Measured skill is not yet fed back into engine reliability.</desc>
+
+                <text class="d-eyebrow" x="4" y="20">01 · A CLOSED PERIOD</text>
+                <text class="d-eyebrow" x="262" y="20">02 · REWIND</text>
+                <text class="d-eyebrow" x="516" y="20">03 · THE SAME PIPELINE</text>
+                <text class="d-eyebrow" x="858" y="20">04 · SCORE</text>
+                <text class="d-eyebrow" x="1086" y="20">05 · WHAT IT SHOWED</text>
+
+                <rect class="d-box" x="4" y="48" width="200" height="84"></rect>
+                <text class="d-title" x="20" y="76">Pick a quarter</text>
+                <text class="d-body" x="20" y="96">that has already reported,</text>
+                <text class="d-body" x="20" y="110">so a real answer exists</text>
+                <text class="d-mono" x="20" y="124">ADI FY2026Q2</text>
+
+                <rect class="d-box" x="4" y="152" width="200" height="70"></rect>
+                <text class="d-title" x="20" y="180">Its actual</text>
+                <text class="d-body" x="20" y="200">published on the results</text>
+                <text class="d-mono" x="20" y="214">2026-05-20 &#183; 3,623 USDm</text>
+
+                <rect class="d-box" x="262" y="48" width="196" height="84"></rect>
+                <text class="d-title" x="278" y="76">Cutoff</text>
+                <text class="d-body" x="278" y="96">publication minus one day.</text>
+                <text class="d-body" x="278" y="110">Corpus loads as_of=cutoff</text>
+                <text class="d-mono" x="278" y="124">2026-05-19 &#183; 264 docs</text>
+
+                <path class="d-gate" d="M486 32 V320"></path>
+                <text class="d-warn" x="478" y="176" text-anchor="middle" transform="rotate(-90 478 176)">A LEAK WOULD NEED A FILING TO TRAVEL BACK IN TIME</text>
+
+                <rect class="d-ink" x="516" y="48" width="300" height="174" rx="6"></rect>
+                <text class="d-eyebrow-rev" x="536" y="74">IDENTICAL CODE TO THE SUBMITTED RUN</text>
+                <text class="d-title-rev" x="536" y="102">Extractors &#8594; engines &#8594; meta</text>
+                <text class="d-body-rev" x="536" y="126">Same extractors, same calibration, same</text>
+                <text class="d-body-rev" x="536" y="142">estimators, same meta-forecaster. The</text>
+                <text class="d-body-rev" x="536" y="158">replay drives the real path, not a copy.</text>
+                <text class="d-mono-rev" x="536" y="184">forecast.system_backtest</text>
+                <text class="d-mono-rev" x="536" y="204">75 cells &#183; 4-way parallel &#183; deterministic</text>
+
+                <rect class="d-box" x="858" y="48" width="200" height="84"></rect>
+                <text class="d-title" x="874" y="76">Against reality</text>
+                <text class="d-body" x="874" y="96">system 3,555 &#183; actual 3,623</text>
+                <text class="d-body" x="874" y="110">our miss 68</text>
+                <text class="d-mono" x="874" y="124">benchmark miss 736</text>
+
+                <rect class="d-chip" x="858" y="152" width="200" height="70"></rect>
+                <text class="d-title" x="874" y="180">Competition formula</text>
+                <text class="d-body" x="874" y="200">miss &#247; benchmark miss,</text>
+                <text class="d-body" x="874" y="214">floored, capped at 5.0</text>
+
+                <rect class="d-box" x="1086" y="48" width="190" height="84"></rect>
+                <text class="d-title" x="1100" y="76">75 held-out cells</text>
+                <text class="d-body" x="1100" y="96">mean 0.38 &#183; median 0.15</text>
+                <text class="d-body" x="1100" y="110">beat benchmark on 68</text>
+                <text class="d-mono" x="1100" y="124">under 1.00 is better</text>
+
+                <rect class="d-box" x="1086" y="152" width="190" height="70"></rect>
+                <text class="d-title" x="1100" y="180">Each engine alone</text>
+                <text class="d-body" x="1100" y="200">fundamental 75 &#183; street 27</text>
+                <text class="d-body" x="1100" y="214">market 0 cells</text>
+
+                <path class="d-line" d="M204 90 H256" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M204 186 H236 V96 H256" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M458 90 H510" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M816 132 H852" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M1058 90 H1080" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M1058 186 H1072 V186 H1080" marker-end="url(#d-arrow)"></path>
+
+                <path class="d-line-dash" d="M204 200 V300 H900 V226" marker-end="url(#d-arrow-muted)"></path>
+                <text class="d-mono" x="330" y="294">the reported actual, revealed only after the cutoff</text>
+
+                <path class="d-gate" d="M1180 222 V262 H666 V226" marker-end="url(#d-arrow-muted)"></path>
+                <text class="d-warn" x="700" y="256">MEASURED SKILL SHOULD SET ENGINE RELIABILITY &#8212; NOT WIRED, RELIABILITY IS STILL A CONSTANT</text>
+
+                <rect class="d-chip" x="4" y="336" width="1272" height="100"></rect>
+                <text class="d-eyebrow" x="24" y="362">WHAT THE REPLAY REFUSES TO SCORE</text>
+                <text class="d-body" x="24" y="388">60 cells recorded as engine failures, each one the system declining to forecast on inputs it did not have.</text>
+                <text class="d-body" x="24" y="406">Deere abstains entirely: its driver chain is anchored to a dated snapshot, not a fiscal period.</text>
+                <text class="d-body" x="24" y="424">Settled market books price the answer, so they are rejected rather than scored.</text>
+              </svg>
+            </div>
+            <figcaption>Solid = replay path &#183; Dashed = the actual, revealed only after the cutoff &#183; Amber = the feedback loop we measured but deliberately did not close</figcaption>
+          </figure>
 
           <p class="note">75 held-out cells · mean score 0.38 · median 0.15 · beat the benchmark on 68</p>
 
