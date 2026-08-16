@@ -358,5 +358,184 @@
    "gate_mae_pp": 0.8,
    "passed": true
   }
+ },
+ "v2": {
+  "generatedBy": "forecast/ml_hd_v2.py \u2014 new families (SVR, KNN) + ensembles + category nowcast, acquisition-step and share-nowcast models",
+  "asOf": "2026-08-16",
+  "walk_forward_ml": {
+   "models": {
+    "ridge": {
+     "n": 14,
+     "mape_pct": 2.54,
+     "q2_only_mape_pct": 1.37,
+     "q2_n": 3
+    },
+    "random_forest": {
+     "n": 14,
+     "mape_pct": 3.49,
+     "q2_only_mape_pct": 1.67,
+     "q2_n": 3
+    },
+    "gradient_boosting": {
+     "n": 14,
+     "mape_pct": 3.23,
+     "q2_only_mape_pct": 1.59,
+     "q2_n": 3
+    },
+    "svr_rbf": {
+     "n": 14,
+     "mape_pct": 3.75,
+     "q2_only_mape_pct": 1.93,
+     "q2_n": 3
+    },
+    "knn": {
+     "n": 14,
+     "mape_pct": 3.28,
+     "q2_only_mape_pct": 2.05,
+     "q2_n": 3
+    },
+    "vote_equal": {
+     "n": 14,
+     "mape_pct": 2.54,
+     "q2_only_mape_pct": 1.42,
+     "q2_n": 3
+    },
+    "vote_cv_weighted": {
+     "n": 14,
+     "mape_pct": 2.63,
+     "q2_only_mape_pct": 1.43,
+     "q2_n": 3
+    },
+    "stack_ridge": {
+     "n": 14,
+     "mape_pct": 4.99,
+     "q2_only_mape_pct": 6.04,
+     "q2_n": 3
+    }
+   },
+   "naive": {
+    "n": 14,
+    "mape_pct": 3.11,
+    "q2_only_mape_pct": 2.01,
+    "q2_n": 3
+   },
+   "per_quarter_deployed": [
+    {
+     "period": "FY2022Q4",
+     "ape_pct": 5.89
+    },
+    {
+     "period": "FY2023Q1",
+     "ape_pct": 2.53
+    },
+    {
+     "period": "FY2023Q2",
+     "ape_pct": 0.05
+    },
+    {
+     "period": "FY2023Q3",
+     "ape_pct": 1.19
+    },
+    {
+     "period": "FY2023Q4",
+     "ape_pct": 1.85
+    },
+    {
+     "period": "FY2024Q1",
+     "ape_pct": 0.62
+    },
+    {
+     "period": "FY2024Q2",
+     "ape_pct": 2.55
+    },
+    {
+     "period": "FY2024Q3",
+     "ape_pct": 2.4
+    },
+    {
+     "period": "FY2024Q4",
+     "ape_pct": 5.69
+    },
+    {
+     "period": "FY2025Q1",
+     "ape_pct": 0.45
+    },
+    {
+     "period": "FY2025Q2",
+     "ape_pct": 1.68
+    },
+    {
+     "period": "FY2025Q3",
+     "ape_pct": 1.11
+    },
+    {
+     "period": "FY2025Q4",
+     "ape_pct": 5.13
+    },
+    {
+     "period": "FY2026Q1",
+     "ape_pct": 5.69
+    }
+   ]
+  },
+  "walk_forward_share_nowcast": {
+   "n": 25,
+   "mape_pct": 2.49,
+   "q2_only_mape_pct": 0.4,
+   "q2_n": 6,
+   "q2_detail": [
+    {
+     "period": "FY2018Q2",
+     "ape_pct": 0.38
+    },
+    {
+     "period": "FY2019Q2",
+     "ape_pct": 0.46
+    },
+    {
+     "period": "FY2022Q2",
+     "ape_pct": 0.61
+    },
+    {
+     "period": "FY2023Q2",
+     "ape_pct": 0.18
+    },
+    {
+     "period": "FY2024Q2",
+     "ape_pct": 0.63
+    },
+    {
+     "period": "FY2025Q2",
+     "ape_pct": 0.11
+    }
+   ]
+  },
+  "q2_blend": {
+   "weights": {
+    "share_nowcast": 0.781,
+    "vote_cv_weighted": 0.219
+   },
+   "members": {
+    "share_nowcast": 47774.8,
+    "vote_cv_weighted": 47860.1
+   },
+   "expected_mape_pct_if_independent": 0.31
+  },
+  "target_0p5_pct_met": true,
+  "prediction": {
+   "net_sales": {
+    "period": "FY2026Q2",
+    "value": 47793.5,
+    "model": "inverse-MAPE blend of share_nowcast + vote_cv_weighted",
+    "cat_yy_target_qtr": 5.44,
+    "cat_yy_prior_qtr": 4.21,
+    "caveats": [
+     "share_nowcast Q2 walk-forward n=6 (all years < 0.65% error)",
+     "FRED holds revised category values; real-time advance data differs slightly",
+     "SRS/GMS inorganic run-rates ($3,880M/qtr) are announcement-based estimates; errors flow ~1:1 into the level",
+     "0.5% claim applies to the Q1->Q2 task only; all-transition MAPE ~2.5%"
+    ]
+   }
+  }
  }
 }
