@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=37">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body>
   <main class="terminal" id="terminal">
@@ -25,8 +25,9 @@
           <header class="chart-head panel-head">
             <div class="instrument-id">
               <h1 id="instrument-title">Home Depot · Net sales</h1>
+              <p id="instrument-method">ENSEMBLE · SOURCE VIEW</p>
             </div>
-            <div class="chart-actions"><button class="detail-trigger" id="details-control" type="button">DETAILS</button><button class="trace-trigger" id="trace-control" type="button">RUN TRACE <span>▶</span></button></div>
+            <div class="chart-actions"><button class="detail-trigger" id="details-control" type="button">DETAILS</button></div>
           </header>
 
           <div class="forecast-deck">
@@ -46,10 +47,16 @@
               <source src="assets/storm-clouds-2066.mp4" type="video/mp4">
             </video>
             <div class="chart-toolbar">
-              <div class="legend"><span class="model-key"><i></i>MODEL / PREDICTION</span><span class="actual-key"><i></i>ACTUAL</span><span class="street-key"><i></i>STREET</span></div>
+              <div class="legend"><span class="model-key"><i></i><b id="prediction-key-label">MODEL / PREDICTION</b></span><span class="actual-key"><i></i><b id="actual-key-label">ACTUAL</b></span><span class="street-key" id="street-key"><i></i>STREET</span></div>
               <div class="method-tabs" id="method-tabs" aria-label="Historical method"></div>
               <div class="range-switch"><span>ALL AVAILABLE PERIODS</span></div>
             </div>
+            <section class="chart-empty" id="chart-empty" aria-live="polite" hidden>
+              <span>REASONING-ONLY SOURCE</span>
+              <h2 id="chart-empty-title">No validation graph for this metric</h2>
+              <p id="chart-empty-copy"></p>
+              <button id="chart-empty-details" type="button">VIEW REASONING + DATA</button>
+            </section>
             <div class="chart-scroll" id="chart-scroll">
             <svg id="history-chart" viewBox="0 0 980 420" role="img" aria-labelledby="chart-title chart-desc">
               <title id="chart-title">Complete validated model prediction and actual history</title>
@@ -67,12 +74,8 @@
               <g id="chart-labels"></g>
             </svg>
             </div>
-            <aside class="method-inspector" id="method-inspector" aria-label="Method details">
-              <header><span id="inspector-method">METHOD</span><button id="details-close" type="button" aria-label="Close details">×</button></header>
-              <div id="inspector-content"></div>
-            </aside>
-            <article class="cinematic-reason" id="cinematic-reason" aria-live="polite" role="dialog" tabindex="0" aria-label="Forecast reasoning step. Click the card to advance or close to exit." hidden>
-              <header><span id="cinematic-stage">STREET</span><div><b id="cinematic-count">01 / 05</b><button id="trace-close" type="button" aria-label="Exit reasoning trace">×</button></div></header>
+            <article class="cinematic-reason" id="cinematic-reason" aria-live="polite" role="dialog" aria-modal="false" aria-label="Selected source reasoning details" hidden>
+              <header><span id="cinematic-stage">OVERVIEW</span><div><b id="cinematic-count">01 / 05</b><button id="trace-close" type="button" aria-label="Close reasoning details">×</button></div></header>
               <h2 id="cinematic-title">Reconstruct Street</h2>
               <p id="cinematic-claim">Public estimates establish the benchmark.</p>
               <div class="cinematic-number"><strong id="cinematic-value">$46.57bn</strong><span id="cinematic-weight">10% META WEIGHT</span></div>
@@ -81,7 +84,7 @@
                 <span id="cinematic-source-label">DATA USED</span>
                 <ul id="cinematic-sources"></ul>
               </section>
-              <footer>CLICK CARD OR NEXT TO ADVANCE <span>→</span></footer>
+              <footer class="detail-pager"><button id="details-back" type="button">← BACK</button><span id="details-progress">OVERVIEW</span><button id="details-next" type="button">NEXT →</button></footer>
             </article>
           </div>
         </article>
@@ -91,6 +94,6 @@
     </section>
 
   </main>
-  <script src="app.js?v=37"></script>
+  <script src="app.js?v=39"></script>
 </body>
 </html>

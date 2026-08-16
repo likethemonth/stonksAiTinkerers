@@ -43,13 +43,10 @@ const svgNS = "http://www.w3.org/2000/svg";
 let replay = null;
 let selectedCompany = 0;
 let selectedMetric = 0;
-let traceToken = 0;
-let traceRunning = false;
-let traceComplete = false;
-let traceAnimating = false;
-let traceStepIndex = -1;
+let detailPageIndex = 0;
+let detailPages = [];
 let currentLightning = [];
-let currentBoundaries = [];
+let chartRenderToken = 0;
 let enabledEngines = new Set(["street", "fundamental", "market"]);
 let selectedMethod = "ensemble";
 const methodLabels = { ensemble: "ENSEMBLE", market: "PREDICTION MARKET", expert: "EXPERT", aggregate: "AGGREGATE FINAL" };
@@ -126,6 +123,7 @@ function metricHistory() {
       }),
     }));
   }
+  if (selectedMethod !== "aggregate") return [];
   return replayCompany().periods.map(period => ({
     period: period.period,
     record: normaliseRecord(period.metrics.find(candidate => candidate.metricKey === item.key)),
@@ -234,27 +232,11 @@ function renderMethodTabs() {
     return `<button type="button" data-method="${key}" class="${key === selectedMethod ? "active" : ""} ${hasSeries ? "" : "no-series"}" title="${hasSeries ? `${metric.series.length} validated periods` : "Reasoning and sources available; no method-specific backtest"}">${methodLabels[key]}</button>`;
   }).join("");
   const series = item.methodMetrics?.[selectedMethod]?.series;
-  $(".range-switch span").textContent = series?.length ? `${series.length} VALIDATED PERIODS · ALL DATA` : "NO METHOD SERIES · META REPLAY";
-}
-
-function renderMethodInspector() {
-  const { company, item } = current();
-  const method = company.methods?.[selectedMethod];
-  if (!method) return;
-  const selected = item.methodMetrics?.[selectedMethod];
-  const gate = selected?.gate;
-  $("#inspector-method").textContent = method.label;
-  $("#inspector-content").innerHTML = `
-    <p class="inspector-summary">${escapeHtml(method.summary || "No method summary supplied.")}</p>
-    <section class="inspector-metrics">${(method.metrics || []).map(metricEntry => `<article>
-      <span>${escapeHtml(metricEntry.label)}</span>
-      <strong>${metricEntry.value == null ? "ABSTAINED" : formatValue(metricEntry.value, metricEntry.unit, true)}</strong>
-      <small>FINAL ${metricEntry.final == null ? "—" : formatValue(metricEntry.final, metricEntry.unit, true)}</small>
-      <p>${escapeHtml(metricEntry.why || "No rationale supplied.")}</p>
-    </article>`).join("")}</section>
-    ${gate ? `<section class="inspector-gate"><div><strong>${gate.score}${gate.kind === "mae" ? "pp" : "%"}</strong><span>ERROR</span></div><div><strong>${gate.threshold}${gate.kind === "mae" ? "pp" : "%"}</strong><span>GATE</span></div><div><strong>${gate.n}</strong><span>PERIODS</span></div><b>${gate.passed ? "PASSED" : "ABSTAINED"}</b></section>` : ""}
-    <section class="inspector-section"><h3>Derivation</h3><ol>${(method.derivation || []).map(step => `<li>${escapeHtml(step)}</li>`).join("")}</ol></section>
-    <section class="inspector-section"><h3>Data used</h3><ul>${(method.data || []).map(source => `<li><b>${escapeHtml(source.name)}</b><span>${escapeHtml(source.value ? `${source.value} · ${source.published}` : source.published || "")}</span><code>${escapeHtml(source.source || "")}</code></li>`).join("") || "<li>No external data for this method.</li>"}</ul></section>`;
+  $(".range-switch span").textContent = series?.length
+    ? `${series.length} VALIDATED PERIODS · EXACT SOURCE`
+    : selectedMethod === "aggregate"
+      ? `${replayCompany().periods.length} PERIODS · AGGREGATE REPLAY`
+      : "NO VALIDATION SERIES · REASONING ONLY";
 }
 
 function renderUniverse() {
@@ -306,12 +288,18 @@ function electrifyPolyline(points, seed) {
 }
 
 function renderMainChart(previousFinal = null) {
+  const renderToken = ++chartRenderToken;
   const { company, item } = current();
   const final = activeFinal(item);
   const methodMetric = item.methodMetrics?.[selectedMethod];
   const probabilityMode = methodMetric?.chartType === "prob";
+  const aggregateMode = selectedMethod === "aggregate";
+  const noSeries = !aggregateMode && !methodMetric?.series?.length;
   const history = metricHistory();
   const chartScroll = $("#chart-scroll");
+  const chartEmpty = $("#chart-empty");
+  chartScroll.hidden = false;
+  chartEmpty.hidden = true;
   const pointSpacing = 76;
   const left = 54;
   const submissionWidth = 118;
@@ -321,12 +309,39 @@ function renderMainChart(previousFinal = null) {
   $("#history-chart").setAttribute("viewBox", `0 0 ${viewWidth} ${viewHeight}`);
   chartScroll.style.setProperty("--chart-width", `${chartWidth}px`);
   requestAnimationFrame(() => { chartScroll.scrollLeft = 0; });
+  const grid = $("#chart-grid");
+  const axes = $("#chart-axes");
+  const actualLayer = $("#actual-series");
+  const predictionLayer = $("#prediction-series");
+  const streetLayer = $("#street-series");
+  const lightningLayer = $("#lightning-series");
+  const errorLayer = $("#error-series");
+  const labels = $("#chart-labels");
+  [grid, axes, actualLayer, predictionLayer, streetLayer, lightningLayer, errorLayer, labels].forEach(layer => layer.replaceChildren());
+  $("#prediction-key-label").textContent = probabilityMode ? "MARKET P(YES)" : methodMetric?.predLabel || "MODEL / PREDICTION";
+  $("#actual-key-label").textContent = probabilityMode ? "RESOLVED OUTCOME" : "ACTUAL";
+  $("#street-key").hidden = !aggregateMode;
+  if (noSeries) {
+    const method = company.methods[selectedMethod];
+    chartScroll.hidden = true;
+    chartEmpty.hidden = false;
+    $("#chart-empty-title").textContent = `${methodLabels[selectedMethod]} has no validation graph for ${item.name}`;
+    $("#chart-empty-copy").textContent = methodMetric?.why || `${method.summary} The source still has reasoning and dated evidence, but no exact per-period series for this metric.`;
+    currentLightning = Array.from({ length: 4 }, () => ({ jagged: [], straight: [], paths: [] }));
+    return;
+  }
   const validForecasts = history.filter(row => row.record?.forecast).map(row => row.record.forecast.value);
   const validActuals = history.filter(row => row.record?.actual).map(row => row.record.actual.value);
-  const chartFinal = probabilityMode ? validForecasts.at(-1) : final;
+  const chartFinal = probabilityMode ? validForecasts.at(-1) : aggregateMode ? final : methodMetric?.value;
+  const hasLiveForecast = Number.isFinite(chartFinal);
   const values = probabilityMode
     ? [...validForecasts, ...validActuals]
-    : [...validForecasts, ...validActuals, item.street, final, ...engineEntries(item).flatMap(engine => engine.value == null ? [] : [engine.value]), ...item.steps.map(step => step.after)];
+    : [
+        ...validForecasts,
+        ...validActuals,
+        ...(hasLiveForecast ? [chartFinal] : []),
+        ...(aggregateMode ? [item.street, final, ...engineEntries(item).flatMap(engine => engine.value == null ? [] : [engine.value]), ...item.steps.map(step => step.after)] : []),
+      ];
   let min = probabilityMode ? 0 : Math.min(...values);
   let max = probabilityMode ? 100 : Math.max(...values);
   if (!probabilityMode) {
@@ -342,16 +357,6 @@ function renderMainChart(previousFinal = null) {
   const periodY = bottom + 25;
   const xHistory = index => left + index * ((historyEnd - left) / Math.max(history.length - 1, 1));
   const y = value => bottom - ((value - min) / (max - min || 1)) * (bottom - top);
-
-  const grid = $("#chart-grid");
-  const axes = $("#chart-axes");
-  const actualLayer = $("#actual-series");
-  const predictionLayer = $("#prediction-series");
-  const streetLayer = $("#street-series");
-  const lightningLayer = $("#lightning-series");
-  const errorLayer = $("#error-series");
-  const labels = $("#chart-labels");
-  [grid, axes, actualLayer, predictionLayer, streetLayer, lightningLayer, errorLayer, labels].forEach(layer => layer.replaceChildren());
 
   for (let index = 0; index < 5; index += 1) {
     const yy = top + index * ((bottom - top) / 4);
@@ -396,29 +401,28 @@ function renderMainChart(previousFinal = null) {
     addSvg(labels, "text", { class: "error-strip-label", x: left, y: errorTop - 10 }, `ABSOLUTE ERROR BY PERIOD · ${errorUnit}`);
   }
   const latestHistoryX = xHistory(history.length - 1);
-  if (!probabilityMode) {
-    addSvg(streetLayer, "line", { class: "street-line", x1: latestHistoryX, y1: y(item.street), x2: liveEnd, y2: y(item.street) });
-    addSvg(labels, "text", { class: "terminal-label", x: liveEnd, y: y(item.street) + 24 }, `STREET ${formatValue(item.street, item.unit, true)}`);
+  if (aggregateMode) {
+    addSvg(streetLayer, "line", { class: "street-line", x1: left, y1: y(item.street), x2: liveEnd, y2: y(item.street) });
+    addSvg(labels, "text", { class: "terminal-label street-label", x: left + 7, y: y(item.street) - 8 }, `STREET ${formatValue(item.street, item.unit, true)}`);
   }
-  if (actualPoints.length) addSvg(labels, "text", { class: "axis-label", x: latestHistoryX + 5, y: actualPoints.at(-1).y + 15 }, "ACTUAL PENDING");
+  if (actualPoints.length && hasLiveForecast) addSvg(labels, "text", { class: "axis-label", x: latestHistoryX + 5, y: actualPoints.at(-1).y + 15 }, "ACTUAL PENDING");
 
-  const predictionPoints = [...forecastPoints, { x: liveEnd, y: y(chartFinal), value: chartFinal }];
+  const predictionPoints = [...forecastPoints, ...(hasLiveForecast ? [{ x: liveEnd, y: y(chartFinal), value: chartFinal }] : [])];
   let predictionPath = null;
   let livePredictionDot = null;
   if (predictionPoints.length) {
     predictionPath = addSvg(predictionLayer, "path", { class: "prediction-line", d: pathFrom(predictionPoints) });
     predictionPoints.forEach((point, index) => {
       const dot = addSvg(predictionLayer, "circle", {
-      class: `prediction-dot ${index === predictionPoints.length - 1 ? "live" : ""}`,
+      class: `prediction-dot ${hasLiveForecast && index === predictionPoints.length - 1 ? "live" : ""}`,
       cx: point.x,
       cy: point.y,
-      r: index === predictionPoints.length - 1 ? 4 : 3,
+      r: hasLiveForecast && index === predictionPoints.length - 1 ? 4 : 3,
       });
-      if (index === predictionPoints.length - 1) livePredictionDot = dot;
+      if (hasLiveForecast && index === predictionPoints.length - 1) livePredictionDot = dot;
     });
   }
   const boundaryIndices = Array.from({ length: 5 }, (_, index) => Math.round(index * (predictionPoints.length - 1) / 4));
-  currentBoundaries = boundaryIndices.map(pointIndex => predictionPoints[pointIndex]);
   currentLightning = [];
   for (let index = 0; index < 4; index += 1) {
     const exactSection = predictionPoints.slice(boundaryIndices[index], boundaryIndices[index + 1] + 1);
@@ -426,11 +430,12 @@ function renderMainChart(previousFinal = null) {
     const segment = { jagged, straight, paths: [] };
     ["lightning-bloom", "lightning-body", "lightning-core"].forEach(className => {
       const path = addSvg(lightningLayer, "path", { class: className, d: pathFrom(jagged), "data-segment": index });
+      path.classList.add("resolved");
       segment.paths.push(path);
     });
     currentLightning.push(segment);
   }
-  if (!probabilityMode && Number.isFinite(previousFinal) && previousFinal !== final) {
+  if (aggregateMode && Number.isFinite(previousFinal) && previousFinal !== final) {
     const fromPrediction = predictionPoints.map((point, index, points) => index === points.length - 1 ? { ...point, y: y(previousFinal) } : point);
     const lastSegment = currentLightning.at(-1);
     const fromLightning = lastSegment.straight.map((point, index, points) => index === points.length - 1 ? { ...point, y: y(previousFinal) } : point);
@@ -438,9 +443,8 @@ function renderMainChart(previousFinal = null) {
     livePredictionDot?.setAttribute("cy", y(previousFinal));
     lastSegment.paths.forEach(path => path.setAttribute("d", pathFrom(fromLightning)));
     const started = performance.now();
-    const shiftToken = traceToken;
     const animateShift = now => {
-      if (shiftToken !== traceToken) return;
+      if (renderToken !== chartRenderToken) return;
       const progress = Math.min(1, (now - started) / 520);
       const eased = 1 - Math.pow(1 - progress, 3);
       predictionPath?.setAttribute("d", interpolatePath(fromPrediction, predictionPoints, eased));
@@ -456,7 +460,7 @@ function renderMainChart(previousFinal = null) {
     addSvg(lightningLayer, "circle", { class: "trace-node", cx: point.x, cy: point.y, r: index === 4 ? 4 : 3, "data-trace-node": index });
   });
   const sourceX = [liveEnd - 90, liveEnd - 60, liveEnd - 30];
-  if (!probabilityMode) engineEntries(item).forEach((engine, index) => {
+  if (aggregateMode) engineEntries(item).forEach((engine, index) => {
     if (engine.value == null) {
       addSvg(predictionLayer, "circle", { class: "meta-source-dot unavailable", cx: sourceX[index], cy: bottom - 9, r: 4.5, "data-engine-node": engine.key });
       addSvg(labels, "text", { class: "source-dot-label unavailable", x: sourceX[index], y: bottom + 7 }, "M×");
@@ -467,14 +471,25 @@ function renderMainChart(previousFinal = null) {
     addSvg(predictionLayer, "circle", { class: "meta-source-dot", cx: sourceX[index], cy: y(engine.value), r: 5, "data-engine-node": engine.key });
     addSvg(labels, "text", { class: "source-dot-label", x: sourceX[index], y: y(engine.value) + (index === 1 ? 16 : -10) }, engine.key[0].toUpperCase());
   });
-  addSvg(labels, "text", { class: "terminal-label final-label", x: liveEnd, y: y(chartFinal) - 27 }, probabilityMode ? `MARKET ${formatValue(chartFinal, "%")}` : `FINAL ${formatValue(final, item.unit)}`);
+  if (hasLiveForecast) {
+    const finalText = probabilityMode
+      ? `MARKET ${formatValue(chartFinal, "%")}`
+      : aggregateMode
+        ? `FINAL ${formatValue(final, item.unit)}`
+        : `${methodLabels[selectedMethod]} ${formatValue(chartFinal, item.unit)}`;
+    addSvg(labels, "text", { class: "terminal-label final-label", x: liveEnd, y: y(chartFinal) - 27 }, finalText);
+  } else {
+    addSvg(labels, "text", { class: "terminal-label final-label", x: liveEnd, y: top + 14 }, `${methodLabels[selectedMethod]} ABSTAINED`);
+  }
 }
 
 function renderQuoteAndHeader() {
   const { company, item } = current();
   const final = activeFinal(item);
   const edge = edgePct(item, final);
+  const method = company.methods?.[selectedMethod];
   $("#instrument-title").textContent = `${company.name} · ${item.name}`;
+  $("#instrument-method").textContent = `${methodLabels[selectedMethod]} · ${method?.label || "SOURCE VIEW"}`;
   $("#quote-value").textContent = formatValue(final, item.unit);
   $("#quote-change").textContent = signedPct(edge);
   $("#quote-change").className = edge < 0 ? "negative" : "positive";
@@ -495,37 +510,6 @@ function renderEngineTable() {
   }).join("");
 }
 
-function resetTrace() {
-  traceToken += 1;
-  traceRunning = false;
-  traceComplete = false;
-  traceAnimating = false;
-  traceStepIndex = -1;
-  $("#terminal").classList.remove("trace-mode");
-  $("#chart-stage").classList.remove("trace-zoom");
-  $("#terminal").classList.remove("trace-active");
-  hideCinematicReason();
-  currentLightning.forEach(segment => segment.paths.forEach(path => {
-    path.classList.remove("drawing", "resolved");
-    path.setAttribute("d", pathFrom(segment.jagged));
-    path.style.removeProperty("--length");
-    path.style.removeProperty("--speed");
-  }));
-  $$('[data-trace-node]').forEach(node => node.classList.remove("active"));
-  $$('[data-engine-node]').forEach(node => node.classList.remove("active-source"));
-  $("#trace-control").hidden = false;
-  $("#trace-control").innerHTML = 'RUN TRACE <span>▶</span>';
-  $("#trace-control").disabled = false;
-}
-
-function cancelTrace(event) {
-  event?.preventDefault();
-  event?.stopPropagation();
-  resetTrace();
-}
-
-const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
-
 function shortSource(source) {
   try {
     const url = new URL(source);
@@ -535,154 +519,140 @@ function shortSource(source) {
   }
 }
 
-function traceExplanation(step, item) {
-  const engines = engineEntries(item);
-  const engine = engines.find(candidate => candidate.key === step.engineKey);
-  if (engine) {
-    const available = engine.value != null && engine.weight > 0;
-    const families = engine.sourceFamilies || [];
-    const citations = engine.citations || [];
-    const reliability = Number.isFinite(engine.reliability) ? engine.reliability : 0;
-    return {
-      weight: available ? `${engine.weight.toFixed(0)}% META WEIGHT · ${reliability.toFixed(0)}% RELIABILITY` : "ABSTAINED · 0% WEIGHT",
-      calculation: available
-        ? `${engine.nObservations || "No"} observation${engine.nObservations === 1 ? "" : "s"} · σ ${formatValue(engine.sigma, item.unit, true)} · ${engine.note}`
-        : engine.reasoning || engine.note,
-      label: families.length ? "SOURCE FAMILIES + EVIDENCE" : "WHY THIS SOURCE ABSTAINED",
-      sources: families.length
-        ? [...families.map(family => family.replaceAll("_", " ")), ...citations.map(shortSource)]
-        : [engine.reasoning || engine.note],
-    };
-  }
-  if (step.engineKey === "meta") {
-    const active = engines.filter(candidate => candidate.value != null && candidate.weight > 0 && enabledEngines.has(candidate.key));
-    return {
-      weight: `${active.length} ACTIVE SOURCE${active.length === 1 ? "" : "S"}`,
-      calculation: `Precision weighting scales 1/σ² by reliability and shared-evidence penalties. Active result: ${formatValue(activeFinal(item), item.unit)}.`,
-      label: "VALUES ENTERING THE BLEND",
-      sources: active.map(candidate => `${candidate.name}: ${formatValue(candidate.value, item.unit)} · ${candidate.weight.toFixed(0)}% weight`),
-    };
-  }
-  const warningText = item.warnings.length ? item.warnings : [item.needsReview ? "Flagged for review" : "Audit passed without review flags"];
-  return {
-    weight: `FINAL · σ ${formatValue(item.sigma, item.unit, true)}`,
-    calculation: `Submitted ${formatValue(activeFinal(item), item.unit)} after applying the active source mix and validation gates.`,
-    label: "SUBMISSION CHECK",
-    sources: warningText,
-  };
+function sourceDetailPages() {
+  const { company, item } = current();
+  const method = company.methods[selectedMethod];
+  const metric = item.methodMetrics?.[selectedMethod];
+  const aggregateMode = selectedMethod === "aggregate";
+  const data = method.data || [];
+  const derivation = method.derivation || [];
+  const seriesCount = aggregateMode ? replayCompany().periods.length : metric?.series?.length || 0;
+  const sourceValue = aggregateMode ? activeFinal(item) : metric?.value;
+  const valueText = Number.isFinite(sourceValue) ? formatValue(sourceValue, item.unit) : "ABSTAINED";
+  const coverage = seriesCount ? `${seriesCount} validated period${seriesCount === 1 ? "" : "s"}` : "No per-period validation series";
+  const gate = metric?.gate;
+  const validationValue = method.brier
+    ? method.brier.market.toFixed(4)
+    : gate
+      ? `${gate.score}${gate.kind === "mae" ? "pp" : "%"}`
+      : seriesCount
+        ? String(seriesCount)
+        : "—";
+  const validationMeta = method.brier ? "BRIER SCORE" : gate ? (gate.passed ? "GATE PASSED" : "GATE FAILED") : "VALIDATION";
+  const evidence = data.length
+    ? data.map(source => `${source.name}${source.published ? ` · ${source.published}` : ""}${source.source ? ` · ${shortSource(source.source)}` : ""}`)
+    : ["No external dataset is recorded for this source view."];
+  const metricCoverage = (method.metrics || []).map(entry => `${entry.label}: ${entry.value == null ? "abstained" : formatValue(entry.value, entry.unit, true)}`);
+  const validationLines = method.brier
+    ? [`Market Brier ${method.brier.market}`, `Base-rate Brier ${method.brier.baseRate}`, `${method.brier.n} resolved markets`]
+    : gate
+      ? [`Error ${gate.score}${gate.kind === "mae" ? "pp" : "%"}`, `Gate ${gate.threshold}${gate.kind === "mae" ? "pp" : "%"}`, `${gate.n} validated periods`, gate.passed ? "Number offered" : "Source abstains"]
+      : [coverage, "No accuracy claim is made without a declared gate."];
+  return [
+    {
+      stage: "OVERVIEW",
+      title: method.label,
+      claim: method.summary || "No source summary supplied.",
+      value: valueText,
+      meta: `${methodLabels[selectedMethod]} · ${item.name}`,
+      calculation: coverage,
+      label: "METRICS COVERED",
+      sources: metricCoverage.length ? metricCoverage : ["This source produced no company metrics."],
+    },
+    {
+      stage: "EVIDENCE",
+      title: "Evidence used",
+      claim: data.length ? `This source uses ${data.length} dated input${data.length === 1 ? "" : "s"}.` : "This source records no external input for the selected company.",
+      value: String(data.length),
+      meta: "DATED SOURCES",
+      calculation: evidence[0],
+      label: "DATA + PUBLICATION DATES",
+      sources: evidence,
+    },
+    {
+      stage: "DERIVATION",
+      title: "How the number was reached",
+      claim: derivation[0] || "No derivation steps were supplied for this source.",
+      value: String(derivation.length),
+      meta: "MODEL STEPS",
+      calculation: derivation[1] || method.summary || "No additional model logic supplied.",
+      label: "REASONING STEPS",
+      sources: derivation.length ? derivation : ["No derivation steps recorded."],
+    },
+    {
+      stage: "VALIDATION",
+      title: gate ? (gate.passed ? "Validation gate passed" : "Validation gate failed") : method.brier ? "Probability calibration" : "Validation coverage",
+      claim: metric?.seriesLabel || coverage,
+      value: validationValue,
+      meta: validationMeta,
+      calculation: gate ? `The declared threshold is ${gate.threshold}${gate.kind === "mae" ? "pp" : "%"} across ${gate.n} periods.` : method.brier ? "Lower Brier scores indicate better-calibrated probabilities." : "Reasoning remains visible even when no exact graph exists.",
+      label: "VALIDATION RESULT",
+      sources: validationLines,
+    },
+    {
+      stage: "OUTPUT",
+      title: item.name,
+      claim: metric?.why || `This source has no defensible direct mapping to ${item.name}.`,
+      value: valueText,
+      meta: Number.isFinite(sourceValue) ? "SOURCE OUTPUT" : "SOURCE ABSTAINED",
+      calculation: aggregateMode ? `Submitted final after active contribution weights: ${formatValue(activeFinal(item), item.unit)}.` : Number.isFinite(sourceValue) ? `Independent ${methodLabels[selectedMethod].toLowerCase()} estimate before aggregation.` : "No value enters the aggregate from this source for the selected metric.",
+      label: "RELATION TO FINAL FORECAST",
+      sources: [`Aggregate final: ${formatValue(activeFinal(item), item.unit)}`, `Street reference: ${formatValue(item.street, item.unit)}`, coverage],
+    },
+  ];
 }
 
-function showCinematicReason(index) {
-  const { item } = current();
-  const step = item.steps[index];
-  const point = currentBoundaries[index];
-  if (!step || !point) return;
-
-  const note = $("#cinematic-reason");
-  note.hidden = false;
-  $("#cinematic-stage").textContent = step.stage;
-  $("#cinematic-count").textContent = `${String(index + 1).padStart(2, "0")} / 05`;
-  $("#cinematic-title").textContent = step.title;
-  $("#cinematic-claim").textContent = step.claim;
-  $("#cinematic-value").textContent = formatValue(index >= 3 ? activeFinal(item) : step.after, item.unit);
-  const explanation = traceExplanation(step, item);
-  $("#cinematic-weight").textContent = explanation.weight;
-  $("#cinematic-calculation").textContent = explanation.calculation;
-  $("#cinematic-source-label").textContent = explanation.label;
-  $("#cinematic-sources").innerHTML = explanation.sources.slice(0, 6).map(source => `<li>${escapeHtml(source)}</li>`).join("");
-  $$('[data-engine-node]').forEach(node => node.classList.remove("active-source"));
-  if (["street", "fundamental", "market"].includes(step.engineKey)) {
-    $(`[data-engine-node="${step.engineKey}"]`)?.classList.add("active-source");
-  } else if (step.engineKey === "meta") {
-    engineEntries(item).filter(engine => enabledEngines.has(engine.key) && engine.value != null && engine.weight > 0).forEach(engine => {
-      $(`[data-engine-node="${engine.key}"]`)?.classList.add("active-source");
-    });
-  }
-  note.dataset.side = point.x > 600 ? "left" : "right";
-
-  const chartScroll = $("#chart-scroll");
-  const chart = $("#history-chart");
-  const viewWidth = chart.viewBox.baseVal.width || 980;
-  const pointLeft = point.x * (chart.getBoundingClientRect().width / viewWidth);
-  const centredLeft = Math.max(0, Math.min(chartScroll.scrollWidth - chartScroll.clientWidth, pointLeft - chartScroll.clientWidth / 2));
-  chartScroll.scrollTo({ left: centredLeft, behavior: "smooth" });
-  note.classList.add("visible");
+function renderDetailPage() {
+  const page = detailPages[detailPageIndex];
+  if (!page) return;
+  $("#cinematic-stage").textContent = page.stage;
+  $("#cinematic-count").textContent = `${String(detailPageIndex + 1).padStart(2, "0")} / ${String(detailPages.length).padStart(2, "0")}`;
+  $("#cinematic-title").textContent = page.title;
+  $("#cinematic-claim").textContent = page.claim;
+  $("#cinematic-value").textContent = page.value;
+  $("#cinematic-weight").textContent = page.meta;
+  $("#cinematic-calculation").textContent = page.calculation;
+  $("#cinematic-source-label").textContent = page.label;
+  $("#cinematic-sources").innerHTML = page.sources.slice(0, 6).map(source => `<li>${escapeHtml(source)}</li>`).join("");
+  $("#details-progress").textContent = page.stage;
+  $("#details-back").disabled = detailPageIndex === 0;
+  $("#details-next").textContent = detailPageIndex === detailPages.length - 1 ? "FINISH ✓" : "NEXT →";
 }
 
-function hideCinematicReason() {
-  const note = $("#cinematic-reason");
-  note.classList.remove("visible");
-  note.hidden = true;
+function openDetails() {
+  detailPages = sourceDetailPages();
+  detailPageIndex = 0;
+  const modal = $("#cinematic-reason");
+  modal.hidden = false;
+  delete modal.dataset.side;
+  renderDetailPage();
+  requestAnimationFrame(() => {
+    modal.classList.add("visible");
+    $("#details-next").focus({ preventScroll: true });
+  });
+}
+
+function closeDetails() {
+  const modal = $("#cinematic-reason");
+  modal.classList.remove("visible");
+  modal.hidden = true;
+  $("#details-control")?.focus({ preventScroll: true });
+}
+
+function advanceDetails() {
+  if (detailPageIndex >= detailPages.length - 1) return closeDetails();
+  detailPageIndex += 1;
+  renderDetailPage();
+}
+
+function previousDetails() {
+  if (detailPageIndex === 0) return;
+  detailPageIndex -= 1;
+  renderDetailPage();
 }
 
 function interpolatePath(from, to, progress) {
   return pathFrom(from.map((point, index) => ({ x: point.x + (to[index].x - point.x) * progress, y: point.y + (to[index].y - point.y) * progress })));
-}
-
-async function straightenLightning(token) {
-  const started = performance.now();
-  const duration = 680;
-  await new Promise(resolve => {
-    function frame(now) {
-      if (token !== traceToken) return resolve();
-      const progress = Math.min(1, (now - started) / duration);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      currentLightning.forEach(segment => segment.paths.forEach(path => path.setAttribute("d", interpolatePath(segment.jagged, segment.straight, eased))));
-      if (progress < 1) requestAnimationFrame(frame); else resolve();
-    }
-    requestAnimationFrame(frame);
-  });
-}
-
-async function runTrace() {
-  if (traceAnimating) return;
-  if (traceComplete) resetTrace();
-  const speeds = [170, 235, 205, 310];
-  if (!traceRunning) {
-    traceRunning = true;
-    traceStepIndex = 0;
-    traceToken += 1;
-    $("#terminal").classList.add("trace-active");
-    renderMainChart();
-    $("#method-inspector").classList.remove("open");
-    $('[data-trace-node="0"]')?.classList.add("active");
-    showCinematicReason(0);
-    $("#trace-control").innerHTML = 'NEXT <span>→</span>';
-    return;
-  }
-
-  const token = traceToken;
-  traceAnimating = true;
-  $("#trace-control").disabled = true;
-  if (traceStepIndex < currentLightning.length) {
-    const segment = currentLightning[traceStepIndex];
-    segment.paths.forEach(path => {
-      const length = path.getTotalLength();
-      path.style.setProperty("--length", length);
-      path.style.setProperty("--speed", `${speeds[traceStepIndex]}ms`);
-      path.classList.add("drawing");
-    });
-    await wait(speeds[traceStepIndex] + 35);
-    if (token !== traceToken) return;
-    segment.paths.forEach(path => { path.classList.remove("drawing"); path.classList.add("resolved"); });
-    traceStepIndex += 1;
-    $(`[data-trace-node="${traceStepIndex}"]`)?.classList.add("active");
-    showCinematicReason(traceStepIndex);
-    $("#trace-control").innerHTML = traceStepIndex === 4 ? 'FINISH <span>✓</span>' : 'NEXT <span>→</span>';
-    traceAnimating = false;
-    $("#trace-control").disabled = false;
-    return;
-  }
-
-  hideCinematicReason();
-  await straightenLightning(token);
-  if (token !== traceToken) return;
-  $("#terminal").classList.remove("trace-active");
-  traceRunning = false;
-  traceComplete = true;
-  traceAnimating = false;
-  $("#trace-control").disabled = false;
-  $("#trace-control").innerHTML = 'REPLAY <span>↻</span>';
 }
 
 function renderSelection() {
@@ -690,10 +660,9 @@ function renderSelection() {
   renderUniverse();
   renderQuoteAndHeader();
   renderMethodTabs();
-  renderMethodInspector();
   renderMainChart();
   renderEngineTable();
-  resetTrace();
+  closeDetails();
 }
 
 function resetEngineSelection() {
@@ -720,7 +689,7 @@ async function init() {
 
 $("#universe-list").addEventListener("click", event => {
   const row = event.target.closest("[data-metric]");
-  if (!row || traceRunning) return;
+  if (!row) return;
   selectedMetric = Number(row.dataset.metric);
   resetEngineSelection();
   chooseDefaultMethod();
@@ -728,7 +697,7 @@ $("#universe-list").addEventListener("click", event => {
 });
 $("#company-tabs").addEventListener("click", event => {
   const tab = event.target.closest("[data-company-tab]");
-  if (!tab || traceRunning) return;
+  if (!tab) return;
   selectedCompany = Number(tab.dataset.companyTab);
   selectedMetric = 0;
   resetEngineSelection();
@@ -737,30 +706,27 @@ $("#company-tabs").addEventListener("click", event => {
 });
 $("#method-tabs").addEventListener("click", event => {
   const control = event.target.closest("[data-method]");
-  if (!control || control.disabled || traceRunning) return;
+  if (!control || control.disabled) return;
   selectedMethod = control.dataset.method;
+  closeDetails();
   renderMethodTabs();
-  renderMethodInspector();
+  renderQuoteAndHeader();
   renderMainChart();
-  resetTrace();
 });
-$("#details-control").addEventListener("click", () => {
-  if (!traceRunning) $("#method-inspector").classList.toggle("open");
-});
-$("#details-close").addEventListener("click", () => $("#method-inspector").classList.remove("open"));
+$("#details-control").addEventListener("click", openDetails);
+$("#chart-empty-details").addEventListener("click", openDetails);
 $("#engine-table").addEventListener("click", event => {
   const control = event.target.closest("[data-engine-toggle]");
-  if (!control || traceRunning) return;
+  if (!control) return;
   const key = control.dataset.engineToggle;
   const { item } = current();
   if (control.dataset.engineAvailable !== "true") {
     if (key === "market") {
       selectedMethod = "market";
       renderMethodTabs();
-      renderMethodInspector();
+      renderQuoteAndHeader();
       renderMainChart();
-      resetTrace();
-      $("#method-inspector").classList.add("open");
+      openDetails();
     }
     return;
   }
@@ -768,31 +734,26 @@ $("#engine-table").addEventListener("click", event => {
   const activeAvailable = engineEntries(item).filter(engine => engine.value != null && enabledEngines.has(engine.key));
   if (enabledEngines.has(key) && activeAvailable.length === 1) return;
   if (enabledEngines.has(key)) enabledEngines.delete(key); else enabledEngines.add(key);
+  selectedMethod = "aggregate";
+  closeDetails();
   renderUniverse();
   renderQuoteAndHeader();
-  resetTrace();
+  renderMethodTabs();
   renderMainChart(previousFinal);
   renderEngineTable();
   const nextFinal = activeFinal(item);
   if (previousFinal !== nextFinal) $("#quote-value").animate([{ transform: "translateY(2px)", opacity: .55 }, { transform: "translateY(0)", opacity: 1 }], { duration: 260, easing: "ease-out" });
 });
-$("#trace-control").addEventListener("click", runTrace);
-$("#cinematic-reason").addEventListener("click", runTrace);
-$("#trace-close").addEventListener("click", cancelTrace);
-$("#cinematic-reason").addEventListener("keydown", event => {
-  if (event.target.closest("#trace-close")) return;
-  if (event.key === "Enter" || event.key === " ") {
-    event.preventDefault();
-    runTrace();
-  }
-});
+$("#trace-close").addEventListener("click", closeDetails);
+$("#details-back").addEventListener("click", previousDetails);
+$("#details-next").addEventListener("click", advanceDetails);
 document.addEventListener("keydown", event => {
-  if (event.key === "Escape" && traceRunning) cancelTrace(event);
+  if (event.key === "Escape" && !$("#cinematic-reason").hidden) closeDetails();
 });
 
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) $("#storm-video")?.pause();
 init().catch(error => {
-  $("#trace-control").textContent = "DATA ERROR";
-  $("#trace-control").disabled = true;
+  $("#details-control").textContent = "DATA ERROR";
+  $("#details-control").disabled = true;
   console.error(error);
 });
