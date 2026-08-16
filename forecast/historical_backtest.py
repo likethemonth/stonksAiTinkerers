@@ -1,9 +1,9 @@
-"""Five-year point-in-time replay with filing-sourced actuals and full traces.
+"""Point-in-time replay with filing-sourced actuals and full traces.
 
 This is deliberately separate from ``forecasting.backtest``. That module ranks
 individual Street sources. This module defines the product backtest denominator:
-20 requested fiscal quarters per company, three challenge metrics per period,
-and an explicit outcome for every one of the resulting 240 metric slots.
+every recoverable filing period per company, three challenge metrics per period,
+and an explicit outcome for every resulting metric slot.
 
 The replay model is a transparent seasonal/trend baseline. It is not presented
 as a historical replay of Street or prediction-market engines because those
@@ -317,6 +317,40 @@ def _latest_resolved_quarter(
     if not periods:
         raise ValueError(f"{company.value}: no resolved quarterly actuals")
     return max(periods, key=lambda period: period.sort_key)
+
+
+def _earliest_resolved_quarter(
+    company: Company,
+    actuals: dict[tuple[str, str], MetricObservation],
+) -> Period:
+    """Earliest filing-derived period for any routed challenge metric."""
+    if company is Company.HAS:
+        years = [
+            row.period.year
+            for row in actuals.values()
+            if row.metric_key in {"net_fees", "pre_exc_basic_eps", "pre_exc_operating_profit"}
+            and row.period.is_full_year
+        ]
+        if not years:
+            raise ValueError("hays: no resolved annual actuals")
+        return Period(year=min(years), quarter=4)
+
+    route_keys = {
+        key
+        for metric in submitted_specs(company)
+        for key in (
+            *ACTUAL_ROUTES[(company, metric.key)].exact_keys,
+            *ACTUAL_ROUTES[(company, metric.key)].proxy_keys,
+        )
+    }
+    periods = [
+        row.period
+        for row in actuals.values()
+        if row.metric_key in route_keys and row.period.quarter is not None
+    ]
+    if not periods:
+        raise ValueError(f"{company.value}: no resolved quarterly actuals")
+    return min(periods, key=lambda period: period.sort_key)
 
 
 def _resolve_actual(
@@ -990,7 +1024,7 @@ def _source_scorecards(rows: list[dict[str, Any]], minimum_n: int = 3) -> list[d
     )
 
 
-def build_backtest(*, as_of: date, quarters: int = 20) -> dict[str, Any]:
+def build_backtest(*, as_of: date, quarters: int | None = None) -> dict[str, Any]:
     companies: list[dict[str, Any]] = []
     all_metric_rows: list[dict[str, Any]] = []
     source_archive = _load_source_archive()
@@ -999,7 +1033,12 @@ def build_backtest(*, as_of: date, quarters: int = 20) -> dict[str, Any]:
     for company in COMPANY_ORDER:
         actuals = _actual_observations(company, as_of)
         end = _latest_resolved_quarter(company, actuals)
-        slots = _quarter_window(end, quarters)
+        if quarters is None:
+            start = _earliest_resolved_quarter(company, actuals)
+            slot_count = _quarter_index(end) - _quarter_index(start) + 1
+        else:
+            slot_count = quarters
+        slots = _quarter_window(end, slot_count)
         period_rows: list[dict[str, Any]] = []
         company_metric_rows: list[dict[str, Any]] = []
         specs = submitted_specs(company)
@@ -1036,7 +1075,7 @@ def build_backtest(*, as_of: date, quarters: int = 20) -> dict[str, Any]:
             "ticker": ticker(company),
             "name": display_name(company),
             "cadence": "annual challenge metrics" if company is Company.HAS else "quarterly",
-            "requestedPeriods": quarters,
+            "requestedPeriods": len(slots),
             "windowStart": slots[0].key,
             "windowEnd": slots[-1].key,
             "periods": period_rows,
@@ -1049,16 +1088,17 @@ def build_backtest(*, as_of: date, quarters: int = 20) -> dict[str, Any]:
     overall = _summary(all_metric_rows)
     overall.update(
         {
-            "requestedCompanyPeriods": len(COMPANY_ORDER) * quarters,
+            "requestedCompanyPeriods": sum(len(company["periods"]) for company in companies),
             "companies": len(COMPANY_ORDER),
             "metricsPerPeriod": 3,
         }
     )
     return {
         "meta": {
-            "title": "Five-year point-in-time forecast replay",
+            "title": "Full filing-history point-in-time forecast replay",
             "asOf": as_of.isoformat(),
             "quartersPerCompany": quarters,
+            "windowMode": "full_filing_history" if quarters is None else "fixed_quarters",
             "modelVersion": "period-engine-replay-v2",
             "modelScope": (
                 "Period-engine replay: filing/fundamental baseline, exact-metric Street consensus, "
@@ -1086,10 +1126,15 @@ def write_backtest(payload: dict[str, Any], output: Path = DEFAULT_OUTPUT) -> No
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--as-of", default=date.today().isoformat())
-    parser.add_argument("--quarters", type=int, default=20)
+    parser.add_argument(
+        "--quarters",
+        type=int,
+        default=None,
+        help="Optional trailing-quarter limit; omitted replays all recoverable filing periods.",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args(argv)
-    if args.quarters < 1:
+    if args.quarters is not None and args.quarters < 1:
         parser.error("--quarters must be positive")
     payload = build_backtest(as_of=date.fromisoformat(args.as_of), quarters=args.quarters)
     write_backtest(payload, args.output)

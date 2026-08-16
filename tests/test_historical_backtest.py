@@ -14,6 +14,11 @@ def replay() -> dict:
     return build_backtest(as_of=date(2026, 8, 16), quarters=20)
 
 
+@pytest.fixture(scope="module")
+def full_replay() -> dict:
+    return build_backtest(as_of=date(2026, 8, 16))
+
+
 def metric_rows(replay: dict) -> list[dict]:
     return [
         metric
@@ -36,6 +41,47 @@ def test_five_year_denominator_and_actual_coverage(replay: dict) -> None:
         for company in replay["companies"]
         for period in company["periods"]
     )
+
+
+def test_full_replay_uses_every_recoverable_filing_period(full_replay: dict) -> None:
+    assert full_replay["meta"]["windowMode"] == "full_filing_history"
+    assert full_replay["meta"]["quartersPerCompany"] is None
+    assert full_replay["summary"]["requestedCompanyPeriods"] == 139
+    assert full_replay["summary"]["requestedMetricSlots"] == 417
+    assert full_replay["summary"]["actualAvailable"] == 305
+    assert full_replay["summary"]["unavailable"] == 112
+    assert full_replay["summary"]["evaluated"] == 285
+
+    spans = {
+        company["ticker"]: (
+            company["windowStart"],
+            company["windowEnd"],
+            company["requestedPeriods"],
+        )
+        for company in full_replay["companies"]
+    }
+    assert spans == {
+        "HD": ("FY2013Q1", "FY2026Q1", 53),
+        "ADI": ("FY2020Q4", "FY2026Q2", 23),
+        "LSE:HAS": ("FY2018Q4", "FY2025Q4", 29),
+        "DE": ("FY2018Q1", "FY2026Q2", 34),
+    }
+
+
+def test_full_replay_evaluated_rows_remain_point_in_time(full_replay: dict) -> None:
+    corpus = Path("challenge/offline-data")
+    evaluated = [row for row in metric_rows(full_replay) if row["delta"] is not None]
+    assert len(evaluated) == 285
+    for row in evaluated:
+        cutoff = date.fromisoformat(row["forecast"]["trace"]["cutoff"])
+        actual_date = date.fromisoformat(row["actual"]["publishedAt"])
+        assert cutoff < actual_date
+        assert (corpus / row["actual"]["sourceFile"]).is_file()
+        assert row["forecast"]["trace"]["inputs"]
+        assert all(
+            date.fromisoformat(item["publishedAt"]) <= cutoff
+            for item in row["forecast"]["trace"]["inputs"]
+        )
 
 
 def test_every_evaluated_row_is_point_in_time_and_sourced(replay: dict) -> None:
