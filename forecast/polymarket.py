@@ -242,6 +242,25 @@ def parse_beat_market(
     if event is None:
         return None
     market = event["markets"][0]
+
+    # A concluded market prices the answer, not a forecast. The snapshot does
+    # contain closed earnings markets for periods that have since reported —
+    # HD 2026-02-24 and 2026-05-19, DE 2025-11-26 — and their books sit at
+    # 0.999/0.001 with umaResolutionStatus "resolved". Reading one at a cutoff
+    # after its event would score beautifully and be pure look-ahead, so the
+    # market must still be open at the cutoff to be usable. Today no historical
+    # snapshot directory exists, so this never fires; it is here because the
+    # protection should be a rule rather than an accident of the data on hand.
+    cutoff = as_of or date.today()
+    raw_end = event.get("endDate") or market.get("endDate")
+    if raw_end:
+        try:
+            end_date = date.fromisoformat(str(raw_end)[:10])
+        except ValueError:
+            end_date = None
+        if end_date is not None and end_date <= cutoff:
+            return None
+
     m = _STRIKE_RE.search(slug)
     if m is None:
         return None
