@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "forecast": ".venv/bin/python -m forecast.ml_hd --as-of 2026-08-16 && .venv/bin/python -m forecasting.backtest --as-of 2026-08-16 --street-only && .venv/bin/python -m forecast.run --as-of 2026-08-16 && .venv/bin/python -m forecast.historical_backtest --as-of 2026-08-16",
+    "forecast": ".venv/bin/python -m forecast.ml_hd --as-of 2026-08-16 && .venv/bin/python -m forecast.ml_hd_v2 --as-of 2026-08-16 && .venv/bin/python -m forecasting.backtest --as-of 2026-08-16 --street-only && .venv/bin/python -m forecast.run --as-of 2026-08-16 && .venv/bin/python -m forecast.historical_backtest --as-of 2026-08-16",
     "backtest:five-year": ".venv/bin/python -m forecast.historical_backtest --as-of 2026-08-16 --quarters 20",
     "test:forecast": ".venv/bin/python -m pytest -q tests forecasting/test_backtest.py",
     "setup:entry": "node scripts/setup-entry.mjs",

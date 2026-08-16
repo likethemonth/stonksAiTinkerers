@@ -66,13 +66,27 @@
     .engine-index { font: 10px var(--mono); color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
     .engine h3 { min-height: 56px; margin-top: 48px; font-size: 28px; }
     .engine p { font-size: 15px; }
-    .flow { display: grid; grid-template-columns: 1fr 48px 1fr 48px 1fr; align-items: stretch; margin-top: 38px; }
-    .flow-node { padding: 24px; border: 1px solid var(--rule); background: rgba(255,255,255,.2); }
-    .flow-node.final { color: var(--paper); background: var(--ink); border-color: var(--ink); }
-    .flow-arrow { display: grid; place-items: center; color: var(--muted); font: 22px var(--mono); }
-    .flow-label { color: var(--muted); font: 9px var(--mono); letter-spacing: .13em; text-transform: uppercase; }
-    .flow-node.final .flow-label { color: #aeb2b6; }
-    .flow-node strong { display: block; margin-top: 12px; font-size: 21px; }
+    .diagram { margin-top: 38px; border: 1px solid var(--rule); background: rgba(255, 255, 255, .28); }
+    .diagram-scroll { overflow-x: auto; padding: 26px 24px; }
+    .diagram svg { display: block; width: 100%; min-width: 1020px; height: auto; }
+    .diagram figcaption { padding: 16px 24px; border-top: 1px solid var(--rule); color: var(--muted); font: 10px/1.6 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    .d-box { fill: rgba(255, 255, 255, .55); stroke: var(--rule); }
+    .d-chip { fill: var(--paper-deep); stroke: var(--rule); }
+    .d-ink { fill: var(--ink); stroke: var(--ink); }
+    .d-eyebrow { fill: var(--muted); font: 9.5px var(--mono); letter-spacing: .13em; }
+    .d-title { fill: var(--ink); font: 700 15px var(--sans); letter-spacing: -.02em; }
+    .d-title-rev { fill: var(--paper); font: 700 15px var(--sans); letter-spacing: -.02em; }
+    .d-body { fill: var(--muted); font: 11.5px var(--sans); }
+    .d-body-rev { fill: #aeb2b6; font: 11.5px var(--sans); }
+    .d-eyebrow-rev { fill: #858990; font: 9.5px var(--mono); letter-spacing: .13em; }
+    .d-mono-rev { fill: var(--signal); font: 10.5px var(--mono); }
+    .d-mono { fill: var(--muted); font: 10.5px var(--mono); }
+    .d-warn { fill: var(--warn); font: 10.5px var(--mono); letter-spacing: .1em; }
+    .d-line { fill: none; stroke: var(--ink); stroke-width: 1.3; }
+    .d-line-dash { fill: none; stroke: var(--muted); stroke-width: 1.3; stroke-dasharray: 5 4; }
+    .d-gate { fill: none; stroke: var(--warn); stroke-width: 1.3; stroke-dasharray: 3 5; }
+    .d-node { fill: var(--ink); }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
     .formula { margin: 34px 0; padding: 24px; border-left: 5px solid var(--signal); background: var(--paper-deep); font: 15px/1.7 var(--mono); overflow-x: auto; }
     .audit-strip { display: grid; grid-template-columns: repeat(4, 1fr); margin: 36px 0; border: 1px solid var(--rule); }
     .audit-cell { padding: 24px; border-right: 1px solid var(--rule); }
@@ -104,8 +118,7 @@
       .engine { min-height: 0; border-right: 0; border-bottom: 1px solid var(--rule); }
       .engine:last-child { border-bottom: 0; }
       .engine h3 { min-height: 0; margin-top: 24px; }
-      .flow { grid-template-columns: 1fr; }
-      .flow-arrow { min-height: 46px; transform: rotate(90deg); }
+      .diagram-scroll { padding: 20px 16px; }
       .audit-strip { grid-template-columns: 1fr 1fr; }
       .audit-cell:nth-child(2) { border-right: 0; }
       .audit-cell:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
@@ -164,7 +177,7 @@
       <div class="dimension"><strong>1,139</strong><span>frozen documents</span><small>filings · calls · slides</small></div>
       <div class="dimension"><strong>12</strong><span>forecast targets</span><small>equal-weight metrics</small></div>
       <div class="dimension"><strong>3</strong><span>explicit engines</span><small>estimate or abstention</small></div>
-      <div class="dimension"><strong>61</strong><span>passing tests</span><small>documented forecast suite</small></div>
+      <div class="dimension"><strong>62</strong><span>passing tests</span><small>documented forecast suite</small></div>
       <div class="dimension"><strong>4/4</strong><span>valid workbooks</span><small>submission checker</small></div>
     </div>
 
@@ -195,15 +208,153 @@
               <p><strong>Inputs:</strong> snapshotted prices, strike, volume and parser self-tests.</p>
             </article>
           </div>
-
-          <div class="flow" aria-label="Forecast data flow">
-            <div class="flow-node"><span class="flow-label">Evidence</span><strong>Point-in-time observations</strong></div>
-            <div class="flow-arrow" aria-hidden="true">→</div>
-            <div class="flow-node"><span class="flow-label">Three lenses</span><strong>Estimate + sigma + provenance</strong></div>
-            <div class="flow-arrow" aria-hidden="true">→</div>
-            <div class="flow-node final"><span class="flow-label">Meta-forecast</span><strong>Workbook value + audit trail</strong></div>
-          </div>
         </div>
+      </div>
+
+      <div class="shell">
+        <figure class="diagram">
+            <div class="diagram-scroll">
+              <svg viewBox="0 0 1280 572" role="img" aria-labelledby="diagram-title diagram-desc">
+                <title id="diagram-title">Three-Lens Meta-Forecaster data flow</title>
+                <desc id="diagram-desc">Evidence selected at the point-in-time cutoff feeds deterministic extractors and three forecasting engines, which are combined by a source-overlap-aware meta-forecaster into four workbooks, a JSON audit and a run log.</desc>
+                <defs>
+                  <marker id="d-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M0 0 L10 5 L0 10 z" fill="#111112"></path>
+                  </marker>
+                  <marker id="d-arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                    <path d="M0 0 L10 5 L0 10 z" fill="#68655f"></path>
+                  </marker>
+                </defs>
+
+                <text class="d-eyebrow" x="4" y="20">01 · EVIDENCE AT CUTOFF</text>
+                <text class="d-eyebrow" x="256" y="20">02 · EXTRACTION</text>
+                <text class="d-eyebrow" x="506" y="20">03 · ENGINES</text>
+                <text class="d-eyebrow" x="826" y="20">04 · META</text>
+                <text class="d-eyebrow" x="1076" y="20">05 · OUTPUT</text>
+
+                <rect class="d-box" x="4" y="48" width="196" height="72"></rect>
+                <text class="d-title" x="20" y="76">Street calls</text>
+                <text class="d-body" x="20" y="96">Public and company-compiled</text>
+                <text class="d-body" x="20" y="110">consensus, each dated</text>
+
+                <rect class="d-box" x="4" y="140" width="196" height="72"></rect>
+                <text class="d-title" x="20" y="168">Frozen corpus</text>
+                <text class="d-body" x="20" y="188">1,139 filings, transcript</text>
+                <text class="d-body" x="20" y="202">sections and slide decks</text>
+
+                <rect class="d-box" x="4" y="268" width="196" height="72"></rect>
+                <text class="d-title" x="20" y="296">Physical drivers</text>
+                <text class="d-body" x="20" y="316">Census NAICS 444, AEM</text>
+                <text class="d-body" x="20" y="330">units, FRED, peer read-through</text>
+
+                <rect class="d-box" x="4" y="428" width="196" height="72"></rect>
+                <text class="d-title" x="20" y="456">Market snapshot</text>
+                <text class="d-body" x="20" y="476">Polymarket prices, strike</text>
+                <text class="d-body" x="20" y="490">and volume, stored by date</text>
+
+                <path class="d-gate" d="M226 32 V512"></path>
+                <text class="d-warn" x="218" y="272" text-anchor="middle" transform="rotate(-90 218 272)">CUTOFF --AS-OF 2026-08-16</text>
+
+                <rect class="d-box" x="256" y="140" width="196" height="140"></rect>
+                <text class="d-eyebrow" x="272" y="164">DETERMINISTIC</text>
+                <text class="d-title" x="272" y="186">Extractors</text>
+                <text class="d-body" x="272" y="206">Per-issuer table and regex</text>
+                <text class="d-body" x="272" y="220">shapes; unit and magnitude</text>
+                <rect class="d-chip" x="270" y="232" width="168" height="34"></rect>
+                <text class="d-mono" x="282" y="253">636 TYPED OBSERVATIONS</text>
+
+                <rect class="d-box" x="506" y="40" width="268" height="88"></rect>
+                <text class="d-eyebrow" x="522" y="64">ENGINE A</text>
+                <text class="d-title" x="522" y="86">Reconstructed Street</text>
+                <text class="d-body" x="522" y="106">Point-in-time source scoring,</text>
+                <text class="d-body" x="522" y="120">bias correction, shrinkage</text>
+
+                <rect class="d-box" x="506" y="150" width="268" height="250"></rect>
+                <text class="d-eyebrow" x="522" y="174">ENGINE B</text>
+                <text class="d-title" x="522" y="196">Fundamental research</text>
+                <text class="d-body" x="522" y="216">Guidance calibration, seasonal</text>
+                <text class="d-body" x="522" y="230">shares, regression bridges</text>
+                <rect class="d-chip" x="520" y="248" width="118" height="86"></rect>
+                <text class="d-mono" x="532" y="270">DRIVER</text>
+                <text class="d-mono" x="532" y="284">NOWCASTS</text>
+                <text class="d-body" x="532" y="306">Dated physical</text>
+                <text class="d-body" x="532" y="320">inputs</text>
+                <rect class="d-chip" x="646" y="248" width="118" height="86"></rect>
+                <text class="d-mono" x="658" y="270">VALIDATION-</text>
+                <text class="d-mono" x="658" y="284">GATED ML</text>
+                <text class="d-body" x="658" y="306">Must beat the</text>
+                <text class="d-body" x="658" y="320">seasonal naive</text>
+                <text class="d-warn" x="522" y="362">NESTED — NEITHER CASTS A SECOND VOTE</text>
+                <text class="d-body" x="522" y="384">Both draw on the same typed store.</text>
+
+                <rect class="d-box" x="506" y="420" width="268" height="88"></rect>
+                <text class="d-eyebrow" x="522" y="444">ENGINE C</text>
+                <text class="d-title" x="522" y="466">Prediction markets</text>
+                <text class="d-body" x="522" y="486">One quantile from a dated beat</text>
+                <text class="d-body" x="522" y="500">price — never a fabricated curve</text>
+                <rect class="d-chip" x="506" y="522" width="268" height="34"></rect>
+                <text class="d-warn" x="518" y="543">9 OF 12 TARGETS: NO MARKET → ABSTAIN</text>
+
+                <rect class="d-ink" x="826" y="150" width="196" height="250"></rect>
+                <text class="d-eyebrow-rev" x="842" y="176">META-FORECASTER</text>
+                <text class="d-title-rev" x="842" y="200">One accountable</text>
+                <text class="d-title-rev" x="842" y="218">number</text>
+                <text class="d-mono-rev" x="842" y="248">w = reliability</text>
+                <text class="d-mono-rev" x="842" y="264">    × overlap ÷ σ²</text>
+                <text class="d-body-rev" x="842" y="294">Inverse-variance base weight,</text>
+                <text class="d-body-rev" x="842" y="308">scaled by declared reliability</text>
+                <text class="d-body-rev" x="842" y="322">and a source-overlap penalty.</text>
+                <text class="d-body-rev" x="842" y="352">needs_review when engines</text>
+                <text class="d-body-rev" x="842" y="366">differ by more than 2σ.</text>
+
+                <rect class="d-box" x="1076" y="176" width="200" height="64"></rect>
+                <text class="d-title" x="1092" y="204">Four workbooks</text>
+                <text class="d-mono" x="1092" y="224">SUBMISSION/*.XLSX</text>
+
+                <rect class="d-box" x="1076" y="244" width="200" height="62"></rect>
+                <text class="d-title" x="1092" y="272">Machine audit</text>
+                <text class="d-mono" x="1092" y="292">FORECAST-AUDIT.JSON</text>
+
+                <rect class="d-box" x="1076" y="310" width="200" height="64"></rect>
+                <text class="d-title" x="1092" y="338">Narrative trail</text>
+                <text class="d-mono" x="1092" y="358">LOGS/RUN-&lt;TS&gt;.LOG</text>
+
+                <path class="d-line" d="M200 84 H506" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M200 176 H256" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M200 304 H506" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M200 464 H506" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M452 210 H506" marker-end="url(#d-arrow)"></path>
+                <path class="d-line-dash" d="M452 160 H478 V110 H506" marker-end="url(#d-arrow-muted)"></path>
+
+                <text class="d-mono" x="300" y="76">POINT-IN-TIME STREET CALLS</text>
+                <text class="d-mono" x="300" y="296">DATED DRIVER SNAPSHOTS</text>
+                <text class="d-mono" x="300" y="456">DATED MARKET PRICES</text>
+
+                <path class="d-line" d="M774 84 H800 V275"></path>
+                <path class="d-line" d="M774 464 H800 V275"></path>
+                <path class="d-line" d="M774 275 H800"></path>
+                <path class="d-line" d="M800 275 H826" marker-end="url(#d-arrow)"></path>
+                <circle class="d-node" cx="800" cy="275" r="3.5"></circle>
+
+                <path class="d-line" d="M1022 275 H1050"></path>
+                <path class="d-line" d="M1050 208 V342"></path>
+                <path class="d-line" d="M1050 208 H1076" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M1050 275 H1076" marker-end="url(#d-arrow)"></path>
+                <path class="d-line" d="M1050 342 H1076" marker-end="url(#d-arrow)"></path>
+                <circle class="d-node" cx="1050" cy="275" r="3.5"></circle>
+              </svg>
+            </div>
+            <figcaption>Solid = forecast path · Dashed = outcomes resolved by the cutoff, fed back to score each Street source · Every engine returns value, sigma, citations and reliability, or abstains</figcaption>
+          </figure>
+          <ol class="sr-only">
+            <li>Four evidence sources are selected only if dated at or before the cutoff: Street calls, the frozen 1,139-document corpus, physical driver snapshots and a Polymarket price snapshot.</li>
+            <li>The corpus passes through deterministic per-issuer extractors with unit and magnitude checks, producing 636 typed observations that each carry a period, units, source file and excerpt.</li>
+            <li>Engine A reconstructs the Street from dated calls, scored against outcomes that had already resolved at the cutoff.</li>
+            <li>Engine B builds the fundamental forecast from the typed store, with driver nowcasts and validation-gated machine learning nested inside it so neither becomes a second independent vote.</li>
+            <li>Engine C reads one quantile from a dated market price, and abstains on the nine of twelve targets with no defensible market.</li>
+            <li>The meta-forecaster weights each engine by reliability and a source-overlap penalty divided by predictive variance, and flags needs_review when engines disagree by more than two combined sigmas.</li>
+            <li>The run writes four workbooks, a machine-readable audit and a timestamped log.</li>
+          </ol>
       </div>
     </section>
 
@@ -260,7 +411,7 @@
                 <tr class="company-row"><td>ADI</td><td>Revenue</td><td class="num">3,996.71</td><td>USDm</td><td class="weights">Street 4% · Fundamental 96% · Market abstained</td></tr>
                 <tr><td>ADI</td><td>Adjusted diluted EPS</td><td class="num">3.43</td><td>USD / share</td><td class="weights">Street 19% · Fundamental 79% · Market 3%</td></tr>
                 <tr><td>ADI</td><td>Adjusted gross margin</td><td class="num">73.15</td><td>%</td><td class="weights">Street 1% · Fundamental 99% · Market abstained</td></tr>
-                <tr class="company-row"><td>Hays</td><td>Net fees</td><td class="num">888.62</td><td>GBPm</td><td class="weights">Street 1% · Fundamental 99% · Market abstained</td></tr>
+                <tr class="company-row"><td>Hays</td><td>Net fees</td><td class="num">903.49</td><td>GBPm</td><td class="weights">Street 1% · Fundamental 99% · Market abstained</td></tr>
                 <tr><td>Hays</td><td>Pre-exceptional basic EPS</td><td class="num">1.19</td><td>GBp</td><td class="weights">Street 60% · Fundamental 40% · Market abstained</td></tr>
                 <tr><td>Hays</td><td>Pre-exceptional operating profit</td><td class="num">45.39</td><td>GBPm</td><td class="weights">Street 56% · Fundamental 44% · Market abstained</td></tr>
                 <tr class="company-row"><td>DE</td><td>Worldwide net sales and revenues</td><td class="num">12,486.77</td><td>USDm</td><td class="weights">Street 9% · Fundamental 91% · Market abstained</td></tr>

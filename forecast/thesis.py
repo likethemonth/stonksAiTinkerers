@@ -263,7 +263,7 @@ def run_theses(
     client = _client()
     if client is None:
         outcome.notes.append(
-            "no ANTHROPIC_API_KEY configured; deterministic anchor used unchanged"
+            "no OPENAI_API_KEY configured; deterministic anchor used unchanged"
         )
         return outcome
     if not observations:
