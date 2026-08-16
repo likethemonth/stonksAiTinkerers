@@ -109,6 +109,43 @@ _GUIDANCE_RES: tuple[tuple[str, re.Pattern[str], Unit], ...] = (
     ),
 )
 
+#: HD did not always guide a range. In several years the same bullet carries a
+#: single "approximately X%" figure, and before this was extracted the engine
+#: could only replay fiscal years that happened to use range wording — which is
+#: why the system backtest saw one Home Depot period instead of several. The
+#: negative lookahead keeps these patterns off the range form above: a bound
+#: followed by "to" belongs to _GUIDANCE_RES, whether or not the percent sign
+#: sits before the "to".
+_NOT_A_RANGE = r"(?!\s*%?\s*to\s)"
+_GUIDANCE_POINT_RES: tuple[tuple[str, re.Pattern[str], Unit], ...] = (
+    (
+        "total_sales_growth_pct",
+        re.compile(
+            rf"Total sales growth of approximately (?P<mid>{_BOUND}){_NOT_A_RANGE}",
+            re.IGNORECASE,
+        ),
+        Unit.PERCENT,
+    ),
+    (
+        "comp_sales_pct",
+        re.compile(
+            rf"Comparable sales growth of approximately (?P<mid>{_BOUND})"
+            rf"{_NOT_A_RANGE}",
+            re.IGNORECASE,
+        ),
+        Unit.PERCENT,
+    ),
+    (
+        "adj_eps_growth_pct",
+        re.compile(
+            rf"Adjusted diluted earnings-per-share to (?P<direction>grow|decline) "
+            rf"approximately (?P<mid>{_BOUND}){_NOT_A_RANGE} from \$(?P<base>[\d.]+)",
+            re.IGNORECASE,
+        ),
+        Unit.PERCENT,
+    ),
+)
+
 _MAGNITUDE: dict[Unit, tuple[float, float]] = {
     Unit.USD_M: (1_000.0, 250_000.0),
     Unit.USD_PER_SHARE: (-50.0, 50.0),
@@ -247,10 +284,12 @@ def _fy_guidance(doc: Document) -> list[MetricObservation]:
     period = Period(year=fy, quarter=None)
 
     rows: list[MetricObservation] = []
+    ranged: set[str] = set()
     for metric_key, regex, units in _GUIDANCE_RES:
         match = regex.search(doc.text)
         if match is None:
             continue
+        ranged.add(metric_key)
         low = _bound_to_float(match.group("low"))
         high = _bound_to_float(match.group("high"))
         excerpt = re.sub(r"\s+", " ", match.group(0))
@@ -278,6 +317,53 @@ def _fy_guidance(doc: Document) -> list[MetricObservation]:
 
         # The EPS bullet quotes the prior-year base it grows from, which is the
         # level the growth rate has to be applied to.
+        if "base" in regex.groupindex and match.group("base"):
+            rows.append(
+                MetricObservation(
+                    company=Company.HD,
+                    metric_key="adj_eps",
+                    period=Period(year=fy - 1, quarter=None),
+                    value=float(match.group("base")),
+                    units=Unit.USD_PER_SHARE,
+                    kind=Kind.ACTUAL,
+                    as_of=doc.published_at,
+                    source_file=doc.rel_path,
+                    doc_type=doc.doc_type,
+                    excerpt=excerpt,
+                    extractor="hd.fy_guidance_base",
+                    note="prior-year full-year base quoted in the guidance bullet",
+                )
+            )
+
+    # Point guidance is a fallback, never an override: a metric guided as a
+    # range in this document keeps the range reading, so years that already
+    # extracted cleanly are untouched.
+    for metric_key, regex, units in _GUIDANCE_POINT_RES:
+        if metric_key in ranged:
+            continue
+        match = regex.search(doc.text)
+        if match is None:
+            continue
+        mid = _bound_to_float(match.group("mid"))
+        if "direction" in regex.groupindex and match.group("direction").lower() == "decline":
+            mid = -mid
+        excerpt = re.sub(r"\s+", " ", match.group(0))
+        rows.append(
+            MetricObservation(
+                company=Company.HD,
+                metric_key=metric_key,
+                period=period,
+                value=round(mid, 4),
+                units=units,
+                kind=Kind.GUIDE_MID,
+                as_of=doc.published_at,
+                source_file=doc.rel_path,
+                doc_type=doc.doc_type,
+                excerpt=excerpt,
+                extractor="hd.fy_guidance_point",
+                note="single-point full-year guidance; no range was published",
+            )
+        )
         if "base" in regex.groupindex and match.group("base"):
             rows.append(
                 MetricObservation(

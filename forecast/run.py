@@ -272,8 +272,13 @@ def _forecast_hd(
             if o.company is Company.HD and o.metric_key == metric_key
             and o.period == fy
         ]
-        mid = max((o for o in rows if o.kind is Kind.GUIDE_MID),
-                  key=lambda o: o.as_of, default=None)
+        # A published range states management's own uncertainty; a single point
+        # does not. Prefer the range reading for the year whenever one exists,
+        # so adding point-guidance extraction cannot move a year that already
+        # had a range.
+        mids = [o for o in rows if o.kind is Kind.GUIDE_MID]
+        ranged = [o for o in mids if o.extractor == "hd.fy_guidance"]
+        mid = max(ranged or mids, key=lambda o: o.as_of, default=None)
         if mid is None:
             return None
         low = max((o for o in rows if o.kind is Kind.GUIDE_LOW),

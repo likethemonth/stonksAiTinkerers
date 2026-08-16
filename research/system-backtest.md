@@ -1,15 +1,15 @@
 # System backtest — the real pipeline replayed on history
 
 **As of:** 2026-08-16  
-**Cells scored:** 63  
+**Cells scored:** 75  
 
 Each cell rebuilds the corpus as of the day before the actual was published, runs the same extractors, calibration, estimators and three-engine meta-forecaster the final command runs, and scores the result against a seasonal median-YoY benchmark using the competition's own formula (error ÷ benchmark error, floored, capped at 5.0). Below 1.00 is better.
 
 ## Headline
 
-- **Mean score 0.30**, median **0.15** across 63 held-out cells.
-- Beat the benchmark on **59 of 63** (94%).
-- Mean absolute error 34.43 versus benchmark 290.9.
+- **Mean score 0.37**, median **0.15** across 75 held-out cells.
+- Beat the benchmark on **68 of 75** (91%).
+- Mean absolute error 65.29 versus benchmark 373.6.
 
 ## By metric
 
@@ -18,17 +18,17 @@ Each cell rebuilds the corpus as of the day before the actual was published, run
 | ADI · Adjusted diluted EPS | 19 | **0.16** | 0.11 | 19/19 | 0.07436 | 0.8082 |
 | ADI · Adjusted gross margin | 19 | **0.48** | 0.25 | 18/19 | 0.8551 | 3.182 |
 | ADI · Revenue | 19 | **0.20** | 0.09 | 17/19 | 83.74 | 931.1 |
-| HD · Adjusted diluted EPS | 1 | **0.02** | 0.02 | 1/1 | 0.2639 | 11.26 |
-| HD · Comparable sales, total company | 1 | **0.53** | 0.53 | 1/1 | 0.4469 | 0.85 |
-| HD · Net sales | 1 | **1.41** | 1.41 | 0/1 | 529.3 | 376.4 |
+| HD · Adjusted diluted EPS | 5 | **0.76** | 0.95 | 4/5 | 0.1752 | 2.288 |
+| HD · Comparable sales, total company | 5 | **0.52** | 0.28 | 4/5 | 0.6213 | 2.42 |
+| HD · Net sales | 5 | **0.96** | 0.26 | 3/5 | 650.8 | 2012 |
 | LSE:HAS · Net fees | 1 | **0.15** | 0.15 | 1/1 | 18.7 | 127.1 |
 | LSE:HAS · Pre-exceptional basic EPS | 1 | **0.39** | 0.39 | 1/1 | 0.7724 | 1.968 |
 | LSE:HAS · Pre-exceptional operating profit | 1 | **0.27** | 0.27 | 1/1 | 10.8 | 40.69 |
 
 ## Coverage and abstentions
 
-- `engine_failed`: 72 cells
-- `scored`: 63 cells
+- `engine_failed`: 60 cells
+- `scored`: 75 cells
 - **Deere & Company excluded.** The Deere engine is an AEM units-to-dollars driver chain anchored to a dated snapshot, not to a fiscal period. No historical cutoff carries the driver observations it consumes, so replaying it would score a model that did not exist at the time.
 
 ## Per-cell results
@@ -92,7 +92,19 @@ Each cell rebuilds the corpus as of the day before the actual was published, run
 | ADI | FY2026Q2 | Adjusted diluted EPS | 2026-05-19 | 3.09 | 2.974 | 2.072 | 0.11 |
 | ADI | FY2026Q2 | Adjusted gross margin | 2026-05-19 | 73 | 72.33 | 69.95 | 0.22 |
 | ADI | FY2026Q2 | Revenue | 2026-05-19 | 3,623 | 3,555 | 2,887 | 0.09 |
-| HD | FY2026Q1 | Adjusted diluted EPS | 2026-05-18 | 3.43 | 3.694 | 14.69 | 0.02 |
+| HD | FY2025Q1 | Adjusted diluted EPS | 2025-05-19 | 3.45 | 3.479 | 3.42 | 0.95 |
+| HD | FY2025Q1 | Comparable sales, total company | 2025-05-19 | -0.3 | 1.013 | -5.05 | 0.28 |
+| HD | FY2025Q1 | Net sales | 2025-05-19 | 3.986e+04 | 3.875e+04 | 3.564e+04 | 0.26 |
+| HD | FY2025Q2 | Adjusted diluted EPS | 2025-08-18 | 4.58 | 4.624 | 4.372 | 0.21 |
+| HD | FY2025Q2 | Comparable sales, total company | 2025-08-18 | 1 | 0.9802 | -3.1 | 0.00 |
+| HD | FY2025Q2 | Net sales | 2025-08-18 | 4.528e+04 | 4.559e+04 | 4.287e+04 | 0.13 |
+| HD | FY2025Q3 | Adjusted diluted EPS | 2025-11-17 | 3.62 | 3.798 | 3.512 | 1.65 |
+| HD | FY2025Q3 | Comparable sales, total company | 2025-11-17 | 0.2 | 0.971 | 0.45 | 1.54 |
+| HD | FY2025Q3 | Net sales | 2025-11-17 | 4.135e+04 | 4.078e+04 | 4.132e+04 | 2.75 |
+| HD | FY2025Q4 | Adjusted diluted EPS | 2026-02-23 | 2.58 | 2.942 | 2.944 | 0.99 |
+| HD | FY2025Q4 | Comparable sales, total company | 2026-02-23 | 0.4 | 0.9555 | 2.55 | 0.26 |
+| HD | FY2025Q4 | Net sales | 2026-02-23 | 3.82e+04 | 3.894e+04 | 4.123e+04 | 0.24 |
+| HD | FY2026Q1 | Adjusted diluted EPS | 2026-05-18 | 3.43 | 3.694 | 14.16 | 0.02 |
 | HD | FY2026Q1 | Comparable sales, total company | 2026-05-18 | 0.6 | 1.047 | 1.45 | 0.53 |
 | HD | FY2026Q1 | Net sales | 2026-05-18 | 4.176e+04 | 4.124e+04 | 4.139e+04 | 1.41 |
 | LSE:HAS | FY2025 | Net fees | 2025-08-20 | 972.4 | 991.1 | 1,099 | 0.15 |

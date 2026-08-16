@@ -9,12 +9,12 @@
   },
   "summary": {
     "overall": {
-      "n": 63,
-      "meanScore": 0.29749477712810807,
-      "medianScore": 0.14506389893799476,
-      "beat": 59,
-      "meanSystemError": 34.42817312322519,
-      "meanBaselineError": 290.87590993034684
+      "n": 75,
+      "meanScore": 0.3734774999560982,
+      "medianScore": 0.15087112845223516,
+      "beat": 68,
+      "meanSystemError": 65.29108539687664,
+      "meanBaselineError": 373.59836847449816
     },
     "byMetric": {
       "ADI \u00b7 Adjusted diluted EPS": {
@@ -42,28 +42,28 @@
         "meanBaselineError": 931.1125336175045
       },
       "HD \u00b7 Adjusted diluted EPS": {
-        "n": 1,
-        "meanScore": 0.023438859184522126,
-        "medianScore": 0.023438859184522126,
-        "beat": 1,
-        "meanSystemError": 0.26392155441771914,
-        "meanBaselineError": 11.26
+        "n": 5,
+        "meanScore": 0.7642819841797677,
+        "medianScore": 0.9483523799866019,
+        "beat": 4,
+        "meanSystemError": 0.17524427812557936,
+        "meanBaselineError": 2.288149970919648
       },
       "HD \u00b7 Comparable sales, total company": {
-        "n": 1,
-        "meanScore": 0.5257310516896724,
-        "medianScore": 0.5257310516896724,
-        "beat": 1,
-        "meanSystemError": 0.44687139393622155,
-        "meanBaselineError": 0.85
+        "n": 5,
+        "meanScore": 0.5214810865247765,
+        "medianScore": 0.27646757549256185,
+        "beat": 4,
+        "meanSystemError": 0.6212845563935043,
+        "meanBaselineError": 2.42
       },
       "HD \u00b7 Net sales": {
-        "n": 1,
-        "meanScore": 1.4063490772187102,
-        "medianScore": 1.4063490772187102,
-        "beat": 0,
-        "meanSystemError": 529.332600731017,
-        "meanBaselineError": 376.38777548591315
+        "n": 5,
+        "meanScore": 0.9590690344413483,
+        "medianScore": 0.26267138603848034,
+        "beat": 3,
+        "meanSystemError": 650.7834495018673,
+        "meanBaselineError": 2011.9304671213656
       },
       "LSE:HAS \u00b7 Net fees": {
         "n": 1,
@@ -91,8 +91,8 @@
       }
     },
     "counts": {
-      "engine_failed": 72,
-      "scored": 63
+      "engine_failed": 60,
+      "scored": 75
     }
   },
   "cells": [
@@ -2425,16 +2425,18 @@
       "actual": 3.45,
       "actual_published": "2025-05-20",
       "cutoff": "2025-05-19",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 3.4785373409260387,
+      "baseline": 3.4199085049731814,
+      "system_error": 0.028537340926038546,
+      "baseline_error": 0.030091495026818738,
+      "score": 0.9483523799866019,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 3.48 (sigma 0.44, reliability 85%, overlap penalty 100%, weight 100%) -> 3.48.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2446,16 +2448,18 @@
       "actual": -0.3,
       "actual_published": "2025-05-20",
       "cutoff": "2025-05-19",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 1.0132209835896688,
+      "baseline": -5.05,
+      "system_error": 1.3132209835896689,
+      "baseline_error": 4.75,
+      "score": 0.27646757549256185,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 1.01 (sigma 0.50, reliability 85%, overlap penalty 100%, weight 100%) -> 1.01.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2467,16 +2471,18 @@
       "actual": 39856.0,
       "actual_published": "2025-05-20",
       "cutoff": "2025-05-19",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 38749.54939932256,
+      "baseline": 35643.70029973745,
+      "system_error": 1106.450600677439,
+      "baseline_error": 4212.299700262549,
+      "score": 0.26267138603848034,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 38,749.55 (sigma 2,241.44, reliability 85%, overlap penalty 100%, weight 100%) -> 38,749.55.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2488,16 +2494,18 @@
       "actual": 4.58,
       "actual_published": "2025-08-20",
       "cutoff": "2025-08-18",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 4.623528342293414,
+      "baseline": 4.371552507463978,
+      "system_error": 0.04352834229341429,
+      "baseline_error": 0.20844749253602224,
+      "score": 0.20882161624415832,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 4.62 (sigma 0.23, reliability 85%, overlap penalty 100%, weight 100%) -> 4.62.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2509,16 +2517,18 @@
       "actual": 1.0,
       "actual_published": "2025-08-19",
       "cutoff": "2025-08-18",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 0.9801962372850844,
+      "baseline": -3.0999999999999996,
+      "system_error": 0.019803762714915574,
+      "baseline_error": 4.1,
+      "score": 0.004830186028028189,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 0.98 (sigma 0.50, reliability 85%, overlap penalty 100%, weight 100%) -> 0.98.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2530,16 +2540,18 @@
       "actual": 45277.0,
       "actual_published": "2025-08-20",
       "cutoff": "2025-08-18",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 45588.14405474878,
+      "baseline": 42873.4526655005,
+      "system_error": 311.14405474878004,
+      "baseline_error": 2403.547334499497,
+      "score": 0.12945201880684873,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 45,588.14 (sigma 1,208.78, reliability 85%, overlap penalty 100%, weight 100%) -> 45,588.14.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2551,16 +2563,18 @@
       "actual": 3.62,
       "actual_published": "2025-11-18",
       "cutoff": "2025-11-17",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 3.7983956329796746,
+      "baseline": 3.5115804429405,
+      "system_error": 0.17839563297967453,
+      "baseline_error": 0.1084195570594999,
+      "score": 1.6454193119583789,
+      "beat_baseline": false,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 3.80 (sigma 0.11, reliability 85%, overlap penalty 100%, weight 100%) -> 3.80.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2572,16 +2586,18 @@
       "actual": 0.2,
       "actual_published": "2025-11-18",
       "cutoff": "2025-11-17",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 0.9709948757613844,
+      "baseline": 0.44999999999999996,
+      "system_error": 0.7709948757613845,
+      "baseline_error": 0.24999999999999994,
+      "score": 1.541989751522769,
+      "beat_baseline": false,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 0.97 (sigma 0.49, reliability 85%, overlap penalty 100%, weight 100%) -> 0.97.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2593,16 +2609,18 @@
       "actual": 41352.0,
       "actual_published": "2025-11-18",
       "cutoff": "2025-11-17",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 40782.65587521699,
+      "baseline": 41317.349730816044,
+      "system_error": 569.3441247830124,
+      "baseline_error": 34.65026918395597,
+      "score": 2.7536473436980673,
+      "beat_baseline": false,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 40,782.66 (sigma 828.46, reliability 85%, overlap penalty 100%, weight 100%) -> 40,782.66.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2614,16 +2632,18 @@
       "actual": 2.58,
       "actual_published": "2026-02-24",
       "cutoff": "2026-02-23",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 2.9418385200110504,
+      "baseline": 2.9439422286110695,
+      "system_error": 0.3618385200110503,
+      "baseline_error": 0.3639422286110694,
+      "score": 0.9942196633568807,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 2.94 (sigma 0.18, reliability 85%, overlap penalty 100%, weight 100%) -> 2.94.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2635,16 +2655,18 @@
       "actual": 0.4,
       "actual_published": "2026-02-24",
       "cutoff": "2026-02-23",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 0.9555317659653312,
+      "baseline": 2.55,
+      "system_error": 0.5555317659653312,
+      "baseline_error": 2.15,
+      "score": 0.2583868678908517,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 0.96 (sigma 0.49, reliability 85%, overlap penalty 100%, weight 100%) -> 0.96.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2656,16 +2678,18 @@
       "actual": 38198.0,
       "actual_published": "2026-02-24",
       "cutoff": "2026-02-23",
-      "system": null,
-      "baseline": null,
-      "system_error": null,
-      "baseline_error": null,
-      "score": null,
-      "beat_baseline": null,
-      "system_engines": [],
-      "system_reasoning": "",
-      "status": "engine_failed",
-      "note": "RuntimeError: HD: full-year guidance not found"
+      "system": 38935.64586656909,
+      "baseline": 41230.76725617491,
+      "system_error": 737.645866569088,
+      "baseline_error": 3032.767256174913,
+      "score": 0.24322534644463487,
+      "beat_baseline": true,
+      "system_engines": [
+        "fundamental"
+      ],
+      "system_reasoning": "Meta-forecast: fundamental 38,935.65 (sigma 1,514.61, reliability 85%, overlap penalty 100%, weight 100%) -> 38,935.65.",
+      "status": "scored",
+      "note": null
     },
     {
       "company": "Home Depot",
@@ -2678,10 +2702,10 @@
       "actual_published": "2026-05-19",
       "cutoff": "2026-05-18",
       "system": 3.6939215544177193,
-      "baseline": 14.69,
+      "baseline": 14.159849081364829,
       "system_error": 0.26392155441771914,
-      "baseline_error": 11.26,
-      "score": 0.023438859184522126,
+      "baseline_error": 10.72984908136483,
+      "score": 0.024596949352818715,
       "beat_baseline": true,
       "system_engines": [
         "fundamental"
