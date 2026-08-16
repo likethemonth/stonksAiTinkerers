@@ -327,7 +327,16 @@
             "published": "2024-11-26 \u2192 2026-05-20",
             "source": "challenge/offline-data/analog-devices/filings/*-8k*.md"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       },
       "driver": {
         "label": "Driver \u2014 peer read-through",
@@ -338,8 +347,57 @@
             "unit": "USDm",
             "value": 4009,
             "why": "Guide-independent peer read-through: TXN June-qtr analog +26% y/y (2 of ADI's 3 fiscal months overlap) and TXN Sept-qtr guide +8.1% q/q vs ADI implied +7.6% - the cycle ran at/above the slope ADI assumed. Beat of +2.8% on 3,900 base, sigma 1.2pp.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q1",
+                "actual": 2423.0,
+                "predicted": 2392.279,
+                "err": 1.27
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 2640.0,
+                "predicted": 2564.0246,
+                "err": 2.88
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 2880.0,
+                "predicted": 2872.5587,
+                "err": 0.26
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 3076.0,
+                "predicted": 3119.538,
+                "err": 1.42
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 3160.0,
+                "predicted": 3184.1325,
+                "err": 0.76
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 3623.0,
+                "predicted": 3583.099,
+                "err": 1.1
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mape",
+              "score": 1.28,
+              "threshold": 2.0,
+              "n": 6,
+              "naive": 18.78,
+              "postScore": 0.93,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": true
+            },
             "final": 3996.71
           },
           {
@@ -347,8 +405,57 @@
             "unit": "USD / share",
             "value": 3.51,
             "why": "P&L flow-through of driver revenue: dRev q/q = 4,009-3,623 = +386; incremental adj op margin 65% (recent 2 qtrs ran ~80%, structural ~50%; half-shrunk to 65%) -> adj OI 1,774+251 = 2,025; nonop 57; tax 12.5% -> NI 1,722; / 490M shares = 3.51.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q1",
+                "actual": 1.63,
+                "predicted": 1.5959,
+                "err": 2.09
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 1.85,
+                "predicted": 1.7858,
+                "err": 3.47
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 2.05,
+                "predicted": 2.0518,
+                "err": 0.09
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 2.26,
+                "predicted": 2.3558,
+                "err": 4.24
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 2.46,
+                "predicted": 2.3634,
+                "err": 3.93
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 3.09,
+                "predicted": 3.0017,
+                "err": 2.86
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mape",
+              "score": 2.78,
+              "threshold": 5.0,
+              "n": 6,
+              "naive": 25.56,
+              "postScore": 3.4,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": true
+            },
             "final": 3.43
           },
           {
@@ -356,8 +463,57 @@
             "unit": "%",
             "value": 72.9,
             "why": "Driver lens adds little: utilization already maxed (physical constraint), mix tailwind from data center (above corp-avg GM) growing fastest. Direction +, magnitude unresolvable from external data; carries the anchor-lens 72.9.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q1",
+                "actual": 68.8,
+                "predicted": 67.7,
+                "err": 1.1
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 69.4,
+                "predicted": 69.0,
+                "err": 0.4
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 69.2,
+                "predicted": 69.9,
+                "err": 0.7
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 69.8,
+                "predicted": 69.8,
+                "err": 0.0
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 71.2,
+                "predicted": 70.2,
+                "err": 1.0
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 73.0,
+                "predicted": 73.0,
+                "err": 0.0
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mae",
+              "score": 0.53,
+              "threshold": 1.0,
+              "n": 6,
+              "naive": 2.02,
+              "postScore": 0.5,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": true
+            },
             "final": 73.15
           }
         ],
@@ -365,7 +521,9 @@
           "TXN reported its June quarter on 22 Jul 2026 \u2014 after ADI guided on 20 May, and overlapping two of ADI's three fiscal-Q3 months.",
           "TXN analog revenue +26% y/y; TXN guided the next quarter +8.1% q/q, above the +7.6% ADI's own outlook implies. The cycle ran at or above the slope ADI assumed.",
           "Beat term +2.8 \u00b11.2pp applied to the $3,900M guide base \u2192 $4,009M.",
-          "EPS flow-through: \u0394Revenue +386 q/q \u00d7 65% incremental adjusted operating margin (recent two quarters ran ~80%, structural ~50%, half-shrunk) \u2192 adj operating income 2,025; less 57 nonop; 12.5% tax; 490M shares \u2192 $3.51."
+          "EPS flow-through: \u0394Revenue +386 q/q \u00d7 65% incremental adjusted operating margin (recent two quarters ran ~80%, structural ~50%, half-shrunk) \u2192 adj operating income 2,025; less 57 nonop; 12.5% tax; 490M shares \u2192 $3.51.",
+          "Backtest protocol: for each historical quarter a packet was built holding only data published before that quarter's results (same extractors and cutoffs as the five-year replay), with the company, all dates and fiscal labels stripped and every currency value multiplied by an undisclosed constant. A fresh, tool-less LLM session answered each of the 6 packets; predictions were de-scaled and scored against the filing actuals under the ML lens's pre-declared gates.",
+          "Leakage caveat, measured not assumed: sessions had to disclose any identity guess, and several recognized the company from COVID-era growth fingerprints; a few in-training quarters show recall-level errors. The gate bar therefore also reports the error on quarters reported AFTER the predictor's training window (post-Jan-2026) \u2014 those cannot be memorized and carry the honest signal."
         ],
         "data": [
           {
@@ -379,8 +537,27 @@
             "value": "8.1 % q/q ($5.65-6.15B, mid $5.90B vs $5.46B)",
             "published": "2026-07-22",
             "source": "https://www.stocktitan.net/sec-filings/TXN/8-k-texas-instruments-inc-reports-material-event-e3f3c5710542.html"
+          },
+          {
+            "name": "Blinded point-in-time packets (prompt + world-view manifest per quarter)",
+            "published": "cutoffs = day before each historical print",
+            "source": "research/llm-replay/packets/"
+          },
+          {
+            "name": "Fresh-session LLM responses (one session per packet) and scored series",
+            "published": "2026-08-16",
+            "source": "research/llm-replay/llm-driver-backtest.json"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 3,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": 0.58,
+          "mean_mape": 2.03,
+          "mean_mae": 0.53,
+          "all_within_gate": true
+        }
       },
       "ml": {
         "label": "ML \u2014 guidance realisation",
@@ -706,7 +883,16 @@
             "published": "2020-11-24 \u2192 2026-05-20",
             "source": "data/observations/analog-devices.json (375 observations)"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 3,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": 0.76,
+          "mean_mape": 2.41,
+          "mean_mae": 0.89,
+          "all_within_gate": true
+        }
       },
       "market": {
         "label": "Market \u2014 Polymarket",
@@ -717,8 +903,28 @@
             "unit": "USD / share",
             "value": 3.47,
             "why": "Market prices P(actual > 3.33) = 0.94 ($958 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 3.47 under the MID surprise-sigma 0.09; scenario range 3.408-3.548 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q4",
+                "actual": 100,
+                "predicted": 93.0,
+                "err": 7.0
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 100,
+                "predicted": 88.0,
+                "err": 12.0
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 100,
+                "predicted": 94.5,
+                "err": 5.5
+              }
+            ],
+            "seriesLabel": "Resolved beat-markets: day-before price vs outcome (100 = beat happened; error in probability points)",
+            "predLabel": "Market P(beat), day before",
             "final": 3.43
           }
         ],
@@ -726,15 +932,64 @@
           "Market: 'Will Analog Devices beat quarterly earnings?', strike $3.33 (the Street consensus at creation).",
           "Price implies P(actual > 3.33) = 94% on $958 of volume.",
           "Implied mean = strike + \u03c3\u00b7\u03a6\u207b\u00b9(p) = 3.33 + 0.09 \u00d7 1.555 = $3.47 under the mid surprise-sigma scenario.",
-          "Used as an external critic, not averaged in blind: our model's implied beat probability was 93% against the market's 94%, so the lenses agreed and no research flag was raised."
+          "Used as an external critic, not averaged in blind: our model's implied beat probability was 93% against the market's 94%, so the lenses agreed and no research flag was raised.",
+          "Historical reliability: Polymarket has listed 4 quarterly beat-markets for this name (series began Nov 2025); 3 have resolved, 3 of them YES. Day-before Brier 0.0075. Across all nine resolved markets the day-before Brier is 0.1 against 0.0988 for always guessing the base rate \u2014 with beats this routine, the market's information is mostly in the strike (the leaked consensus), not the price.",
+          "The blinded LLM replay answered the same beat questions from its anonymized packets: Brier 0.0228 vs the market's 0.0075 on the identical 3 events."
         ],
         "data": [
           {
             "name": "Polymarket ADI Q3 non-GAAP EPS market",
             "published": "2026-08-16",
             "source": "forecast/data/polymarket/2026-08-16/adi-quarterly-earnings-nongaap-eps-08-19-2026-3pt33.json"
+          },
+          {
+            "name": "Resolved beat-market snapshots + 12h CLOB price history",
+            "published": "2025-11-18 \u2192 2026-08-16",
+            "source": "forecast/data/polymarket/history/ \u00b7 research/polymarket-reliability.json"
           }
-        ]
+        ],
+        "brier": {
+          "market": 0.0075,
+          "baseRate": 0.0988,
+          "n": 3,
+          "llm": 0.0228
+        },
+        "extraSeries": [
+          {
+            "label": "Blinded LLM replay on the same events: P(beat) vs outcome",
+            "unit": "%",
+            "predLabel": "LLM P(beat), day-before packet",
+            "series": [
+              {
+                "period": "FY2025Q4",
+                "actual": 100,
+                "predicted": 87.0,
+                "err": 13.0
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 100,
+                "predicted": 83.0,
+                "err": 17.0
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 100,
+                "predicted": 85.0,
+                "err": 15.0
+              }
+            ]
+          }
+        ],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 1,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       }
     }
   },
@@ -793,7 +1048,16 @@
             "published": "2025-08-19",
             "source": "challenge/offline-data/home-depot/filings/2025-08-19__hd-us-20250819-q2-8k__143666.md"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       },
       "driver": {
         "label": "Driver \u2014 category nowcast",
@@ -804,8 +1068,69 @@
             "unit": "USDm",
             "value": 47770,
             "why": "Q2-25 base 45,283 x (1 + 1.9 driver comps + 3.3 GMS inorganic [Q1-observed total-vs-comp gap] + 0.3 new stores) = 47,774.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2024Q2",
+                "actual": 43175.0,
+                "predicted": 41333.8938,
+                "err": 4.26
+              },
+              {
+                "period": "FY2024Q3",
+                "actual": 40217.0,
+                "predicted": 40002.8023,
+                "err": 0.53
+              },
+              {
+                "period": "FY2024Q4",
+                "actual": 39704.0,
+                "predicted": 39372.2853,
+                "err": 0.84
+              },
+              {
+                "period": "FY2025Q1",
+                "actual": 39856.0,
+                "predicted": 39792.63,
+                "err": 0.16
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 45277.0,
+                "predicted": 45271.1223,
+                "err": 0.01
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 41352.0,
+                "predicted": 41333.8938,
+                "err": 0.04
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 38198.0,
+                "predicted": 38671.7108,
+                "err": 1.24
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 41765.0,
+                "predicted": 42314.6981,
+                "err": 1.32
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mape",
+              "score": 1.05,
+              "threshold": 2.0,
+              "n": 8,
+              "naive": 5.47,
+              "postScore": 1.28,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": true
+            },
             "final": 47105.31
           },
           {
@@ -813,8 +1138,69 @@
             "unit": "USD / share",
             "value": 4.74,
             "why": "Sales-to-EPS wedge calibrated on Q1 FY26 (sales +4.8% vs adj EPS -3.7% = -8.5pp wedge from GMS dilution/interest/mix), carried at half weight: EPS growth = +5.5 - 4.25 = +1.25% -> 4.68 x 1.0125 = 4.74.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2024Q2",
+                "actual": 4.6,
+                "predicted": 4.3436,
+                "err": 5.57
+              },
+              {
+                "period": "FY2024Q3",
+                "actual": 3.67,
+                "predicted": 3.699,
+                "err": 0.79
+              },
+              {
+                "period": "FY2024Q4",
+                "actual": 3.02,
+                "predicted": 2.9985,
+                "err": 0.71
+              },
+              {
+                "period": "FY2025Q1",
+                "actual": 3.45,
+                "predicted": 3.4468,
+                "err": 0.09
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 4.58,
+                "predicted": 4.5818,
+                "err": 0.04
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 3.62,
+                "predicted": 3.657,
+                "err": 1.02
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 2.58,
+                "predicted": 2.382,
+                "err": 7.68
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 3.3,
+                "predicted": 3.4748,
+                "err": 5.3
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet (scored on GAAP EPS)",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mape",
+              "score": 2.65,
+              "threshold": 5.0,
+              "n": 8,
+              "naive": 5.02,
+              "postScore": 6.49,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": true
+            },
             "final": 4.64
           },
           {
@@ -822,8 +1208,69 @@
             "unit": "%",
             "value": 1.9,
             "why": "Census NAICS 444 nowcast: quarter-window category +5.2% y/y (Jul +5.9 accelerating vs +4.6 YTD) minus 3.3pp category-to-comp wedge calibrated on Q1 (category +3.9 vs HD comps +0.6). Produced by forecast/drivers.py.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2024Q2",
+                "actual": -3.3,
+                "predicted": -3.4,
+                "err": 0.1
+              },
+              {
+                "period": "FY2024Q3",
+                "actual": -1.3,
+                "predicted": -1.3,
+                "err": 0.0
+              },
+              {
+                "period": "FY2024Q4",
+                "actual": 0.8,
+                "predicted": 0.5,
+                "err": 0.3
+              },
+              {
+                "period": "FY2025Q1",
+                "actual": -0.3,
+                "predicted": -0.2,
+                "err": 0.1
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 1.0,
+                "predicted": 1.0,
+                "err": 0.0
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 0.2,
+                "predicted": 0.2,
+                "err": 0.0
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 0.4,
+                "predicted": 1.0,
+                "err": 0.6
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 0.6,
+                "predicted": 2.8,
+                "err": 2.2
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mae",
+              "score": 0.41,
+              "threshold": 0.8,
+              "n": 8,
+              "naive": 2.12,
+              "postScore": 1.4,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": true
+            },
             "final": 1.13
           }
         ],
@@ -832,7 +1279,9 @@
           "Category-to-comp wedge calibrated on Q1 FY26: category +3.9% against HD's printed comps +0.6% \u21d2 \u22123.3pp. The wedge is structural (category scope plus pro-distributor inflation), so it is carried at full weight.",
           "Comps = 5.2 \u2212 3.3 = +1.9%.",
           "Net sales = 45,283 \u00d7 (1 + 1.9% comps + 3.3% GMS + 0.3% stores) = $47,770M.",
-          "EPS: sales-to-EPS wedge calibrated on Q1 (sales +4.8% vs adjusted EPS \u22123.7% = \u22128.5pp from GMS dilution, acquisition interest and mix), carried at half weight \u2192 +1.25% growth \u2192 $4.74."
+          "EPS: sales-to-EPS wedge calibrated on Q1 (sales +4.8% vs adjusted EPS \u22123.7% = \u22128.5pp from GMS dilution, acquisition interest and mix), carried at half weight \u2192 +1.25% growth \u2192 $4.74.",
+          "Backtest protocol: for each historical quarter a packet was built holding only data published before that quarter's results (same extractors and cutoffs as the five-year replay), with the company, all dates and fiscal labels stripped and every currency value multiplied by an undisclosed constant. A fresh, tool-less LLM session answered each of the 8 packets; predictions were de-scaled and scored against the filing actuals under the ML lens's pre-declared gates.",
+          "Leakage caveat, measured not assumed: sessions had to disclose any identity guess, and several recognized the company from COVID-era growth fingerprints; a few in-training quarters show recall-level errors. The gate bar therefore also reports the error on quarters reported AFTER the predictor's training window (post-Jan-2026) \u2014 those cannot be memorized and carry the honest signal."
         ],
         "data": [
           {
@@ -846,8 +1295,27 @@
             "value": "4.6 % y/y",
             "published": "2026-08-14",
             "source": "https://www.census.gov/retail/sales.html"
+          },
+          {
+            "name": "Blinded point-in-time packets (prompt + world-view manifest per quarter)",
+            "published": "cutoffs = day before each historical print",
+            "source": "research/llm-replay/packets/"
+          },
+          {
+            "name": "Fresh-session LLM responses (one session per packet) and scored series",
+            "published": "2026-08-16",
+            "source": "research/llm-replay/llm-driver-backtest.json"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 3,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": 0.52,
+          "mean_mape": 1.85,
+          "mean_mae": 0.41,
+          "all_within_gate": true
+        }
       },
       "ml": {
         "label": "ML \u2014 share of category",
@@ -1003,7 +1471,16 @@
             "published": "2024-06-18, 2025-09",
             "source": "forecast/ml_hd_v2.py ACQ_STEP_USDM"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 3,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": 0.51,
+          "mean_mape": 2.29,
+          "mean_mae": 0.4,
+          "all_within_gate": true
+        }
       },
       "market": {
         "label": "Market \u2014 Polymarket",
@@ -1014,23 +1491,92 @@
             "unit": "USD / share",
             "value": 4.769,
             "why": "Market prices P(actual > 4.73) = 0.79 ($4,360 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 4.769 under the MID surprise-sigma 0.05; scenario range 4.754-4.801 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q3",
+                "actual": 0,
+                "predicted": 62.0,
+                "err": 62.0
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 100,
+                "predicted": 79.5,
+                "err": 20.5
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 100,
+                "predicted": 60.0,
+                "err": 40.0
+              }
+            ],
+            "seriesLabel": "Resolved beat-markets: day-before price vs outcome (100 = beat happened; error in probability points)",
+            "predLabel": "Market P(beat), day before",
             "final": 4.64
           }
         ],
         "derivation": [
           "Market: 'Will Home Depot beat quarterly earnings?', strike $4.73 (Street consensus at creation).",
           "Price implies P(actual > 4.73) = 78.5% on $4,360 of volume \u2014 the most liquid of the three markets.",
-          "Implied mean = 4.73 + 0.05 \u00d7 \u03a6\u207b\u00b9(0.785) = $4.77."
+          "Implied mean = 4.73 + 0.05 \u00d7 \u03a6\u207b\u00b9(0.785) = $4.77.",
+          "Historical reliability: Polymarket has listed 4 quarterly beat-markets for this name (series began Nov 2025); 3 have resolved, 2 of them YES. Day-before Brier 0.1955. Across all nine resolved markets the day-before Brier is 0.1 against 0.0988 for always guessing the base rate \u2014 with beats this routine, the market's information is mostly in the strike (the leaked consensus), not the price.",
+          "The blinded LLM replay answered the same beat questions from its anonymized packets: Brier 0.1145 vs the market's 0.1955 on the identical 3 events."
         ],
         "data": [
           {
             "name": "Polymarket HD Q2 non-GAAP EPS market",
             "published": "2026-08-16",
             "source": "forecast/data/polymarket/2026-08-16/hd-quarterly-earnings-nongaap-eps-08-18-2026-4pt73.json"
+          },
+          {
+            "name": "Resolved beat-market snapshots + 12h CLOB price history",
+            "published": "2025-11-18 \u2192 2026-08-16",
+            "source": "forecast/data/polymarket/history/ \u00b7 research/polymarket-reliability.json"
           }
-        ]
+        ],
+        "brier": {
+          "market": 0.1955,
+          "baseRate": 0.0988,
+          "n": 3,
+          "llm": 0.1145
+        },
+        "extraSeries": [
+          {
+            "label": "Blinded LLM replay on the same events: P(beat) vs outcome",
+            "unit": "%",
+            "predLabel": "LLM P(beat), day-before packet",
+            "series": [
+              {
+                "period": "FY2025Q3",
+                "actual": 0,
+                "predicted": 25.0,
+                "err": 25.0
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 100,
+                "predicted": 55.0,
+                "err": 45.0
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 100,
+                "predicted": 72.0,
+                "err": 28.0
+              }
+            ]
+          }
+        ],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 1,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       }
     }
   },
@@ -1104,7 +1650,16 @@
             "published": "2026-08-11",
             "source": "haysplc.com/investors/analysts-consensus"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       },
       "driver": {
         "label": "Driver \u2014 not applicable",
@@ -1143,7 +1698,16 @@
           "When the company has already told you the answer for three of four quarters, a macro proxy can only add noise.",
           "The lens therefore carries the anchor reconstruction and flags itself as contributing no independent signal."
         ],
-        "data": []
+        "data": [],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       },
       "ml": {
         "label": "ML \u2014 quarterly composition",
@@ -1228,7 +1792,16 @@
             "published": "2026-07-10",
             "source": "data/observations/hays.json"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 1,
+          "abstained": 2,
+          "total": 3,
+          "mean_gate_relative": 0.76,
+          "mean_mape": 1.52,
+          "mean_mae": null,
+          "all_within_gate": true
+        }
       },
       "market": {
         "label": "Market \u2014 no coverage",
@@ -1238,7 +1811,16 @@
           "Searched Polymarket for Hays net fees, profit and EPS markets: none exist, open or closed.",
           "For Hays the company-compiled analyst consensus plays the role the market plays elsewhere \u2014 it is a published, dated snapshot of the Street view, and it is what the anchor lens measures itself against."
         ],
-        "data": []
+        "data": [],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 0,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       }
     }
   },
@@ -1302,7 +1884,16 @@
             "published": "2026-05-21",
             "source": "challenge/offline-data/deere/call-transcripts/2026-05-21__de-us-20260521-call-pres__1042774.md"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       },
       "driver": {
         "label": "Driver \u2014 units to dollars",
@@ -1313,8 +1904,57 @@
             "unit": "USDm",
             "value": 12470,
             "why": "Segment unit chains on Q3-25 bases: PPA 4,273 x (0.55x(-11) units + 0.45x(-1) RoW + 1.75 price + 2.5 FX - 2.55 Q2-residual/2) = 4,047. SAT 3,025 x (0.7x(-10) units + 0.3x(+1) + 1.75 + 2.0 + 7.9 Q2-residual/2 [production normalization]) = 3,175. C&F 3,059 x (+4 industry units + 1.75 + 2.0 + 10.6 Q2-residual/2) = 3,622. Equipment 10,844 + financial services & other 1,630 (6-qtr range 1,590-1,660) = 12,474.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q1",
+                "actual": 8508.0,
+                "predicted": 8556.5915,
+                "err": 0.57
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 12763.0,
+                "predicted": 12746.3708,
+                "err": 0.13
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 12018.0,
+                "predicted": 11979.2281,
+                "err": 0.32
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 12394.0,
+                "predicted": 11684.1733,
+                "err": 5.73
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 9611.0,
+                "predicted": 9382.7452,
+                "err": 2.37
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 13369.0,
+                "predicted": 13454.5025,
+                "err": 0.64
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mape",
+              "score": 1.63,
+              "threshold": 2.0,
+              "n": 6,
+              "naive": 16.36,
+              "postScore": 1.51,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": true
+            },
             "final": 12486.77
           },
           {
@@ -1322,8 +1962,57 @@
             "unit": "USD / share",
             "value": 5.0,
             "why": "Segment op profits from driver sales x margins (PPA 12.6%, SAT 16.0% [Q3-25 level], C&F 11.0%) = 513+508+398 = 1,419; NI = (1,419 x 0.755 tax + 215 FinSvcs) x 1.05 corporate/pension multiplier (calibrated 1.03-1.085 over 4 qtrs) = 1,350; / 269.8M shares = 5.00.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q1",
+                "actual": 3.19,
+                "predicted": 3.1866,
+                "err": 0.11
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 6.64,
+                "predicted": 6.6092,
+                "err": 0.46
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 4.75,
+                "predicted": 4.8979,
+                "err": 3.11
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 3.93,
+                "predicted": 4.0127,
+                "err": 2.11
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 2.42,
+                "predicted": 2.3014,
+                "err": 4.9
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 6.55,
+                "predicted": 5.7831,
+                "err": 11.71
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mape",
+              "score": 3.73,
+              "threshold": 5.0,
+              "n": 6,
+              "naive": 34.19,
+              "postScore": 8.3,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": true
+            },
             "final": 5.03
           },
           {
@@ -1331,8 +2020,57 @@
             "unit": "USDm",
             "value": 513,
             "why": "AEM units chain (Jul tractors -10.9, combines -5.3, Jun combines ~+1, Apr R3M -14/-24) -> PPA sales 4,047 x 12.6% margin (H1 11.0%, best cost comps reserved for Q4) = 513. Produced by forecast/drivers.py.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q1",
+                "actual": 338.0,
+                "predicted": 342.2637,
+                "err": 1.26
+              },
+              {
+                "period": "FY2025Q2",
+                "actual": 1148.0,
+                "predicted": 1138.9118,
+                "err": 0.79
+              },
+              {
+                "period": "FY2025Q3",
+                "actual": 580.0,
+                "predicted": 944.1756,
+                "err": 62.79
+              },
+              {
+                "period": "FY2025Q4",
+                "actual": 604.0,
+                "predicted": 566.5054,
+                "err": 6.21
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 139.0,
+                "predicted": 300.956,
+                "err": 116.52
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 706.0,
+                "predicted": 967.78,
+                "err": 37.08
+              }
+            ],
+            "seriesLabel": "Blinded LLM replay \u2014 fresh session per quarter, anonymized point-in-time packet",
+            "predLabel": "Blinded LLM replay",
+            "gate": {
+              "kind": "mape",
+              "score": 37.44,
+              "threshold": 10.0,
+              "n": 6,
+              "naive": 94.63,
+              "postScore": 76.8,
+              "postN": 2,
+              "beats_naive": true,
+              "passed": false
+            },
             "final": 519.09
           }
         ],
@@ -1341,7 +2079,9 @@
           "Quarter-window large-ag units centred at \u221211 \u00b14pp.",
           "PPA sales chain: 0.55 \u00d7 (\u221211) North America units + 0.45 \u00d7 (\u22121) rest of world + 1.75 price + 2.5 FX \u2212 2.55 shipment residual = \u22125.3% \u2192 4,273 \u00d7 0.947 \u2248 $4,047M.",
           "The residual is calibrated, not assumed: running the same chain on Q2 gave \u22129.3% against a reported \u221214.4%, a \u22125.1pp gap (Deere ships below retail while dealers destock). It is carried forward at half weight.",
-          "PPA operating profit = 4,047 \u00d7 12.6% margin \u2248 $513M. Repeating the construction for Small Ag & Turf and Construction & Forestry, then adding ~$1,630M of financial services and other revenue, gives group revenue $12,470M and EPS $5.00."
+          "PPA operating profit = 4,047 \u00d7 12.6% margin \u2248 $513M. Repeating the construction for Small Ag & Turf and Construction & Forestry, then adding ~$1,630M of financial services and other revenue, gives group revenue $12,470M and EPS $5.00.",
+          "Backtest protocol: for each historical quarter a packet was built holding only data published before that quarter's results (same extractors and cutoffs as the five-year replay), with the company, all dates and fiscal labels stripped and every currency value multiplied by an undisclosed constant. A fresh, tool-less LLM session answered each of the 6 packets; predictions were de-scaled and scored against the filing actuals under the ML lens's pre-declared gates.",
+          "Leakage caveat, measured not assumed: sessions had to disclose any identity guess, and several recognized the company from COVID-era growth fingerprints; a few in-training quarters show recall-level errors. The gate bar therefore also reports the error on quarters reported AFTER the predictor's training window (post-Jan-2026) \u2014 those cannot be memorized and carry the honest signal."
         ],
         "data": [
           {
@@ -1373,8 +2113,27 @@
             "value": "-22.6 % y/y",
             "published": "2026-08-11",
             "source": "https://www.aem.org/news/tractor-sales-growth-softens-in-us-canada"
+          },
+          {
+            "name": "Blinded point-in-time packets (prompt + world-view manifest per quarter)",
+            "published": "cutoffs = day before each historical print",
+            "source": "research/llm-replay/packets/"
+          },
+          {
+            "name": "Fresh-session LLM responses (one session per packet) and scored series",
+            "published": "2026-08-16",
+            "source": "research/llm-replay/llm-driver-backtest.json"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 3,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": 1.77,
+          "mean_mape": 14.27,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       },
       "ml": {
         "label": "ML \u2014 abstained",
@@ -1583,7 +2342,16 @@
             "published": "FY2018Q1 \u2192 FY2026Q2",
             "source": "data/observations/deere.json (116 observations)"
           }
-        ]
+        ],
+        "stats": {
+          "validated": 3,
+          "abstained": 0,
+          "total": 3,
+          "mean_gate_relative": 3.63,
+          "mean_mape": 18.57,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       },
       "market": {
         "label": "Market \u2014 Polymarket",
@@ -1594,8 +2362,28 @@
             "unit": "USD / share",
             "value": 5.189,
             "why": "Market prices P(actual > 4.72) = 0.91 ($1,086 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 5.189 under the MID surprise-sigma 0.35; scenario range 4.988-5.457 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
-            "series": [],
-            "seriesLabel": "",
+            "series": [
+              {
+                "period": "FY2025Q4",
+                "actual": 100,
+                "predicted": 74.5,
+                "err": 25.5
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 100,
+                "predicted": 53.0,
+                "err": 47.0
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 100,
+                "predicted": 92.5,
+                "err": 7.5
+              }
+            ],
+            "seriesLabel": "Resolved beat-markets: day-before price vs outcome (100 = beat happened; error in probability points)",
+            "predLabel": "Market P(beat), day before",
             "final": 5.03
           }
         ],
@@ -1603,15 +2391,64 @@
           "Market: 'Will Deere & Co beat quarterly earnings?', strike $4.72 (Street consensus at creation).",
           "Price implies P(actual > 4.72) = 91% on $1,086 of volume.",
           "Implied mean = 4.72 + 0.35 \u00d7 \u03a6\u207b\u00b9(0.91) = $5.19 under the mid surprise-sigma scenario \u2014 notably above both our anchor ($4.95) and driver ($5.00) lenses.",
-          "Treated as an upside flag rather than folded in: further IEEPA tariff-refund recognitions after Q2's $272M would push GAAP EPS up, and the market may be pricing that."
+          "Treated as an upside flag rather than folded in: further IEEPA tariff-refund recognitions after Q2's $272M would push GAAP EPS up, and the market may be pricing that.",
+          "Historical reliability: Polymarket has listed 4 quarterly beat-markets for this name (series began Nov 2025); 3 have resolved, 3 of them YES. Day-before Brier 0.0972. Across all nine resolved markets the day-before Brier is 0.1 against 0.0988 for always guessing the base rate \u2014 with beats this routine, the market's information is mostly in the strike (the leaked consensus), not the price.",
+          "The blinded LLM replay answered the same beat questions from its anonymized packets: Brier 0.1498 vs the market's 0.0972 on the identical 3 events."
         ],
         "data": [
           {
             "name": "Polymarket Deere Q3 GAAP EPS market",
             "published": "2026-08-16",
             "source": "forecast/data/polymarket/2026-08-16/de-quarterly-earnings-gaap-eps-08-20-2026-4pt72.json"
+          },
+          {
+            "name": "Resolved beat-market snapshots + 12h CLOB price history",
+            "published": "2025-11-18 \u2192 2026-08-16",
+            "source": "forecast/data/polymarket/history/ \u00b7 research/polymarket-reliability.json"
           }
-        ]
+        ],
+        "brier": {
+          "market": 0.0972,
+          "baseRate": 0.0988,
+          "n": 3,
+          "llm": 0.1498
+        },
+        "extraSeries": [
+          {
+            "label": "Blinded LLM replay on the same events: P(beat) vs outcome",
+            "unit": "%",
+            "predLabel": "LLM P(beat), day-before packet",
+            "series": [
+              {
+                "period": "FY2025Q4",
+                "actual": 100,
+                "predicted": 62.0,
+                "err": 38.0
+              },
+              {
+                "period": "FY2026Q1",
+                "actual": 100,
+                "predicted": 68.0,
+                "err": 32.0
+              },
+              {
+                "period": "FY2026Q2",
+                "actual": 100,
+                "predicted": 55.0,
+                "err": 45.0
+              }
+            ]
+          }
+        ],
+        "stats": {
+          "validated": 0,
+          "abstained": 0,
+          "total": 1,
+          "mean_gate_relative": null,
+          "mean_mape": null,
+          "mean_mae": null,
+          "all_within_gate": false
+        }
       }
     }
   }
