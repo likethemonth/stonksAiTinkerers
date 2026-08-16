@@ -25,11 +25,22 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 INDEX = REPO_ROOT / "architecture" / "index.html"
 PREDICTIONS = REPO_ROOT / "architecture" / "predictions.html"
 
-START = "<!-- PREDICTIONS-EMBED:START -->"
-END = "<!-- PREDICTIONS-EMBED:END -->"
-
-#: Tall enough for the explorer's own layout; it scrolls internally beyond this.
-FRAME_HEIGHT = 1680
+#: (marker name, source file, frame height, iframe title). Each entry is
+#: inlined between its own pair of marker comments in the architecture page.
+EMBEDS = (
+    (
+        "PREDICTIONS",
+        REPO_ROOT / "architecture" / "predictions.html",
+        1680,
+        "Forecast explorer: stock by method",
+    ),
+    (
+        "PRESENTATION",
+        REPO_ROOT / "presentation" / "ml.html",
+        820,
+        "The machine learning lens: slide deck",
+    ),
+)
 
 
 def _srcdoc(html: str) -> str:
@@ -38,30 +49,28 @@ def _srcdoc(html: str) -> str:
 
 
 def main() -> int:
-    if not PREDICTIONS.exists():
-        print(f"  SKIP: {PREDICTIONS.relative_to(REPO_ROOT)} not built yet")
-        return 0
-
     index = INDEX.read_text(encoding="utf-8")
-    if START not in index or END not in index:
-        print(f"  FAIL: markers missing from {INDEX.relative_to(REPO_ROOT)}")
-        return 1
 
-    frame = (
-        f'<iframe title="Forecast explorer: stock by method" '
-        f'style="width:100%;height:{FRAME_HEIGHT}px;border:0;display:block" '
-        f'srcdoc="{_srcdoc(PREDICTIONS.read_text(encoding="utf-8"))}"></iframe>'
-    )
+    for name, source, height, title in EMBEDS:
+        start, end = f"<!-- {name}-EMBED:START -->", f"<!-- {name}-EMBED:END -->"
+        if not source.exists():
+            print(f"  SKIP {source.name}: not built yet")
+            continue
+        if start not in index or end not in index:
+            print(f"  SKIP {source.name}: no {name} markers in {INDEX.name}")
+            continue
+        frame = (
+            f'<iframe title="{title}" '
+            f'style="width:100%;height:{height}px;border:0;display:block" '
+            f'srcdoc="{_srcdoc(source.read_text(encoding="utf-8"))}"></iframe>'
+        )
+        head, _, rest = index.partition(start)
+        _, _, tail = rest.partition(end)
+        index = f"{head}{start}\n{frame}\n{end}{tail}"
+        print(f"  embedded {source.name}")
 
-    head, _, rest = index.partition(START)
-    _, _, tail = rest.partition(END)
-    INDEX.write_text(f"{head}{START}\n{frame}\n{END}{tail}", encoding="utf-8")
-
-    size = INDEX.stat().st_size
-    print(
-        f"  embedded {PREDICTIONS.name} into {INDEX.name} "
-        f"({size / 1024:.0f} KB, self-contained)"
-    )
+    INDEX.write_text(index, encoding="utf-8")
+    print(f"  {INDEX.name} is {INDEX.stat().st_size / 1024:.0f} KB, self-contained")
     return 0
 
 
