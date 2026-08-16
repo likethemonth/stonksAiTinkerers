@@ -1,0 +1,200 @@
+{
+ "id": "HD-FY2025Q1",
+ "prompt": "You are an expert earnings nowcaster. Forecast one fiscal quarter of one anonymized company using ONLY the data in this message.\n\nANONYMIZATION AND RULES\n- The company's identity, all calendar dates and fiscal-year labels have been removed. Quarters are labelled relative to the target: T is the target quarter, T-1 the one before it. Q1..Q4 mark each quarter's position within the fiscal year (seasonality is real).\n- Every currency value has been multiplied by ONE fixed undisclosed constant. Growth rates, margins, seasonality and all cross-metric relationships are unchanged. Percent metrics are not scaled.\n- The target quarter T (position Q1) has ENDED, but its results are NOT yet published. Everything below was published before the results.\n- Do not use knowledge of any real-world company or period. If you believe you recognize the company or the period anyway, you MUST disclose that in \"identityGuess\" \u2014 and still derive every number only from the data below.\n- Do not use any tools, web access, or external data. Work only from this message.\n\nPREDICT (for quarter T, position Q1)\n- net_sales: quarterly revenue \u2014 scaled currency units\n- diluted_eps_gaap: GAAP diluted EPS \u2014 scaled currency units\n- comp_sales_pct: y/y same-store sales growth, %\n\n\nDATA 1 \u2014 QUARTERLY ACTUALS AS ORIGINALLY REPORTED (oldest first)\nT-28 (Q1): net_sales=17804.7, diluted_eps_gaap=1.484\nT-27 (Q2): net_sales=21741.4, diluted_eps_gaap=2.177\nT-26 (Q3): net_sales=18771.7, diluted_eps_gaap=1.791\nT-25 (Q4): net_sales=18906.6, diluted_eps_gaap=1.492\nT-24 (Q1): net_sales=18828.1, diluted_eps_gaap=1.62\nT-23 (Q2): net_sales=22009.8, diluted_eps_gaap=2.262\nT-22 (Q3): net_sales=19429.1, diluted_eps_gaap=1.806\nT-21 (Q4): net_sales=18400.6, diluted_eps_gaap=1.627, comp_sales_pct=5.2\nT-20 (Q1): net_sales=20169.2, diluted_eps_gaap=1.484\nT-19 (Q2): net_sales=27158.4, diluted_eps_gaap=2.869\nT-18 (Q3): net_sales=23934.6, diluted_eps_gaap=2.27\nT-17 (Q4): net_sales=23024.7, diluted_eps_gaap=1.891, comp_sales_pct=24.5\nT-16 (Q1): net_sales=26763.8, diluted_eps_gaap=2.755, comp_sales_pct=31.0\nT-15 (Q2): net_sales=29345.9, diluted_eps_gaap=3.233, comp_sales_pct=4.5\nT-14 (Q3): net_sales=26278.4, diluted_eps_gaap=2.798, comp_sales_pct=6.1\nT-13 (Q4): net_sales=25492.7, diluted_eps_gaap=2.291, comp_sales_pct=8.1\nT-12 (Q1): net_sales=27768.6, diluted_eps_gaap=2.919, comp_sales_pct=2.2\nT-11 (Q2): net_sales=31254.4, diluted_eps_gaap=3.604, comp_sales_pct=5.8\nT-10 (Q3): net_sales=27742.9, diluted_eps_gaap=3.026, comp_sales_pct=4.3\nT-9 (Q4): net_sales=25572.6, diluted_eps_gaap=2.355, comp_sales_pct=-0.3\nT-8 (Q1): net_sales=26590.3, diluted_eps_gaap=2.726, comp_sales_pct=-4.5\nT-7 (Q2): net_sales=30629.1, diluted_eps_gaap=3.319, comp_sales_pct=-2.0\nT-6 (Q3): net_sales=26913.6, diluted_eps_gaap=2.719, comp_sales_pct=-3.1\nT-5 (Q4): net_sales=24826.8, diluted_eps_gaap=2.013, comp_sales_pct=-3.5\nT-4 (Q1): net_sales=25991.5, diluted_eps_gaap=2.591, comp_sales_pct=-2.8\nT-3 (Q2): net_sales=30814.0, diluted_eps_gaap=3.283, comp_sales_pct=-3.3\nT-2 (Q3): net_sales=28702.9, diluted_eps_gaap=2.619, comp_sales_pct=-1.3\nT-1 (Q4): net_sales=28336.7, diluted_eps_gaap=2.155, comp_sales_pct=0.8\n\nDATA 2 \u2014 MONTHLY RETAIL SALES OF THE CATEGORY THE COMPANY SELLS INTO (same scaled units, US census-style series; M-0 is the last month of quarter T)\nMonths M-2, M-1, M-0 constitute the target quarter T. All three are published. Each earlier fiscal quarter T-k spans months M-(3k+2)..M-(3k).\nM-41: 28296.1\nM-40: 27382.5\nM-39: 24079.5\nM-38: 23881.8\nM-37: 31664.0\nM-36: 32865.2\nM-35: 35682.9\nM-34: 34267.6\nM-33: 30913.2\nM-32: 32139.3\nM-31: 30314.4\nM-30: 30607.7\nM-29: 28828.5\nM-28: 27593.8\nM-27: 24833.2\nM-26: 24059.5\nM-25: 29625.0\nM-24: 30594.2\nM-23: 35770.6\nM-22: 32811.6\nM-21: 29645.7\nM-20: 31143.0\nM-19: 28309.6\nM-18: 29777.0\nM-17: 28201.1\nM-16: 25980.8\nM-15: 23262.3\nM-14: 23986.0\nM-13: 27441.8\nM-12: 31779.6\nM-11: 34354.7\nM-10: 30927.5\nM-9: 31237.9\nM-8: 30387.9\nM-7: 28573.0\nM-6: 31897.4\nM-5: 28445.2\nM-4: 26318.4\nM-3: 23483.6\nM-2: 22516.5\nM-1: 28397.4\nM-0: 32146.5\n\nMETHOD\nUse the category months inside T (they are the demand driver for the quarter being predicted), the company's share of the category implied by recent quarters, and the seasonal structure. Calibrate the category-to-company mapping on the most recent quarters where both are known.\nState your derivation chain briefly. Be a forecaster, not a curve-fitter: prefer the freshest information.\n\nOUTPUT \u2014 reply with EXACTLY one JSON object and nothing else (no code fences):\n{\"predictions\": {\"net_sales\": <number>, \"diluted_eps_gaap\": <number>, \"comp_sales_pct\": <number>}, \"pBeat\": null, \"reasoning\": \"<the chain, max 150 words>\", \"identityGuess\": null}\n",
+ "private": {
+  "company": "home-depot",
+  "ticker": "HD",
+  "code": "Company R",
+  "period": "FY2025Q1",
+  "targetQuarterPosition": 1,
+  "cutoff": "2025-05-19",
+  "scale": 0.7137,
+  "worldview": {
+   "rule": "only rows originally disclosed on or before the cutoff; census months lagged by a +16-day publication model",
+   "corpusDocumentsVisible": 279,
+   "corpusDocumentsExcluded": 40,
+   "newestVisibleDocument": "home-depot/filings/2025-04-07__hd-us-20250407-filing__437650.md"
+  },
+  "market": null,
+  "historyQuarters": 28,
+  "censusMonths": 42,
+  "sources": [
+   {
+    "source": "forecast/data/drivers/fred-rsbmgesdn.csv (US Census monthly category retail, FRED)",
+    "published": "monthly, +16d lag"
+   },
+   {
+    "source": "home-depot/filings/2015-05-19__hd-us-20150519-q1-10q__437643.md",
+    "published": "2015-05-19"
+   },
+   {
+    "source": "home-depot/filings/2015-08-18__hd-us-20150818-q2-10q__437645.md",
+    "published": "2015-08-18"
+   },
+   {
+    "source": "home-depot/filings/2015-11-17__hd-us-20151117-q3-10q__437636.md",
+    "published": "2015-11-17"
+   },
+   {
+    "source": "home-depot/filings/2016-05-17__hd-us-20160517-q1-10q__437642.md",
+    "published": "2016-05-17"
+   },
+   {
+    "source": "home-depot/filings/2016-08-16__hd-us-20160816-q2-10q__437635.md",
+    "published": "2016-08-16"
+   },
+   {
+    "source": "home-depot/filings/2016-11-15__hd-us-20161115-q3-10q__437647.md",
+    "published": "2016-11-15"
+   },
+   {
+    "source": "home-depot/filings/2017-02-21__hd-us-20170221-q4-8k__437606.md",
+    "published": "2017-02-21"
+   },
+   {
+    "source": "home-depot/filings/2017-05-16__hd-us-20170516-q1-10q__437632.md",
+    "published": "2017-05-16"
+   },
+   {
+    "source": "home-depot/filings/2017-08-15__hd-us-20170815-q2-10q__437640.md",
+    "published": "2017-08-15"
+   },
+   {
+    "source": "home-depot/filings/2017-11-14__hd-us-20171114-q3-10q__437638.md",
+    "published": "2017-11-14"
+   },
+   {
+    "source": "home-depot/filings/2018-02-20__hd-us-20180220-q4-8k__437599.md",
+    "published": "2018-02-20"
+   },
+   {
+    "source": "home-depot/filings/2018-05-15__hd-us-20180515-q1-10q__437628.md",
+    "published": "2018-05-15"
+   },
+   {
+    "source": "home-depot/filings/2018-08-14__hd-us-20180814-q2-10q__437634.md",
+    "published": "2018-08-14"
+   },
+   {
+    "source": "home-depot/filings/2018-11-13__hd-us-20181113-q3-10q__437630.md",
+    "published": "2018-11-13"
+   },
+   {
+    "source": "home-depot/filings/2019-02-26__hd-us-20190226-q4-8k__437590.md",
+    "published": "2019-02-26"
+   },
+   {
+    "source": "home-depot/filings/2019-05-21__hd-us-20190521-q1-10q__437621.md",
+    "published": "2019-05-21"
+   },
+   {
+    "source": "home-depot/filings/2019-08-20__hd-us-20190820-q2-10q__437627.md",
+    "published": "2019-08-20"
+   },
+   {
+    "source": "home-depot/filings/2019-11-19__hd-us-20191119-q3-10q__437624.md",
+    "published": "2019-11-19"
+   },
+   {
+    "source": "home-depot/filings/2020-02-25__hd-us-20200225-q4-8k__437581.md",
+    "published": "2020-02-25"
+   },
+   {
+    "source": "home-depot/filings/2020-05-19__hd-us-20200519-q1-10q__437622.md",
+    "published": "2020-05-19"
+   },
+   {
+    "source": "home-depot/filings/2020-08-17__hd-us-20200817-q2-10q__101839.md",
+    "published": "2020-08-17"
+   },
+   {
+    "source": "home-depot/filings/2020-11-17__hd-us-20201117-q3-10q__101837.md",
+    "published": "2020-11-17"
+   },
+   {
+    "source": "home-depot/filings/2021-02-23__hd-us-20210223-q4-8k__101835.md",
+    "published": "2021-02-23"
+   },
+   {
+    "source": "home-depot/filings/2021-05-18__hd-us-20210518-q1-10q__101836.md",
+    "published": "2021-05-18"
+   },
+   {
+    "source": "home-depot/filings/2021-05-18__hd-us-20210518-q1-8k__101823.md",
+    "published": "2021-05-18"
+   },
+   {
+    "source": "home-depot/filings/2021-08-17__hd-us-20210817-q2-10q__101831.md",
+    "published": "2021-08-17"
+   },
+   {
+    "source": "home-depot/filings/2021-08-17__hd-us-20210817-q2-8k__101848.md",
+    "published": "2021-08-17"
+   },
+   {
+    "source": "home-depot/filings/2021-11-16__hd-us-20211116-q3-10q__101833.md",
+    "published": "2021-11-16"
+   },
+   {
+    "source": "home-depot/filings/2021-11-16__hd-us-20211116-q3-8k__101850.md",
+    "published": "2021-11-16"
+   },
+   {
+    "source": "home-depot/filings/2022-02-22__hd-us-20220222-q4-8k__101852.md",
+    "published": "2022-02-22"
+   },
+   {
+    "source": "home-depot/filings/2022-05-17__hd-us-20220517-q1-10q__101822.md",
+    "published": "2022-05-17"
+   },
+   {
+    "source": "home-depot/filings/2022-05-17__hd-us-20220517-q1-8k__101820.md",
+    "published": "2022-05-17"
+   },
+   {
+    "source": "home-depot/filings/2022-08-16__hd-us-20220816-q2-10q__101824.md",
+    "published": "2022-08-16"
+   },
+   {
+    "source": "home-depot/filings/2022-11-15__hd-us-20221115-q3-10q__101826.md",
+    "published": "2022-11-15"
+   },
+   {
+    "source": "home-depot/filings/2023-02-21__hd-us-20230221-q4-8k__101845.md",
+    "published": "2023-02-21"
+   },
+   {
+    "source": "home-depot/filings/2023-05-16__hd-us-20230516-q1-10q__101841.md",
+    "published": "2023-05-16"
+   },
+   {
+    "source": "home-depot/filings/2023-08-15__hd-us-20230815-q2-10q__101816.md",
+    "published": "2023-08-15"
+   },
+   {
+    "source": "home-depot/filings/2023-11-14__hd-us-20231114-q3-10q__101828.md",
+    "published": "2023-11-14"
+   },
+   {
+    "source": "home-depot/filings/2024-02-20__hd-us-20240220-q4-8k__101851.md",
+    "published": "2024-02-20"
+   },
+   {
+    "source": "home-depot/filings/2024-05-14__hd-us-20240514-q1-10q__101821.md",
+    "published": "2024-05-14"
+   },
+   {
+    "source": "home-depot/filings/2024-08-13__hd-us-20240813-q2-10q__101825.md",
+    "published": "2024-08-13"
+   },
+   {
+    "source": "home-depot/filings/2024-11-12__hd-us-20241112-q3-10q__101846.md",
+    "published": "2024-11-12"
+   },
+   {
+    "source": "home-depot/filings/2025-02-25__hd-us-20250225-q4-8k__101827.md",
+    "published": "2025-02-25"
+   }
+  ]
+ }
+}

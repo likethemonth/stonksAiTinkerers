@@ -1,0 +1,142 @@
+[
+ {
+  "id": "HD-FY2024Q2",
+  "period": "FY2024Q2",
+  "cutoff": "2024-08-12",
+  "historyQuarters": 28,
+  "hasMarket": false
+ },
+ {
+  "id": "HD-FY2024Q3",
+  "period": "FY2024Q3",
+  "cutoff": "2024-11-11",
+  "historyQuarters": 28,
+  "hasMarket": false
+ },
+ {
+  "id": "HD-FY2024Q4",
+  "period": "FY2024Q4",
+  "cutoff": "2025-02-24",
+  "historyQuarters": 28,
+  "hasMarket": false
+ },
+ {
+  "id": "HD-FY2025Q1",
+  "period": "FY2025Q1",
+  "cutoff": "2025-05-19",
+  "historyQuarters": 28,
+  "hasMarket": false
+ },
+ {
+  "id": "HD-FY2025Q2",
+  "period": "FY2025Q2",
+  "cutoff": "2025-08-18",
+  "historyQuarters": 28,
+  "hasMarket": false
+ },
+ {
+  "id": "HD-FY2025Q3",
+  "period": "FY2025Q3",
+  "cutoff": "2025-11-17",
+  "historyQuarters": 28,
+  "hasMarket": true
+ },
+ {
+  "id": "HD-FY2025Q4",
+  "period": "FY2025Q4",
+  "cutoff": "2026-02-23",
+  "historyQuarters": 28,
+  "hasMarket": true
+ },
+ {
+  "id": "HD-FY2026Q1",
+  "period": "FY2026Q1",
+  "cutoff": "2026-05-18",
+  "historyQuarters": 28,
+  "hasMarket": true
+ },
+ {
+  "id": "ADI-FY2025Q1",
+  "period": "FY2025Q1",
+  "cutoff": "2025-02-18",
+  "historyQuarters": 17,
+  "hasMarket": false
+ },
+ {
+  "id": "ADI-FY2025Q2",
+  "period": "FY2025Q2",
+  "cutoff": "2025-05-21",
+  "historyQuarters": 18,
+  "hasMarket": false
+ },
+ {
+  "id": "ADI-FY2025Q3",
+  "period": "FY2025Q3",
+  "cutoff": "2025-08-19",
+  "historyQuarters": 19,
+  "hasMarket": false
+ },
+ {
+  "id": "ADI-FY2025Q4",
+  "period": "FY2025Q4",
+  "cutoff": "2025-11-24",
+  "historyQuarters": 20,
+  "hasMarket": true
+ },
+ {
+  "id": "ADI-FY2026Q1",
+  "period": "FY2026Q1",
+  "cutoff": "2026-02-17",
+  "historyQuarters": 21,
+  "hasMarket": true
+ },
+ {
+  "id": "ADI-FY2026Q2",
+  "period": "FY2026Q2",
+  "cutoff": "2026-05-19",
+  "historyQuarters": 22,
+  "hasMarket": true
+ },
+ {
+  "id": "DE-FY2025Q1",
+  "period": "FY2025Q1",
+  "cutoff": "2025-02-12",
+  "historyQuarters": 27,
+  "hasMarket": false
+ },
+ {
+  "id": "DE-FY2025Q2",
+  "period": "FY2025Q2",
+  "cutoff": "2025-05-14",
+  "historyQuarters": 28,
+  "hasMarket": false
+ },
+ {
+  "id": "DE-FY2025Q3",
+  "period": "FY2025Q3",
+  "cutoff": "2025-08-14",
+  "historyQuarters": 28,
+  "hasMarket": false
+ },
+ {
+  "id": "DE-FY2025Q4",
+  "period": "FY2025Q4",
+  "cutoff": "2025-11-25",
+  "historyQuarters": 28,
+  "hasMarket": true
+ },
+ {
+  "id": "DE-FY2026Q1",
+  "period": "FY2026Q1",
+  "cutoff": "2026-02-18",
+  "historyQuarters": 28,
+  "hasMarket": true
+ },
+ {
+  "id": "DE-FY2026Q2",
+  "period": "FY2026Q2",
+  "cutoff": "2026-05-20",
+  "historyQuarters": 28,
+  "hasMarket": true
+ }
+]

@@ -1,0 +1,92 @@
+{
+ "id": "ADI-FY2025Q1",
+ "prompt": "You are an expert earnings nowcaster. Forecast one fiscal quarter of one anonymized company using ONLY the data in this message.\n\nANONYMIZATION AND RULES\n- The company's identity, all calendar dates and fiscal-year labels have been removed. Quarters are labelled relative to the target: T is the target quarter, T-1 the one before it. Q1..Q4 mark each quarter's position within the fiscal year (seasonality is real).\n- Every currency value has been multiplied by ONE fixed undisclosed constant. Growth rates, margins, seasonality and all cross-metric relationships are unchanged. Percent metrics are not scaled.\n- The target quarter T (position Q1) has ENDED, but its results are NOT yet published. Everything below was published before the results.\n- Do not use knowledge of any real-world company or period. If you believe you recognize the company or the period anyway, you MUST disclose that in \"identityGuess\" \u2014 and still derive every number only from the data below.\n- Do not use any tools, web access, or external data. Work only from this message.\n\nPREDICT (for quarter T, position Q1)\n- revenue: quarterly revenue \u2014 scaled currency units\n- adj_eps: adjusted non-GAAP diluted EPS \u2014 scaled currency units\n- adj_gross_margin_pct: adjusted gross margin, %\n\n\nDATA 1 \u2014 QUARTERLY ACTUALS AS ORIGINALLY REPORTED (oldest first)\nT-17 (Q4): revenue=2008.1, adj_eps=1.895, adj_gross_margin_pct=70.0, adj_operating_margin_pct=41.7\nT-16 (Q1): revenue=2050.2, adj_eps=1.895, adj_gross_margin_pct=70.0, adj_operating_margin_pct=40.7\nT-15 (Q2): revenue=2185.7, adj_eps=2.026, adj_gross_margin_pct=70.9, adj_operating_margin_pct=41.7\nT-14 (Q3): revenue=2314.7, adj_eps=2.263, adj_gross_margin_pct=71.6, adj_operating_margin_pct=43.6\nT-13 (Q4): revenue=3079.2, adj_eps=2.277, adj_gross_margin_pct=70.9, adj_operating_margin_pct=43.1\nT-12 (Q1): revenue=3531.9, adj_eps=2.553, adj_gross_margin_pct=71.9, adj_operating_margin_pct=45.8\nT-11 (Q2): revenue=3910.9, adj_eps=3.158, adj_gross_margin_pct=74.2, adj_operating_margin_pct=50.3\nT-10 (Q3): revenue=4092.4, adj_eps=3.316, adj_gross_margin_pct=74.1, adj_operating_margin_pct=50.1\nT-9 (Q4): revenue=4274.0, adj_eps=3.592, adj_gross_margin_pct=74.0, adj_operating_margin_pct=51.1\nT-8 (Q1): revenue=4276.7, adj_eps=3.619, adj_gross_margin_pct=73.6, adj_operating_margin_pct=51.1\nT-7 (Q2): revenue=4293.8, adj_eps=3.724, adj_gross_margin_pct=73.7, adj_operating_margin_pct=51.2\nT-6 (Q3): revenue=4047.7, adj_eps=3.277, adj_gross_margin_pct=72.2, adj_operating_margin_pct=47.8\nT-5 (Q4): revenue=3574.0, adj_eps=2.645, adj_gross_margin_pct=70.2, adj_operating_margin_pct=44.7\nT-4 (Q1): revenue=3306.9, adj_eps=2.277, adj_gross_margin_pct=69.0, adj_operating_margin_pct=42.0\nT-3 (Q2): revenue=2841.0, adj_eps=1.842, adj_gross_margin_pct=66.7, adj_operating_margin_pct=39.0\nT-2 (Q3): revenue=3042.4, adj_eps=2.079, adj_gross_margin_pct=67.9, adj_operating_margin_pct=41.2\nT-1 (Q4): revenue=3214.7, adj_eps=2.198, adj_gross_margin_pct=67.9, adj_operating_margin_pct=41.1\n\nDATA 2 \u2014 MANAGEMENT GUIDANCE (each issued one quarter before the quarter it guides; same scaled units; percent guides unscaled)\nT-16 adj_eps guide: mid 1.711, range 1.579\u20131.842\nT-16 adj_operating_margin_pct guide: mid 40.0, range 39.0\u201341.0\nT-16 revenue guide: mid 1973.9, range 1881.7\u20132066.0\nT-15 adj_eps guide: mid 1.895, range 1.79\u20132.0\nT-15 adj_operating_margin_pct guide: mid 41.0, range 40.3\u201341.7\nT-15 revenue guide: mid 2105.4, range 2039.6\u20132171.2\nT-14 adj_eps guide: mid 2.119, range 1.974\u20132.263\nT-14 adj_operating_margin_pct guide: mid 42.5, range 41.5\u201343.5\nT-14 revenue guide: mid 2237.0, range 2144.9\u20132329.1\nT-13 adj_eps guide: mid 2.263, range 2.119\u20132.408\nT-13 adj_operating_margin_pct guide: mid 43.7, range 42.7\u201344.7\nT-13 revenue guide: mid 2342.3, range 2250.2\u20132434.4\nT-12 adj_eps guide: mid 2.342, range 2.211\u20132.474\nT-12 adj_operating_margin_pct guide: mid 43.3, range 42.6\u201344.0\nT-12 revenue guide: mid 3421.3, range 3289.8\u20133552.9\nT-11 adj_eps guide: mid 2.724, range 2.592\u20132.856\nT-11 adj_operating_margin_pct guide: mid 46.5, range 45.8\u201347.2\nT-11 revenue guide: mid 3684.5, range 3552.9\u20133816.1\nT-10 adj_eps guide: mid 3.184, range 3.053\u20133.316\nT-10 adj_operating_margin_pct guide: mid 49.5, range 48.8\u201350.2\nT-10 revenue guide: mid 4013.5, range 3881.9\u20134145.1\nT-9 adj_eps guide: mid 3.382, range 3.25\u20133.513\nT-9 adj_operating_margin_pct guide: mid 50.3, range 49.6\u201351.0\nT-9 revenue guide: mid 4145.1, range 4013.5\u20134276.7\nT-8 adj_eps guide: mid 3.421, range 3.29\u20133.553\nT-8 adj_operating_margin_pct guide: mid 50.0, range 49.3\u201350.7\nT-8 revenue guide: mid 4145.1, range 4013.5\u20134276.7\nT-7 adj_eps guide: mid 3.619, range 3.487\u20133.75\nT-7 adj_operating_margin_pct guide: mid 51.0, range 50.3\u201351.7\nT-7 revenue guide: mid 4210.9, range 4079.3\u20134342.5\nT-6 adj_eps guide: mid 3.316, range 3.184\u20133.448\nT-6 adj_operating_margin_pct guide: mid 48.5, range 47.8\u201349.2\nT-6 revenue guide: mid 4079.3, range 3947.7\u20134210.9\nT-5 adj_eps guide: mid 2.632, range 2.5\u20132.763\nT-5 adj_operating_margin_pct guide: mid 44.0, range 43.3\u201344.7\nT-5 revenue guide: mid 3552.9, range 3421.3\u20133684.5\nT-4 adj_eps guide: mid 2.237, range 2.105\u20132.369\nT-4 adj_operating_margin_pct guide: mid 41.5, range 40.8\u201342.2\nT-4 revenue guide: mid 3289.8, range 3158.2\u20133421.3\nT-3 adj_eps guide: mid 1.658, range 1.526\u20131.79\nT-3 adj_operating_margin_pct guide: mid 37.0, range 36.0\u201338.0\nT-3 revenue guide: mid 2763.4, range 2631.8\u20132895.0\nT-2 adj_eps guide: mid 1.974, range 1.842\u20132.105\nT-2 adj_operating_margin_pct guide: mid 40.0, range 39.0\u201341.0\nT-2 revenue guide: mid 2987.1, range 2855.5\u20133118.7\nT-1 adj_eps guide: mid 2.145, range 2.013\u20132.277\nT-1 adj_operating_margin_pct guide: mid 41.0, range 40.0\u201342.0\nT-1 revenue guide: mid 3158.2, range 3026.6\u20133289.8\nT (the target quarter) adj_eps guide: mid 2.013, range 1.882\u20132.145\nT (the target quarter) adj_operating_margin_pct guide: mid 40.0, range 39.0\u201341.0\nT (the target quarter) revenue guide: mid 3092.4, range 2960.8\u20133224.0\n\nMETHOD\nThe guidance for T is the anchor. Calibrate how actuals have historically realised against the guide midpoints (the beat/miss cadence) and apply that calibration. Margins: use guided operating margin plus the observed gross-vs-operating spread.\nState your derivation chain briefly. Be a forecaster, not a curve-fitter: prefer the freshest information.\n\nOUTPUT \u2014 reply with EXACTLY one JSON object and nothing else (no code fences):\n{\"predictions\": {\"revenue\": <number>, \"adj_eps\": <number>, \"adj_gross_margin_pct\": <number>}, \"pBeat\": null, \"reasoning\": \"<the chain, max 150 words>\", \"identityGuess\": null}\n",
+ "private": {
+  "company": "analog-devices",
+  "ticker": "ADI",
+  "code": "Company S",
+  "period": "FY2025Q1",
+  "targetQuarterPosition": 1,
+  "cutoff": "2025-02-18",
+  "scale": 1.3159,
+  "worldview": {
+   "rule": "only rows originally disclosed on or before the cutoff; census months lagged by a +16-day publication model",
+   "corpusDocumentsVisible": 228,
+   "corpusDocumentsExcluded": 43,
+   "newestVisibleDocument": "analog-devices/filings/2025-01-27__adi-us-20250127-filing__486291.md"
+  },
+  "market": null,
+  "historyQuarters": 17,
+  "censusMonths": 0,
+  "sources": [
+   {
+    "source": "analog-devices/filings/2020-10-24__adi-us-20201024-q4-8k__102686.md",
+    "published": "2020-10-24"
+   },
+   {
+    "source": "analog-devices/filings/2021-02-17__adi-us-20210217-q1-8k__102671.md",
+    "published": "2021-02-17"
+   },
+   {
+    "source": "analog-devices/filings/2021-05-19__adi-us-20210519-q2-8k__102672.md",
+    "published": "2021-05-19"
+   },
+   {
+    "source": "analog-devices/filings/2021-08-18__adi-us-20210818-q3-8k__102665.md",
+    "published": "2021-08-18"
+   },
+   {
+    "source": "analog-devices/filings/2021-11-23__adi-us-20211123-q4-8k__102674.md",
+    "published": "2021-11-23"
+   },
+   {
+    "source": "analog-devices/filings/2022-02-16__adi-us-20220216-q1-8k__102680.md",
+    "published": "2022-02-16"
+   },
+   {
+    "source": "analog-devices/filings/2022-05-18__adi-us-20220518-q2-8k__102659.md",
+    "published": "2022-05-18"
+   },
+   {
+    "source": "analog-devices/filings/2022-08-17__adi-us-20220817-q3-8k__102658.md",
+    "published": "2022-08-17"
+   },
+   {
+    "source": "analog-devices/filings/2022-11-22__adi-us-20221122-q4-8k__102656.md",
+    "published": "2022-11-22"
+   },
+   {
+    "source": "analog-devices/filings/2023-02-15__adi-us-20230215-q1-8k__102661.md",
+    "published": "2023-02-15"
+   },
+   {
+    "source": "analog-devices/filings/2023-05-24__adi-us-20230524-q2-8k__102668.md",
+    "published": "2023-05-24"
+   },
+   {
+    "source": "analog-devices/filings/2023-08-23__adi-us-20230823-q3-8k-2__488074.md",
+    "published": "2023-08-23"
+   },
+   {
+    "source": "analog-devices/filings/2023-11-21__adi-us-20231121-q4-8k__102653.md",
+    "published": "2023-11-21"
+   },
+   {
+    "source": "analog-devices/filings/2024-02-21__adi-us-20240221-q1-8k__102673.md",
+    "published": "2024-02-21"
+   },
+   {
+    "source": "analog-devices/filings/2024-05-22__adi-us-20240522-q2-8k__102675.md",
+    "published": "2024-05-22"
+   },
+   {
+    "source": "analog-devices/filings/2024-08-21__adi-us-20240821-q3-8k__102648.md",
+    "published": "2024-08-21"
+   },
+   {
+    "source": "analog-devices/filings/2024-11-26__adi-us-20241126-q4-8k__102666.md",
+    "published": "2024-11-26"
+   }
+  ]
+ }
+}

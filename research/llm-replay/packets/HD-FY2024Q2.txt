@@ -1,0 +1,96 @@
+You are an expert earnings nowcaster. Forecast one fiscal quarter of one anonymized company using ONLY the data in this message.
+
+ANONYMIZATION AND RULES
+- The company's identity, all calendar dates and fiscal-year labels have been removed. Quarters are labelled relative to the target: T is the target quarter, T-1 the one before it. Q1..Q4 mark each quarter's position within the fiscal year (seasonality is real).
+- Every currency value has been multiplied by ONE fixed undisclosed constant. Growth rates, margins, seasonality and all cross-metric relationships are unchanged. Percent metrics are not scaled.
+- The target quarter T (position Q2) has ENDED, but its results are NOT yet published. Everything below was published before the results.
+- Do not use knowledge of any real-world company or period. If you believe you recognize the company or the period anyway, you MUST disclose that in "identityGuess" — and still derive every number only from the data below.
+- Do not use any tools, web access, or external data. Work only from this message.
+
+PREDICT (for quarter T, position Q2)
+- net_sales: quarterly revenue — scaled currency units
+- diluted_eps_gaap: GAAP diluted EPS — scaled currency units
+- comp_sales_pct: y/y same-store sales growth, %
+
+
+DATA 1 — QUARTERLY ACTUALS AS ORIGINALLY REPORTED (oldest first)
+T-28 (Q2): net_sales=20060.7, diluted_eps_gaap=1.606
+T-27 (Q3): net_sales=17861.1, diluted_eps_gaap=1.313
+T-26 (Q4): net_sales=17045.3, diluted_eps_gaap=1.085
+T-25 (Q1): net_sales=17804.7, diluted_eps_gaap=1.484
+T-24 (Q2): net_sales=21741.4, diluted_eps_gaap=2.177
+T-23 (Q3): net_sales=18771.7, diluted_eps_gaap=1.791
+T-22 (Q4): net_sales=18906.6, diluted_eps_gaap=1.492
+T-21 (Q1): net_sales=18828.1, diluted_eps_gaap=1.62
+T-20 (Q2): net_sales=22009.8, diluted_eps_gaap=2.262
+T-19 (Q3): net_sales=19429.1, diluted_eps_gaap=1.806
+T-18 (Q4): net_sales=18400.6, diluted_eps_gaap=1.627, comp_sales_pct=5.2
+T-17 (Q1): net_sales=20169.2, diluted_eps_gaap=1.484
+T-16 (Q2): net_sales=27158.4, diluted_eps_gaap=2.869
+T-15 (Q3): net_sales=23934.6, diluted_eps_gaap=2.27
+T-14 (Q4): net_sales=23024.7, diluted_eps_gaap=1.891, comp_sales_pct=24.5
+T-13 (Q1): net_sales=26763.8, diluted_eps_gaap=2.755, comp_sales_pct=31.0
+T-12 (Q2): net_sales=29345.9, diluted_eps_gaap=3.233, comp_sales_pct=4.5
+T-11 (Q3): net_sales=26278.4, diluted_eps_gaap=2.798, comp_sales_pct=6.1
+T-10 (Q4): net_sales=25492.7, diluted_eps_gaap=2.291, comp_sales_pct=8.1
+T-9 (Q1): net_sales=27768.6, diluted_eps_gaap=2.919, comp_sales_pct=2.2
+T-8 (Q2): net_sales=31254.4, diluted_eps_gaap=3.604, comp_sales_pct=5.8
+T-7 (Q3): net_sales=27742.9, diluted_eps_gaap=3.026, comp_sales_pct=4.3
+T-6 (Q4): net_sales=25572.6, diluted_eps_gaap=2.355, comp_sales_pct=-0.3
+T-5 (Q1): net_sales=26590.3, diluted_eps_gaap=2.726, comp_sales_pct=-4.5
+T-4 (Q2): net_sales=30629.1, diluted_eps_gaap=3.319, comp_sales_pct=-2.0
+T-3 (Q3): net_sales=26913.6, diluted_eps_gaap=2.719, comp_sales_pct=-3.1
+T-2 (Q4): net_sales=24826.8, diluted_eps_gaap=2.013, comp_sales_pct=-3.5
+T-1 (Q1): net_sales=25991.5, diluted_eps_gaap=2.591, comp_sales_pct=-2.8
+
+DATA 2 — MONTHLY RETAIL SALES OF THE CATEGORY THE COMPANY SELLS INTO (same scaled units, US census-style series; M-0 is the last month of quarter T)
+Months M-2, M-1, M-0 constitute the target quarter T. The final 1 month(s) of T are not yet published — extrapolate them. Each earlier fiscal quarter T-k spans months M-(3k+2)..M-(3k).
+M-42: 21929.1
+M-41: 20835.0
+M-40: 30620.6
+M-39: 33217.7
+M-38: 33127.1
+M-37: 32125.8
+M-36: 29426.6
+M-35: 28314.6
+M-34: 27813.6
+M-33: 28233.3
+M-32: 28296.1
+M-31: 27382.5
+M-30: 24079.5
+M-29: 23881.8
+M-28: 31664.0
+M-27: 32865.2
+M-26: 35682.9
+M-25: 34267.6
+M-24: 30913.2
+M-23: 32139.3
+M-22: 30314.4
+M-21: 30607.7
+M-20: 28828.5
+M-19: 27593.8
+M-18: 24833.2
+M-17: 24059.5
+M-16: 29625.0
+M-15: 30594.2
+M-14: 35770.6
+M-13: 32811.6
+M-12: 29645.7
+M-11: 31143.0
+M-10: 28309.6
+M-9: 29777.0
+M-8: 28201.1
+M-7: 25980.8
+M-6: 23262.3
+M-5: 23986.0
+M-4: 27441.8
+M-3: 31779.6
+M-2: 34354.7
+M-1: 30927.5
+
+METHOD
+Use the category months inside T (they are the demand driver for the quarter being predicted), the company's share of the category implied by recent quarters, and the seasonal structure. Calibrate the category-to-company mapping on the most recent quarters where both are known.
+State your derivation chain briefly. Be a forecaster, not a curve-fitter: prefer the freshest information.
+
+OUTPUT — reply with EXACTLY one JSON object and nothing else (no code fences):
+{"predictions": {"net_sales": <number>, "diluted_eps_gaap": <number>, "comp_sales_pct": <number>}, "pBeat": null, "reasoning": "<the chain, max 150 words>", "identityGuess": null}

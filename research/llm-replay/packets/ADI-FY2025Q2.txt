@@ -1,0 +1,97 @@
+You are an expert earnings nowcaster. Forecast one fiscal quarter of one anonymized company using ONLY the data in this message.
+
+ANONYMIZATION AND RULES
+- The company's identity, all calendar dates and fiscal-year labels have been removed. Quarters are labelled relative to the target: T is the target quarter, T-1 the one before it. Q1..Q4 mark each quarter's position within the fiscal year (seasonality is real).
+- Every currency value has been multiplied by ONE fixed undisclosed constant. Growth rates, margins, seasonality and all cross-metric relationships are unchanged. Percent metrics are not scaled.
+- The target quarter T (position Q2) has ENDED, but its results are NOT yet published. Everything below was published before the results.
+- Do not use knowledge of any real-world company or period. If you believe you recognize the company or the period anyway, you MUST disclose that in "identityGuess" — and still derive every number only from the data below.
+- Do not use any tools, web access, or external data. Work only from this message.
+
+PREDICT (for quarter T, position Q2)
+- revenue: quarterly revenue — scaled currency units
+- adj_eps: adjusted non-GAAP diluted EPS — scaled currency units
+- adj_gross_margin_pct: adjusted gross margin, %
+
+
+DATA 1 — QUARTERLY ACTUALS AS ORIGINALLY REPORTED (oldest first)
+T-18 (Q4): revenue=2008.1, adj_eps=1.895, adj_gross_margin_pct=70.0, adj_operating_margin_pct=41.7
+T-17 (Q1): revenue=2050.2, adj_eps=1.895, adj_gross_margin_pct=70.0, adj_operating_margin_pct=40.7
+T-16 (Q2): revenue=2185.7, adj_eps=2.026, adj_gross_margin_pct=70.9, adj_operating_margin_pct=41.7
+T-15 (Q3): revenue=2314.7, adj_eps=2.263, adj_gross_margin_pct=71.6, adj_operating_margin_pct=43.6
+T-14 (Q4): revenue=3079.2, adj_eps=2.277, adj_gross_margin_pct=70.9, adj_operating_margin_pct=43.1
+T-13 (Q1): revenue=3531.9, adj_eps=2.553, adj_gross_margin_pct=71.9, adj_operating_margin_pct=45.8
+T-12 (Q2): revenue=3910.9, adj_eps=3.158, adj_gross_margin_pct=74.2, adj_operating_margin_pct=50.3
+T-11 (Q3): revenue=4092.4, adj_eps=3.316, adj_gross_margin_pct=74.1, adj_operating_margin_pct=50.1
+T-10 (Q4): revenue=4274.0, adj_eps=3.592, adj_gross_margin_pct=74.0, adj_operating_margin_pct=51.1
+T-9 (Q1): revenue=4276.7, adj_eps=3.619, adj_gross_margin_pct=73.6, adj_operating_margin_pct=51.1
+T-8 (Q2): revenue=4293.8, adj_eps=3.724, adj_gross_margin_pct=73.7, adj_operating_margin_pct=51.2
+T-7 (Q3): revenue=4047.7, adj_eps=3.277, adj_gross_margin_pct=72.2, adj_operating_margin_pct=47.8
+T-6 (Q4): revenue=3574.0, adj_eps=2.645, adj_gross_margin_pct=70.2, adj_operating_margin_pct=44.7
+T-5 (Q1): revenue=3306.9, adj_eps=2.277, adj_gross_margin_pct=69.0, adj_operating_margin_pct=42.0
+T-4 (Q2): revenue=2841.0, adj_eps=1.842, adj_gross_margin_pct=66.7, adj_operating_margin_pct=39.0
+T-3 (Q3): revenue=3042.4, adj_eps=2.079, adj_gross_margin_pct=67.9, adj_operating_margin_pct=41.2
+T-2 (Q4): revenue=3214.7, adj_eps=2.198, adj_gross_margin_pct=67.9, adj_operating_margin_pct=41.1
+T-1 (Q1): revenue=3188.4, adj_eps=2.145, adj_gross_margin_pct=68.8, adj_operating_margin_pct=40.5
+
+DATA 2 — MANAGEMENT GUIDANCE (each issued one quarter before the quarter it guides; same scaled units; percent guides unscaled)
+T-17 adj_eps guide: mid 1.711, range 1.579–1.842
+T-17 adj_operating_margin_pct guide: mid 40.0, range 39.0–41.0
+T-17 revenue guide: mid 1973.9, range 1881.7–2066.0
+T-16 adj_eps guide: mid 1.895, range 1.79–2.0
+T-16 adj_operating_margin_pct guide: mid 41.0, range 40.3–41.7
+T-16 revenue guide: mid 2105.4, range 2039.6–2171.2
+T-15 adj_eps guide: mid 2.119, range 1.974–2.263
+T-15 adj_operating_margin_pct guide: mid 42.5, range 41.5–43.5
+T-15 revenue guide: mid 2237.0, range 2144.9–2329.1
+T-14 adj_eps guide: mid 2.263, range 2.119–2.408
+T-14 adj_operating_margin_pct guide: mid 43.7, range 42.7–44.7
+T-14 revenue guide: mid 2342.3, range 2250.2–2434.4
+T-13 adj_eps guide: mid 2.342, range 2.211–2.474
+T-13 adj_operating_margin_pct guide: mid 43.3, range 42.6–44.0
+T-13 revenue guide: mid 3421.3, range 3289.8–3552.9
+T-12 adj_eps guide: mid 2.724, range 2.592–2.856
+T-12 adj_operating_margin_pct guide: mid 46.5, range 45.8–47.2
+T-12 revenue guide: mid 3684.5, range 3552.9–3816.1
+T-11 adj_eps guide: mid 3.184, range 3.053–3.316
+T-11 adj_operating_margin_pct guide: mid 49.5, range 48.8–50.2
+T-11 revenue guide: mid 4013.5, range 3881.9–4145.1
+T-10 adj_eps guide: mid 3.382, range 3.25–3.513
+T-10 adj_operating_margin_pct guide: mid 50.3, range 49.6–51.0
+T-10 revenue guide: mid 4145.1, range 4013.5–4276.7
+T-9 adj_eps guide: mid 3.421, range 3.29–3.553
+T-9 adj_operating_margin_pct guide: mid 50.0, range 49.3–50.7
+T-9 revenue guide: mid 4145.1, range 4013.5–4276.7
+T-8 adj_eps guide: mid 3.619, range 3.487–3.75
+T-8 adj_operating_margin_pct guide: mid 51.0, range 50.3–51.7
+T-8 revenue guide: mid 4210.9, range 4079.3–4342.5
+T-7 adj_eps guide: mid 3.316, range 3.184–3.448
+T-7 adj_operating_margin_pct guide: mid 48.5, range 47.8–49.2
+T-7 revenue guide: mid 4079.3, range 3947.7–4210.9
+T-6 adj_eps guide: mid 2.632, range 2.5–2.763
+T-6 adj_operating_margin_pct guide: mid 44.0, range 43.3–44.7
+T-6 revenue guide: mid 3552.9, range 3421.3–3684.5
+T-5 adj_eps guide: mid 2.237, range 2.105–2.369
+T-5 adj_operating_margin_pct guide: mid 41.5, range 40.8–42.2
+T-5 revenue guide: mid 3289.8, range 3158.2–3421.3
+T-4 adj_eps guide: mid 1.658, range 1.526–1.79
+T-4 adj_operating_margin_pct guide: mid 37.0, range 36.0–38.0
+T-4 revenue guide: mid 2763.4, range 2631.8–2895.0
+T-3 adj_eps guide: mid 1.974, range 1.842–2.105
+T-3 adj_operating_margin_pct guide: mid 40.0, range 39.0–41.0
+T-3 revenue guide: mid 2987.1, range 2855.5–3118.7
+T-2 adj_eps guide: mid 2.145, range 2.013–2.277
+T-2 adj_operating_margin_pct guide: mid 41.0, range 40.0–42.0
+T-2 revenue guide: mid 3158.2, range 3026.6–3289.8
+T-1 adj_eps guide: mid 2.013, range 1.882–2.145
+T-1 adj_operating_margin_pct guide: mid 40.0, range 39.0–41.0
+T-1 revenue guide: mid 3092.4, range 2960.8–3224.0
+T (the target quarter) adj_eps guide: mid 2.211, range 2.079–2.342
+T (the target quarter) adj_operating_margin_pct guide: mid 40.5, range 39.5–41.5
+T (the target quarter) revenue guide: mid 3289.8, range 3158.2–3421.3
+
+METHOD
+The guidance for T is the anchor. Calibrate how actuals have historically realised against the guide midpoints (the beat/miss cadence) and apply that calibration. Margins: use guided operating margin plus the observed gross-vs-operating spread.
+State your derivation chain briefly. Be a forecaster, not a curve-fitter: prefer the freshest information.
+
+OUTPUT — reply with EXACTLY one JSON object and nothing else (no code fences):
+{"predictions": {"revenue": <number>, "adj_eps": <number>, "adj_gross_margin_pct": <number>}, "pBeat": null, "reasoning": "<the chain, max 150 words>", "identityGuess": null}

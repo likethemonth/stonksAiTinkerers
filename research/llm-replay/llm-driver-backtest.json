@@ -1,0 +1,941 @@
+{
+  "meta": {
+    "title": "Blinded LLM point-in-time replay (driver-lens backtest)",
+    "generated": "2026-08-16",
+    "predictor": "one fresh claude-fable-5 session per packet; context = packet text only",
+    "blinding": "no names/dates; relative periods; currency scaled by an undisclosed per-company constant",
+    "gates": "identical to the ML panel's pre-declared gates",
+    "packets": "research/llm-replay/packets",
+    "responses": "research/llm-replay/responses"
+  },
+  "leakageAudit": {
+    "identityGuesses": [
+      {
+        "id": "HD-FY2024Q2",
+        "guess": "Home Depot, target quarter Q2 FY2024 (ending July 2024); comp anchors +24.5% Q4 FY20 and +31.0% Q1 FY21 match. All numbers derived from provided data only."
+      },
+      {
+        "id": "HD-FY2024Q3",
+        "guess": "Home Depot; T appears to be FY2024 Q3 (quarter ending Oct/Nov 2024), with the SRS acquisition explaining the comp-vs-sales wedge"
+      },
+      {
+        "id": "HD-FY2024Q4",
+        "guess": "Home Depot; target looks like Q4 FY2024 (14-week quarter ending early Feb 2025), scaled by ~0.71"
+      },
+      {
+        "id": "HD-FY2025Q1",
+        "guess": "Home Depot; target appears to be Q1 FY2025 (quarter ended April 2025), given the comp-sales sequence (31.0 in Q1 FY2021, 0.8 in Q4 FY2024) and Q2-peaking seasonality with the SRS acquisition pattern. All numbers above were derived from the provided data only."
+      },
+      {
+        "id": "HD-FY2025Q2",
+        "guess": "Home Depot; T appears to be Q2 FY2025 (quarter ended early Aug 2025), with T-4 = Q2 FY2024 including ~6 weeks of SRS Distribution."
+      },
+      {
+        "id": "HD-FY2025Q3",
+        "guess": "Home Depot, fiscal Q3 2025 (quarter ended Nov 2025); scale factor ~0.714"
+      },
+      {
+        "id": "HD-FY2025Q4",
+        "guess": "Home Depot, fiscal Q4 FY2025 (quarter ending early Feb 2026)"
+      },
+      {
+        "id": "HD-FY2026Q1",
+        "guess": "Home Depot; target quarter appears to be Q1 FY2026 (ending ~April 2026), with T-20/T-21 matching the +31.0%/+24.5% COVID-era comps"
+      },
+      {
+        "id": "ADI-FY2025Q1",
+        "guess": "Pattern (74% peak adj GM, ~51% peak op margin, downcycle to ~67% GM then recovery, Q1 sequential dip) resembles Analog Devices around FY2022-2026; all numbers derived solely from the provided data."
+      },
+      {
+        "id": "ADI-FY2025Q2",
+        "guess": "Analog Devices, fiscal Q2 2025 (Maxim-acquisition revenue jump at T-14, 2022 peak ~74% GM, 2023-24 downturn, recovery into 2025)"
+      },
+      {
+        "id": "ADI-FY2025Q3",
+        "guess": "Pattern (Q4 acquisition-driven 31% revenue jump \u2248 Maxim deal, ~70-74% adj GM, 66.7% trough, guided adj OM) suggests Analog Devices; T \u2248 fiscal Q3 2025, scale \u2248 1.316. All numbers derived only from the provided data."
+      },
+      {
+        "id": "ADI-FY2026Q1",
+        "guess": "Pattern (74% adj GM peak, ~51% op margin, semis cycle, guides rev/EPS/opm) resembles Analog Devices, but all numbers derived solely from provided data."
+      },
+      {
+        "id": "ADI-FY2026Q2",
+        "guess": "Pattern (70-74% gross margin, 40-51% operating margin, 2021-style boom then sharp downcycle then recovery, quarterly EPS/OM/revenue guidance ranges) resembles a cyclical semiconductor company such as KLA or Texas Instruments, but I am not confident; all numbers derived solely from the provided data."
+      },
+      {
+        "id": "DE-FY2025Q1",
+        "guess": "Deere & Company \u2014 target looks like fiscal Q1 2025 (quarter ended late January 2025)"
+      },
+      {
+        "id": "DE-FY2025Q2",
+        "guess": "Deere & Co; target looks like fiscal Q2 2025 (quarter ended April 2025)"
+      },
+      {
+        "id": "DE-FY2025Q3",
+        "guess": "Deere & Co. \u2014 fiscal Q3 2025 (quarter ended ~July 2025); Segment A = Production & Precision Agriculture. All numbers above derived only from the provided series."
+      },
+      {
+        "id": "DE-FY2025Q4",
+        "guess": "Deere & Company \u2014 target looks like fiscal Q4 2025 (October-end), scale factor ~1.18"
+      },
+      {
+        "id": "DE-FY2026Q1",
+        "guess": "Deere & Co., fiscal Q1 2026 (quarter ending late Jan 2026); scale factor ~0.85 vs USD millions"
+      }
+    ],
+    "suspiciouslyExact": [
+      {
+        "id": "HD-FY2024Q3",
+        "metric": "comp_sales_pct",
+        "err": 0.0
+      },
+      {
+        "id": "HD-FY2025Q2",
+        "metric": "net_sales",
+        "err": 0.01
+      },
+      {
+        "id": "HD-FY2025Q2",
+        "metric": "diluted_eps_gaap",
+        "err": 0.04
+      },
+      {
+        "id": "HD-FY2025Q2",
+        "metric": "comp_sales_pct",
+        "err": 0.0
+      },
+      {
+        "id": "HD-FY2025Q3",
+        "metric": "net_sales",
+        "err": 0.04
+      },
+      {
+        "id": "HD-FY2025Q3",
+        "metric": "comp_sales_pct",
+        "err": 0.0
+      },
+      {
+        "id": "ADI-FY2025Q4",
+        "metric": "adj_gross_margin_pct",
+        "err": 0.0
+      },
+      {
+        "id": "ADI-FY2026Q2",
+        "metric": "adj_gross_margin_pct",
+        "err": 0.0
+      }
+    ],
+    "inTrainingMeanErr": 2.76,
+    "postTrainingMeanErr": 11.18,
+    "note": "Identity blinding held for magnitude lookup only where the fingerprint was weak. Sessions recognized HD and DE from COVID-era comp/seasonal fingerprints, and several in-training quarters show recall-level (near-zero) errors despite the instruction not to use memory. Verdict: treat in-training quarters as an upper bound (recall-contaminated); quarters whose cutoff postdates the predictor's training window are leak-free by construction and carry the honest signal (gate.postScore / pBeat.brierLLMPost)."
+  },
+  "companies": {
+    "HD": {
+      "scale": 0.7137,
+      "metrics": {
+        "net_sales": {
+          "rows": [
+            {
+              "period": "FY2024Q2",
+              "cutoff": "2024-08-12",
+              "actual": 43175.0,
+              "predicted": 41333.8938,
+              "err": 4.26,
+              "naiveErr": 0.6,
+              "inTraining": true
+            },
+            {
+              "period": "FY2024Q3",
+              "cutoff": "2024-11-11",
+              "actual": 40217.0,
+              "predicted": 40002.8023,
+              "err": 0.53,
+              "naiveErr": 6.23,
+              "inTraining": true
+            },
+            {
+              "period": "FY2024Q4",
+              "cutoff": "2025-02-24",
+              "actual": 39704.0,
+              "predicted": 39372.2853,
+              "err": 0.84,
+              "naiveErr": 12.39,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-05-19",
+              "actual": 39856.0,
+              "predicted": 39792.63,
+              "err": 0.16,
+              "naiveErr": 8.63,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-08-18",
+              "actual": 45277.0,
+              "predicted": 45271.1223,
+              "err": 0.01,
+              "naiveErr": 4.64,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-11-17",
+              "actual": 41352.0,
+              "predicted": 41333.8938,
+              "err": 0.04,
+              "naiveErr": 2.74,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2026-02-23",
+              "actual": 38198.0,
+              "predicted": 38671.7108,
+              "err": 1.24,
+              "naiveErr": 3.94,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-05-18",
+              "actual": 41765.0,
+              "predicted": 42314.6981,
+              "err": 1.32,
+              "naiveErr": 4.57,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mape",
+            "score": 1.05,
+            "threshold": 2.0,
+            "n": 8,
+            "naive": 5.47,
+            "postScore": 1.28,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": true
+          }
+        },
+        "diluted_eps_gaap": {
+          "rows": [
+            {
+              "period": "FY2024Q2",
+              "cutoff": "2024-08-12",
+              "actual": 4.6,
+              "predicted": 4.3436,
+              "err": 5.57,
+              "naiveErr": 1.09,
+              "inTraining": true
+            },
+            {
+              "period": "FY2024Q3",
+              "cutoff": "2024-11-11",
+              "actual": 3.67,
+              "predicted": 3.699,
+              "err": 0.79,
+              "naiveErr": 3.81,
+              "inTraining": true
+            },
+            {
+              "period": "FY2024Q4",
+              "cutoff": "2025-02-24",
+              "actual": 3.02,
+              "predicted": 2.9985,
+              "err": 0.71,
+              "naiveErr": 6.62,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-05-19",
+              "actual": 3.45,
+              "predicted": 3.4468,
+              "err": 0.09,
+              "naiveErr": 5.22,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-08-18",
+              "actual": 4.58,
+              "predicted": 4.5818,
+              "err": 0.04,
+              "naiveErr": 0.44,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-11-17",
+              "actual": 3.62,
+              "predicted": 3.657,
+              "err": 1.02,
+              "naiveErr": 1.38,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2026-02-23",
+              "actual": 2.58,
+              "predicted": 2.382,
+              "err": 7.68,
+              "naiveErr": 17.05,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-05-18",
+              "actual": 3.3,
+              "predicted": 3.4748,
+              "err": 5.3,
+              "naiveErr": 4.55,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mape",
+            "score": 2.65,
+            "threshold": 5.0,
+            "n": 8,
+            "naive": 5.02,
+            "postScore": 6.49,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": true
+          }
+        },
+        "comp_sales_pct": {
+          "rows": [
+            {
+              "period": "FY2024Q2",
+              "cutoff": "2024-08-12",
+              "actual": -3.3,
+              "predicted": -3.4,
+              "err": 0.1,
+              "naiveErr": 1.3,
+              "inTraining": true
+            },
+            {
+              "period": "FY2024Q3",
+              "cutoff": "2024-11-11",
+              "actual": -1.3,
+              "predicted": -1.3,
+              "err": 0.0,
+              "naiveErr": 1.8,
+              "inTraining": true
+            },
+            {
+              "period": "FY2024Q4",
+              "cutoff": "2025-02-24",
+              "actual": 0.8,
+              "predicted": 0.5,
+              "err": 0.3,
+              "naiveErr": 4.3,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-05-19",
+              "actual": -0.3,
+              "predicted": -0.2,
+              "err": 0.1,
+              "naiveErr": 2.5,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-08-18",
+              "actual": 1.0,
+              "predicted": 1.0,
+              "err": 0.0,
+              "naiveErr": 4.3,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-11-17",
+              "actual": 0.2,
+              "predicted": 0.2,
+              "err": 0.0,
+              "naiveErr": 1.5,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2026-02-23",
+              "actual": 0.4,
+              "predicted": 1.0,
+              "err": 0.6,
+              "naiveErr": 0.4,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-05-18",
+              "actual": 0.6,
+              "predicted": 2.8,
+              "err": 2.2,
+              "naiveErr": 0.9,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mae",
+            "score": 0.41,
+            "threshold": 0.8,
+            "n": 8,
+            "naive": 2.12,
+            "postScore": 1.4,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": true
+          }
+        }
+      },
+      "pBeat": {
+        "rows": [
+          {
+            "period": "FY2025Q3",
+            "inTraining": true,
+            "strike": 3.85,
+            "pLLM": 0.25,
+            "pMarketDayBefore": 0.62,
+            "outcome": 0,
+            "brierLLM": 0.0625,
+            "brierMarket": 0.3844
+          },
+          {
+            "period": "FY2025Q4",
+            "inTraining": false,
+            "strike": 2.52,
+            "pLLM": 0.55,
+            "pMarketDayBefore": 0.795,
+            "outcome": 1,
+            "brierLLM": 0.2025,
+            "brierMarket": 0.042
+          },
+          {
+            "period": "FY2026Q1",
+            "inTraining": false,
+            "strike": 3.41,
+            "pLLM": 0.72,
+            "pMarketDayBefore": 0.6,
+            "outcome": 1,
+            "brierLLM": 0.0784,
+            "brierMarket": 0.16
+          }
+        ],
+        "brierLLM": 0.1145,
+        "brierMarket": 0.1955,
+        "brierLLMPost": 0.1405,
+        "brierMarketPost": 0.101,
+        "nPost": 2
+      }
+    },
+    "ADI": {
+      "scale": 1.3159,
+      "metrics": {
+        "revenue": {
+          "rows": [
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-02-18",
+              "actual": 2423.0,
+              "predicted": 2392.279,
+              "err": 1.27,
+              "naiveErr": 3.71,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-05-21",
+              "actual": 2640.0,
+              "predicted": 2564.0246,
+              "err": 2.88,
+              "naiveErr": 18.22,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-08-19",
+              "actual": 2880.0,
+              "predicted": 2872.5587,
+              "err": 0.26,
+              "naiveErr": 19.72,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2025-11-24",
+              "actual": 3076.0,
+              "predicted": 3119.538,
+              "err": 1.42,
+              "naiveErr": 20.58,
+              "inTraining": true
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-02-17",
+              "actual": 3160.0,
+              "predicted": 3184.1325,
+              "err": 0.76,
+              "naiveErr": 23.32,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q2",
+              "cutoff": "2026-05-19",
+              "actual": 3623.0,
+              "predicted": 3583.099,
+              "err": 1.1,
+              "naiveErr": 27.13,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mape",
+            "score": 1.28,
+            "threshold": 2.0,
+            "n": 6,
+            "naive": 18.78,
+            "postScore": 0.93,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": true
+          }
+        },
+        "adj_eps": {
+          "rows": [
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-02-18",
+              "actual": 1.63,
+              "predicted": 1.5959,
+              "err": 2.09,
+              "naiveErr": 6.13,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-05-21",
+              "actual": 1.85,
+              "predicted": 1.7858,
+              "err": 3.47,
+              "naiveErr": 24.32,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-08-19",
+              "actual": 2.05,
+              "predicted": 2.0518,
+              "err": 0.09,
+              "naiveErr": 22.93,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2025-11-24",
+              "actual": 2.26,
+              "predicted": 2.3558,
+              "err": 4.24,
+              "naiveErr": 26.11,
+              "inTraining": true
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-02-17",
+              "actual": 2.46,
+              "predicted": 2.3634,
+              "err": 3.93,
+              "naiveErr": 33.74,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q2",
+              "cutoff": "2026-05-19",
+              "actual": 3.09,
+              "predicted": 3.0017,
+              "err": 2.86,
+              "naiveErr": 40.13,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mape",
+            "score": 2.78,
+            "threshold": 5.0,
+            "n": 6,
+            "naive": 25.56,
+            "postScore": 3.4,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": true
+          }
+        },
+        "adj_gross_margin_pct": {
+          "rows": [
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-02-18",
+              "actual": 68.8,
+              "predicted": 67.7,
+              "err": 1.1,
+              "naiveErr": 0.2,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-05-21",
+              "actual": 69.4,
+              "predicted": 69.0,
+              "err": 0.4,
+              "naiveErr": 2.7,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-08-19",
+              "actual": 69.2,
+              "predicted": 69.9,
+              "err": 0.7,
+              "naiveErr": 1.3,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2025-11-24",
+              "actual": 69.8,
+              "predicted": 69.8,
+              "err": 0.0,
+              "naiveErr": 1.9,
+              "inTraining": true
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-02-17",
+              "actual": 71.2,
+              "predicted": 70.2,
+              "err": 1.0,
+              "naiveErr": 2.4,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q2",
+              "cutoff": "2026-05-19",
+              "actual": 73.0,
+              "predicted": 73.0,
+              "err": 0.0,
+              "naiveErr": 3.6,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mae",
+            "score": 0.53,
+            "threshold": 1.0,
+            "n": 6,
+            "naive": 2.02,
+            "postScore": 0.5,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": true
+          }
+        }
+      },
+      "pBeat": {
+        "rows": [
+          {
+            "period": "FY2025Q4",
+            "inTraining": true,
+            "strike": 2.23,
+            "pLLM": 0.87,
+            "pMarketDayBefore": 0.93,
+            "outcome": 1,
+            "brierLLM": 0.0169,
+            "brierMarket": 0.0049
+          },
+          {
+            "period": "FY2026Q1",
+            "inTraining": false,
+            "strike": 2.3,
+            "pLLM": 0.83,
+            "pMarketDayBefore": 0.88,
+            "outcome": 1,
+            "brierLLM": 0.0289,
+            "brierMarket": 0.0144
+          },
+          {
+            "period": "FY2026Q2",
+            "inTraining": false,
+            "strike": 2.9,
+            "pLLM": 0.85,
+            "pMarketDayBefore": 0.9445,
+            "outcome": 1,
+            "brierLLM": 0.0225,
+            "brierMarket": 0.0031
+          }
+        ],
+        "brierLLM": 0.0228,
+        "brierMarket": 0.0075,
+        "brierLLMPost": 0.0257,
+        "brierMarketPost": 0.0087,
+        "nPost": 2
+      }
+    },
+    "DE": {
+      "scale": 0.8473,
+      "metrics": {
+        "worldwide_net_sales_revenues": {
+          "rows": [
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-02-12",
+              "actual": 8508.0,
+              "predicted": 8556.5915,
+              "err": 0.57,
+              "naiveErr": 43.22,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-05-14",
+              "actual": 12763.0,
+              "predicted": 12746.3708,
+              "err": 0.13,
+              "naiveErr": 19.37,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-08-14",
+              "actual": 12018.0,
+              "predicted": 11979.2281,
+              "err": 0.32,
+              "naiveErr": 9.44,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2025-11-25",
+              "actual": 12394.0,
+              "predicted": 11684.1733,
+              "err": 5.73,
+              "naiveErr": 10.09,
+              "inTraining": true
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-02-18",
+              "actual": 9611.0,
+              "predicted": 9382.7452,
+              "err": 2.37,
+              "naiveErr": 11.48,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q2",
+              "cutoff": "2026-05-20",
+              "actual": 13369.0,
+              "predicted": 13454.5025,
+              "err": 0.64,
+              "naiveErr": 4.53,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mape",
+            "score": 1.63,
+            "threshold": 2.0,
+            "n": 6,
+            "naive": 16.36,
+            "postScore": 1.51,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": true
+          }
+        },
+        "diluted_eps_gaap": {
+          "rows": [
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-02-12",
+              "actual": 3.19,
+              "predicted": 3.1866,
+              "err": 0.11,
+              "naiveErr": 95.3,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-05-14",
+              "actual": 6.64,
+              "predicted": 6.6092,
+              "err": 0.46,
+              "naiveErr": 28.46,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-08-14",
+              "actual": 4.75,
+              "predicted": 4.8979,
+              "err": 3.11,
+              "naiveErr": 32.42,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2025-11-25",
+              "actual": 3.93,
+              "predicted": 4.0127,
+              "err": 2.11,
+              "naiveErr": 15.78,
+              "inTraining": true
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-02-18",
+              "actual": 2.42,
+              "predicted": 2.3014,
+              "err": 4.9,
+              "naiveErr": 31.82,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q2",
+              "cutoff": "2026-05-20",
+              "actual": 6.55,
+              "predicted": 5.7831,
+              "err": 11.71,
+              "naiveErr": 1.37,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mape",
+            "score": 3.73,
+            "threshold": 5.0,
+            "n": 6,
+            "naive": 34.19,
+            "postScore": 8.3,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": true
+          }
+        },
+        "ppa_operating_profit": {
+          "rows": [
+            {
+              "period": "FY2025Q1",
+              "cutoff": "2025-02-12",
+              "actual": 338.0,
+              "predicted": 342.2637,
+              "err": 1.26,
+              "naiveErr": 209.17,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q2",
+              "cutoff": "2025-05-14",
+              "actual": 1148.0,
+              "predicted": 1138.9118,
+              "err": 0.79,
+              "naiveErr": 43.73,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q3",
+              "cutoff": "2025-08-14",
+              "actual": 580.0,
+              "predicted": 944.1756,
+              "err": 62.79,
+              "naiveErr": 100.34,
+              "inTraining": true
+            },
+            {
+              "period": "FY2025Q4",
+              "cutoff": "2025-11-25",
+              "actual": 604.0,
+              "predicted": 566.5054,
+              "err": 6.21,
+              "naiveErr": 8.77,
+              "inTraining": true
+            },
+            {
+              "period": "FY2026Q1",
+              "cutoff": "2026-02-18",
+              "actual": 139.0,
+              "predicted": 300.956,
+              "err": 116.52,
+              "naiveErr": 143.17,
+              "inTraining": false
+            },
+            {
+              "period": "FY2026Q2",
+              "cutoff": "2026-05-20",
+              "actual": 706.0,
+              "predicted": 967.78,
+              "err": 37.08,
+              "naiveErr": 62.61,
+              "inTraining": false
+            }
+          ],
+          "gate": {
+            "kind": "mape",
+            "score": 37.44,
+            "threshold": 10.0,
+            "n": 6,
+            "naive": 94.63,
+            "postScore": 76.8,
+            "postN": 2,
+            "beats_naive": true,
+            "passed": false
+          }
+        }
+      },
+      "pBeat": {
+        "rows": [
+          {
+            "period": "FY2025Q4",
+            "inTraining": true,
+            "strike": 3.87,
+            "pLLM": 0.62,
+            "pMarketDayBefore": 0.745,
+            "outcome": 1,
+            "brierLLM": 0.1444,
+            "brierMarket": 0.065
+          },
+          {
+            "period": "FY2026Q1",
+            "inTraining": false,
+            "strike": 2.1,
+            "pLLM": 0.68,
+            "pMarketDayBefore": 0.53,
+            "outcome": 1,
+            "brierLLM": 0.1024,
+            "brierMarket": 0.2209
+          },
+          {
+            "period": "FY2026Q2",
+            "inTraining": false,
+            "strike": 5.74,
+            "pLLM": 0.55,
+            "pMarketDayBefore": 0.925,
+            "outcome": 1,
+            "brierLLM": 0.2025,
+            "brierMarket": 0.0056
+          }
+        ],
+        "brierLLM": 0.1498,
+        "brierMarket": 0.0972,
+        "brierLLMPost": 0.1525,
+        "brierMarketPost": 0.1133,
+        "nPost": 2
+      }
+    }
+  }
+}
