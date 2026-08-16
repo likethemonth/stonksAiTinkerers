@@ -1,0 +1,316 @@
+{
+  "as_of": "2026-08-16",
+  "closed_observations": 39,
+  "source_scores": [
+    {
+      "source_id": "public_consensus",
+      "source_name": "Public analyst consensus",
+      "company": "Home Depot",
+      "metric": "Net sales",
+      "observations": 6,
+      "weighted_error": 0.00624141730322568,
+      "shrunk_error": 0.03616556991553456,
+      "signed_bias": -0.005173322455204159,
+      "within_one_percent_rate": 0.8333333333333334,
+      "last_forecast_date": "2026-05-18"
+    },
+    {
+      "source_id": "public_consensus",
+      "source_name": "Public analyst consensus",
+      "company": "Analog Devices",
+      "metric": "Revenue",
+      "observations": 8,
+      "weighted_error": 0.02764699099561323,
+      "shrunk_error": 0.046019959591949045,
+      "signed_bias": -0.02764699099561323,
+      "within_one_percent_rate": 0.0,
+      "last_forecast_date": "2026-05-19"
+    },
+    {
+      "source_id": "public_consensus",
+      "source_name": "Public analyst consensus",
+      "company": "Home Depot",
+      "metric": "Adjusted diluted EPS",
+      "observations": 6,
+      "weighted_error": 0.02559086448700151,
+      "shrunk_error": 0.04766486882746134,
+      "signed_bias": -0.013950749692554262,
+      "within_one_percent_rate": 0.5,
+      "last_forecast_date": "2026-05-18"
+    },
+    {
+      "source_id": "public_consensus",
+      "source_name": "Public analyst consensus",
+      "company": "Analog Devices",
+      "metric": "Adjusted diluted EPS",
+      "observations": 8,
+      "weighted_error": 0.05051124539470793,
+      "shrunk_error": 0.060860143626377594,
+      "signed_bias": -0.05051124539470793,
+      "within_one_percent_rate": 0.0,
+      "last_forecast_date": "2026-05-19"
+    },
+    {
+      "source_id": "management_guidance",
+      "source_name": "ADI management guidance",
+      "company": "Analog Devices",
+      "metric": "Revenue",
+      "observations": 1,
+      "weighted_error": 0.04513888888888889,
+      "shrunk_error": 0.07377883010201468,
+      "signed_bias": -0.04513888888888889,
+      "within_one_percent_rate": 0.0,
+      "last_forecast_date": "2025-05-22"
+    },
+    {
+      "source_id": "management_guidance",
+      "source_name": "ADI management guidance",
+      "company": "Analog Devices",
+      "metric": "Adjusted diluted EPS",
+      "observations": 1,
+      "weighted_error": 0.06341463414634142,
+      "shrunk_error": 0.0770402441142225,
+      "signed_bias": -0.06341463414634142,
+      "within_one_percent_rate": 0.0,
+      "last_forecast_date": "2025-05-22"
+    },
+    {
+      "source_id": "public_consensus",
+      "source_name": "Public analyst consensus",
+      "company": "Deere & Company",
+      "metric": "Diluted EPS (GAAP)",
+      "observations": 7,
+      "weighted_error": 0.10015809100889918,
+      "shrunk_error": 0.09263131108932818,
+      "signed_bias": -0.09779797913772657,
+      "within_one_percent_rate": 0.14285714285714285,
+      "last_forecast_date": "2026-05-20"
+    },
+    {
+      "source_id": "public_consensus",
+      "source_name": "Public analyst consensus",
+      "company": "Home Depot",
+      "metric": "Comparable sales, total company",
+      "observations": 2,
+      "weighted_error": 0.3774014378088907,
+      "shrunk_error": 0.16530288707397528,
+      "signed_bias": 0.3774014378088907,
+      "within_one_percent_rate": 0.0,
+      "last_forecast_date": "2025-08-18"
+    }
+  ],
+  "forecasts": [
+    {
+      "company": "Analog Devices",
+      "metric": "Adjusted diluted EPS",
+      "period": "FY2026Q3",
+      "units": "USD / share",
+      "forecast": 3.51,
+      "unrounded_forecast": 3.507150541645225,
+      "components": [
+        {
+          "source_id": "public_consensus",
+          "source_name": "Benzinga / S&P consensus",
+          "source_type": "consensus",
+          "raw_forecast": 3.33,
+          "bias_adjusted_forecast": 3.507150541645225,
+          "observations": 8,
+          "shrunk_error": 0.060860143626377594,
+          "weight": 14.788003221371435,
+          "source_url": "https://www.benzinga.com/quote/adi/earnings"
+        }
+      ]
+    },
+    {
+      "company": "Analog Devices",
+      "metric": "Revenue",
+      "period": "FY2026Q3",
+      "units": "USDm",
+      "forecast": 4021.0,
+      "unrounded_forecast": 4021.17334321157,
+      "components": [
+        {
+          "source_id": "public_consensus",
+          "source_name": "Benzinga analyst consensus",
+          "source_type": "consensus",
+          "raw_forecast": 3910.0,
+          "bias_adjusted_forecast": 4021.17334321157,
+          "observations": 8,
+          "shrunk_error": 0.046019959591949045,
+          "weight": 19.556731643837654,
+          "source_url": "https://www.benzinga.com/quote/adi/earnings"
+        }
+      ]
+    },
+    {
+      "company": "Deere & Company",
+      "metric": "Diluted EPS (GAAP)",
+      "period": "FY2026Q3",
+      "units": "USD / share",
+      "forecast": 5.09,
+      "unrounded_forecast": 5.0922782429625935,
+      "components": [
+        {
+          "source_id": "public_consensus",
+          "source_name": "Public analyst consensus",
+          "source_type": "consensus",
+          "raw_forecast": 4.75,
+          "bias_adjusted_forecast": 5.26489620967621,
+          "observations": 7,
+          "shrunk_error": 0.09263131108932818,
+          "weight": 9.176162897881365,
+          "source_url": "https://www.marketbeat.com/stocks/NYSE/DE/earnings/"
+        },
+        {
+          "source_id": "refinitiv_consensus",
+          "source_name": "Refinitiv / S&P consensus",
+          "source_type": "consensus",
+          "raw_forecast": 4.69,
+          "bias_adjusted_forecast": 4.69,
+          "observations": 0,
+          "shrunk_error": null,
+          "weight": 3.9375,
+          "source_url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks"
+        }
+      ]
+    },
+    {
+      "company": "Hays plc",
+      "metric": "Net fees",
+      "period": "FY2026",
+      "units": "GBPm",
+      "forecast": 902.4,
+      "unrounded_forecast": 902.4,
+      "components": [
+        {
+          "source_id": "hays_company_consensus",
+          "source_name": "Hays published nine-analyst consensus",
+          "source_type": "company_consensus",
+          "raw_forecast": 902.4,
+          "bias_adjusted_forecast": 902.4,
+          "observations": 0,
+          "shrunk_error": null,
+          "weight": 4.375,
+          "source_url": "https://www.haysplc.com/investors/analysts-consensus"
+        }
+      ]
+    },
+    {
+      "company": "Hays plc",
+      "metric": "Pre-exceptional basic EPS",
+      "period": "FY2026",
+      "units": "GBp",
+      "forecast": 1.13,
+      "unrounded_forecast": 1.13,
+      "components": [
+        {
+          "source_id": "hays_company_consensus",
+          "source_name": "Hays published nine-analyst consensus",
+          "source_type": "company_consensus",
+          "raw_forecast": 1.13,
+          "bias_adjusted_forecast": 1.13,
+          "observations": 0,
+          "shrunk_error": null,
+          "weight": 4.375,
+          "source_url": "https://www.haysplc.com/investors/analysts-consensus"
+        }
+      ]
+    },
+    {
+      "company": "Hays plc",
+      "metric": "Pre-exceptional operating profit",
+      "period": "FY2026",
+      "units": "GBPm",
+      "forecast": 45.3,
+      "unrounded_forecast": 45.3,
+      "components": [
+        {
+          "source_id": "hays_company_consensus",
+          "source_name": "Hays published nine-analyst consensus",
+          "source_type": "company_consensus",
+          "raw_forecast": 45.3,
+          "bias_adjusted_forecast": 45.3,
+          "observations": 0,
+          "shrunk_error": null,
+          "weight": 4.375,
+          "source_url": "https://www.haysplc.com/investors/analysts-consensus"
+        }
+      ]
+    },
+    {
+      "company": "Home Depot",
+      "metric": "Adjusted diluted EPS",
+      "period": "FY2026Q2",
+      "units": "USD / share",
+      "forecast": 4.77,
+      "unrounded_forecast": 4.774333168412735,
+      "components": [
+        {
+          "source_id": "public_consensus",
+          "source_name": "Refinitiv / S&P consensus",
+          "source_type": "consensus",
+          "raw_forecast": 4.73,
+          "bias_adjusted_forecast": 4.796920639131573,
+          "observations": 6,
+          "shrunk_error": 0.04766486882746134,
+          "weight": 19.930821659005026,
+          "source_url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks"
+        },
+        {
+          "source_id": "oppenheimer_nagel",
+          "source_name": "Brian Nagel / Oppenheimer",
+          "source_type": "analyst",
+          "raw_forecast": 4.66,
+          "bias_adjusted_forecast": 4.66,
+          "observations": 0,
+          "shrunk_error": null,
+          "weight": 3.9375,
+          "source_url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks"
+        }
+      ]
+    },
+    {
+      "company": "Home Depot",
+      "metric": "Net sales",
+      "period": "FY2026Q2",
+      "units": "USDm",
+      "forecast": 47416.0,
+      "unrounded_forecast": 47416.260041494286,
+      "components": [
+        {
+          "source_id": "public_consensus",
+          "source_name": "Refinitiv / S&P consensus",
+          "source_type": "consensus",
+          "raw_forecast": 47200.0,
+          "bias_adjusted_forecast": 47445.45061506419,
+          "observations": 6,
+          "shrunk_error": 0.03616556991553456,
+          "weight": 26.268077683242506,
+          "source_url": "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks"
+        },
+        {
+          "source_id": "benzinga_consensus",
+          "source_name": "Benzinga analyst consensus",
+          "source_type": "consensus",
+          "raw_forecast": 47350.0,
+          "bias_adjusted_forecast": 47350.0,
+          "observations": 0,
+          "shrunk_error": null,
+          "weight": 3.7187499999999996,
+          "source_url": "https://www.benzinga.com/quote/hd/earnings"
+        },
+        {
+          "source_id": "linkedin_beta_finch",
+          "source_name": "Beta Finch LinkedIn post",
+          "source_type": "social_explicit",
+          "raw_forecast": 47200.0,
+          "bias_adjusted_forecast": 47200.0,
+          "observations": 0,
+          "shrunk_error": null,
+          "weight": 2.40625,
+          "source_url": "https://www.linkedin.com/company/beta-finch/posts/"
+        }
+      ]
+    }
+  ]
+}

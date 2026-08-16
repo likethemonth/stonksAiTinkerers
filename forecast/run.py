@@ -77,8 +77,15 @@ class Log:
         self.path.write_text("\n".join(self.lines) + "\n", encoding="utf-8")
 
 
-def _forecast_adi(as_of: date | None, log: Log) -> list[MetricForecast]:
-    """Calibrated forecast from extracted guidance."""
+def _forecast_adi(
+    as_of: date | None, log: Log, period: Period | None = None
+) -> list[MetricForecast]:
+    """Calibrated forecast from extracted guidance.
+
+    ``period`` overrides the registry target so ``forecast.system_backtest`` can
+    replay this exact engine at a historical cutoff. Omitting it reproduces the
+    submitted run byte for byte.
+    """
     docs = load(Company.ADI, as_of=as_of)
     rejected: list[str] = []
     observations = adi.extract(docs, rejected)
@@ -93,7 +100,7 @@ def _forecast_adi(as_of: date | None, log: Log) -> list[MetricForecast]:
     for reason in rejected:
         log(f"  REJECTED {reason}")
 
-    period = target_period(Company.ADI)
+    period = period or target_period(Company.ADI)
     specs = submitted_specs(Company.ADI)
     metrics: list[MetricForecast] = []
 
@@ -149,7 +156,9 @@ def _forecast_adi(as_of: date | None, log: Log) -> list[MetricForecast]:
 _HAYS_CONSENSUS_POSITION = 0.8
 
 
-def _forecast_hays(as_of: date | None, log: Log) -> list[MetricForecast]:
+def _forecast_hays(
+    as_of: date | None, log: Log, period: Period | None = None
+) -> list[MetricForecast]:
     """Hays: the only company where a real analyst benchmark exists in the corpus."""
     docs = load(Company.HAS, as_of=as_of)
     rejected: list[str] = []
@@ -161,7 +170,7 @@ def _forecast_hays(as_of: date | None, log: Log) -> list[MetricForecast]:
     for reason in rejected:
         log(f"  RESOLVED {reason}")
 
-    period = target_period(Company.HAS)
+    period = period or target_period(Company.HAS)
     specs = {s.label: s for s in submitted_specs(Company.HAS)}
     metrics: list[MetricForecast] = []
 
@@ -237,7 +246,9 @@ def _forecast_baseline(company: Company, log: Log) -> list[MetricForecast]:
     return metrics
 
 
-def _forecast_hd(as_of: date | None, log: Log) -> list[MetricForecast]:
+def _forecast_hd(
+    as_of: date | None, log: Log, period: Period | None = None
+) -> list[MetricForecast]:
     """Home Depot: full-year guidance divided into a quarter by seasonal history."""
     docs = load(Company.HD, as_of=as_of)
     rejected: list[str] = []
@@ -249,7 +260,7 @@ def _forecast_hd(as_of: date | None, log: Log) -> list[MetricForecast]:
     for reason in rejected:
         log(f"  REJECTED {reason}")
 
-    period = target_period(Company.HD)
+    period = period or target_period(Company.HD)
     fy = Period(year=period.year, quarter=None)
     specs = {s.label: s for s in submitted_specs(Company.HD)}
     metrics: list[MetricForecast] = []
@@ -322,8 +333,17 @@ def _forecast_hd(as_of: date | None, log: Log) -> list[MetricForecast]:
     return sorted(metrics, key=lambda m: order[m.label])
 
 
-def _forecast_deere(as_of: date | None, log: Log) -> list[MetricForecast]:
-    """Deere: extracted history plus the post-guidance segment driver chain."""
+def _forecast_deere(
+    as_of: date | None, log: Log, period: Period | None = None
+) -> list[MetricForecast]:
+    """Deere: extracted history plus the post-guidance segment driver chain.
+
+    ``period`` is accepted for a uniform forecaster signature but cannot change
+    the result: the AEM driver chain is anchored to a dated snapshot rather than
+    to a fiscal period, so Deere has no replayable historical engine. The system
+    backtest records this as an explicit abstention instead of scoring a model
+    that would not have existed at the historical cutoff.
+    """
     docs = load(Company.DE, as_of=as_of)
     rejected: list[str] = []
     observations = deere.extract(docs, rejected)
