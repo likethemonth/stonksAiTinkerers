@@ -1024,7 +1024,17 @@ def _source_scorecards(rows: list[dict[str, Any]], minimum_n: int = 3) -> list[d
     )
 
 
-def build_backtest(*, as_of: date, quarters: int | None = None) -> dict[str, Any]:
+def build_backtest(
+    *,
+    as_of: date,
+    quarters: int | None = None,
+    start_year: int | None = None,
+) -> dict[str, Any]:
+    if quarters is not None and start_year is not None:
+        raise ValueError("quarters and start_year are mutually exclusive")
+    if start_year is not None and start_year < 1900:
+        raise ValueError("start_year must be 1900 or later")
+
     companies: list[dict[str, Any]] = []
     all_metric_rows: list[dict[str, Any]] = []
     source_archive = _load_source_archive()
@@ -1034,7 +1044,12 @@ def build_backtest(*, as_of: date, quarters: int | None = None) -> dict[str, Any
         actuals = _actual_observations(company, as_of)
         end = _latest_resolved_quarter(company, actuals)
         if quarters is None:
-            start = _earliest_resolved_quarter(company, actuals)
+            earliest = _earliest_resolved_quarter(company, actuals)
+            start = (
+                Period(year=max(start_year, earliest.year), quarter=1)
+                if start_year is not None
+                else earliest
+            )
             slot_count = _quarter_index(end) - _quarter_index(start) + 1
         else:
             slot_count = quarters
@@ -1095,10 +1110,19 @@ def build_backtest(*, as_of: date, quarters: int | None = None) -> dict[str, Any
     )
     return {
         "meta": {
-            "title": "Full filing-history point-in-time forecast replay",
+            "title": (
+                f"Point-in-time forecast replay since fiscal {start_year}"
+                if start_year is not None
+                else "Full filing-history point-in-time forecast replay"
+            ),
             "asOf": as_of.isoformat(),
             "quartersPerCompany": quarters,
-            "windowMode": "full_filing_history" if quarters is None else "fixed_quarters",
+            "startYear": start_year,
+            "windowMode": (
+                "filing_history_since_year"
+                if start_year is not None
+                else "full_filing_history" if quarters is None else "fixed_quarters"
+            ),
             "modelVersion": "period-engine-replay-v2",
             "modelScope": (
                 "Period-engine replay: filing/fundamental baseline, exact-metric Street consensus, "
@@ -1132,11 +1156,25 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Optional trailing-quarter limit; omitted replays all recoverable filing periods.",
     )
+    parser.add_argument(
+        "--start-year",
+        type=int,
+        default=None,
+        help="Optional first fiscal year; includes every quarter from Q1 onward.",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args(argv)
     if args.quarters is not None and args.quarters < 1:
         parser.error("--quarters must be positive")
-    payload = build_backtest(as_of=date.fromisoformat(args.as_of), quarters=args.quarters)
+    if args.start_year is not None and args.start_year < 1900:
+        parser.error("--start-year must be 1900 or later")
+    if args.quarters is not None and args.start_year is not None:
+        parser.error("--quarters and --start-year are mutually exclusive")
+    payload = build_backtest(
+        as_of=date.fromisoformat(args.as_of),
+        quarters=args.quarters,
+        start_year=args.start_year,
+    )
     write_backtest(payload, args.output)
     print(
         f"Wrote {args.output}: {payload['summary']['requestedCompanyPeriods']} company-periods, "

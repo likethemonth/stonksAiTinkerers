@@ -19,6 +19,11 @@ def full_replay() -> dict:
     return build_backtest(as_of=date(2026, 8, 16))
 
 
+@pytest.fixture(scope="module")
+def replay_since_2015() -> dict:
+    return build_backtest(as_of=date(2026, 8, 16), start_year=2015)
+
+
 def metric_rows(replay: dict) -> list[dict]:
     return [
         metric
@@ -76,6 +81,25 @@ def test_full_replay_uses_every_recoverable_filing_period(full_replay: dict) -> 
     )
     assert earliest["LSE:HAS"]["metrics"][0]["actual"]["value"] == pytest.approx(724.9)
     assert earliest["DE"]["metrics"][0]["actual"]["value"] == pytest.approx(7654.0)
+
+
+def test_start_year_replay_uses_a_common_2015_floor(replay_since_2015: dict) -> None:
+    assert replay_since_2015["meta"]["windowMode"] == "filing_history_since_year"
+    assert replay_since_2015["meta"]["startYear"] == 2015
+    assert all(
+        company["windowStart"] == "FY2015Q1"
+        for company in replay_since_2015["companies"]
+    )
+    assert all(
+        int(period["period"][2:6]) >= 2015
+        for company in replay_since_2015["companies"]
+        for period in company["periods"]
+    )
+
+
+def test_start_year_and_trailing_quarters_are_mutually_exclusive() -> None:
+    with pytest.raises(ValueError, match="mutually exclusive"):
+        build_backtest(as_of=date(2026, 8, 16), quarters=20, start_year=2015)
 
 
 def test_full_replay_evaluated_rows_remain_point_in_time(full_replay: dict) -> None:
