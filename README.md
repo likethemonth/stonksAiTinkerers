@@ -72,6 +72,8 @@ Use `HD`, `ADI`, `HAS` or `DE` for the four challenge companies. The output cont
 
 This entry implements the approach in [agents-vs-wall-street-standalone-strategy.md](agents-vs-wall-street-standalone-strategy.md): a reconstructed Street estimate, an independent fundamental/driver model, and a prediction-market lens feed a source-overlap-aware meta-forecaster. Missing market coverage is an explicit abstention rather than a copied estimate.
 
+The full React forecast room is deployed at [analyst-evidence-console.zctyurl.chatgpt.site](https://analyst-evidence-console.zctyurl.chatgpt.site). It exposes all 12 submitted forecasts, the three-engine calculation behind each number, candidate research lenses, historical holdouts, the point-in-time Street backtest, pipeline stages, test results, workbook checks, and explicit coverage gaps.
+
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
