@@ -15,6 +15,7 @@ so the log never lets a provisional number pass as a calibrated one.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 import traceback
 from datetime import date, datetime
@@ -42,6 +43,7 @@ from forecast.metrics import (
     ticker,
     verify_registry,
 )
+from forecast.orchestrate import orchestrate
 from forecast.schema import Company, CompanyForecast, Estimate, Kind, MetricForecast, Period
 from forecast.store import write_calibration_report, write_observations
 from forecast.writer import write_workbook
@@ -324,7 +326,7 @@ FORECASTERS = {
 }
 
 
-def run_company(company: Company, as_of: date | None, log: Log) -> Path:
+def run_company(company: Company, as_of: date | None, log: Log) -> CompanyForecast:
     log(f"=== {display_name(company)} ({ticker(company)}) "
         f"{target_period(company).key} ===")
 
@@ -333,6 +335,8 @@ def run_company(company: Company, as_of: date | None, log: Log) -> Path:
         metrics = forecaster(as_of, log)
     else:
         metrics = _forecast_baseline(company, log)
+
+    metrics = orchestrate(company, metrics, as_of=as_of)
 
     forecast = CompanyForecast(
         ticker=ticker(company),
@@ -349,12 +353,18 @@ def run_company(company: Company, as_of: date | None, log: Log) -> Path:
         log(f"      {m.reasoning}")
         for w in m.warnings:
             log(f"      WARNING {w}")
+        for weight in m.meta_weights:
+            log(
+                f"      engine {weight.engine.value}: "
+                f"{weight.normalized_weight:.0%} "
+                f"(overlap penalty {weight.overlap_penalty:.0%})"
+            )
         log(f"      sources: {', '.join(m.citations[:3])}")
 
     path = write_workbook(forecast)
     log(f"  wrote {path.relative_to(REPO_ROOT)}")
     log()
-    return path
+    return forecast
 
 
 def main() -> int:
@@ -378,15 +388,33 @@ def main() -> int:
     log()
 
     failures: list[str] = []
+    forecasts: list[CompanyForecast] = []
     for company in Company:
         try:
-            run_company(company, args.as_of, log)
+            forecasts.append(run_company(company, args.as_of, log))
         except Exception as exc:  # noqa: BLE001 - one company must not kill the run
             failures.append(company.value)
             log(f"  FAILED {company.value}: {exc}")
             for line in traceback.format_exc().splitlines():
                 log(f"    {line}")
             log()
+
+    audit_path = REPO_ROOT / "submission" / "forecast-audit.json"
+    audit_path.parent.mkdir(parents=True, exist_ok=True)
+    audit_path.write_text(
+        json.dumps(
+            {
+                "generated_at": datetime.now().isoformat(timespec="seconds"),
+                "as_of": (args.as_of or date.today()).isoformat(),
+                "forecasts": [forecast.model_dump(mode="json") for forecast in forecasts],
+                "failures": failures,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    log(f"audit: {audit_path.relative_to(REPO_ROOT)}")
 
     elapsed = (datetime.now() - started).total_seconds()
     if failures:

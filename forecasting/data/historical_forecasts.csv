@@ -1,0 +1,40 @@
+source_id,source_name,source_type,company,metric,period,forecast_date,event_date,forecast,actual,units,source_url,quality
+public_consensus,Public analyst consensus,consensus,Home Depot,Adjusted diluted EPS,FY2024Q2,2024-08-12,2024-08-13,4.49,4.67,USD / share,https://www.reddit.com/r/Optionmillionaires/comments/1er41jm,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Adjusted diluted EPS,FY2025Q1,2025-05-19,2025-05-20,3.59,3.56,USD / share,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Adjusted diluted EPS,FY2025Q2,2025-08-18,2025-08-19,4.69,4.68,USD / share,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Adjusted diluted EPS,FY2025Q3,2025-11-17,2025-11-18,3.83,3.74,USD / share,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Adjusted diluted EPS,FY2025Q4,2026-02-23,2026-02-24,2.52,2.72,USD / share,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Adjusted diluted EPS,FY2026Q1,2026-05-18,2026-05-19,3.41,3.43,USD / share,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Net sales,FY2024Q2,2024-08-12,2024-08-13,43060,43180,USDm,https://www.reddit.com/r/Optionmillionaires/comments/1er41jm,0.88
+public_consensus,Public analyst consensus,consensus,Home Depot,Net sales,FY2025Q1,2025-05-19,2025-05-20,39240,39860,USDm,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Net sales,FY2025Q2,2025-08-18,2025-08-19,45430,45280,USDm,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Net sales,FY2025Q3,2025-11-17,2025-11-18,41060,41350,USDm,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Net sales,FY2025Q4,2026-02-23,2026-02-24,38010,38200,USDm,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,Net sales,FY2026Q1,2026-05-18,2026-05-19,41590,41770,USDm,https://www.marketbeat.com/stocks/NYSE/HD/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Home Depot,"Comparable sales, total company",FY2024Q2,2024-08-12,2024-08-13,-2.63,-3.3,%,https://www.reddit.com/r/HomeDepot/comments/1erckt6,0.80
+public_consensus,Public analyst consensus,consensus,Home Depot,"Comparable sales, total company",FY2025Q2,2025-08-18,2025-08-19,1.5,1.0,%,https://www.axios.com/2025/08/19/home-depot-earnings-tariffs-prices,0.85
+public_consensus,Public analyst consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2024Q3,2024-08-20,2024-08-21,1.50,1.58,USD / share,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2024Q4,2024-11-25,2024-11-26,1.64,1.67,USD / share,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2025Q1,2025-02-18,2025-02-19,1.54,1.63,USD / share,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2025Q2,2025-05-21,2025-05-22,1.70,1.85,USD / share,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2025Q3,2025-08-19,2025-08-20,1.95,2.05,USD / share,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2025Q4,2025-11-24,2025-11-25,2.22,2.26,USD / share,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2026Q1,2026-02-17,2026-02-18,2.31,2.46,USD / share,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2026Q2,2026-05-19,2026-05-20,2.89,3.09,USD / share,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Revenue,FY2024Q3,2024-08-20,2024-08-21,2270,2310,USDm,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Revenue,FY2024Q4,2024-11-25,2024-11-26,2410,2440,USDm,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Revenue,FY2025Q1,2025-02-18,2025-02-19,2360,2420,USDm,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Revenue,FY2025Q2,2025-05-21,2025-05-22,2500,2640,USDm,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Revenue,FY2025Q3,2025-08-19,2025-08-20,2760,2880,USDm,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Revenue,FY2025Q4,2025-11-24,2025-11-25,3020,3080,USDm,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Revenue,FY2026Q1,2026-02-17,2026-02-18,3100,3160,USDm,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+public_consensus,Public analyst consensus,consensus,Analog Devices,Revenue,FY2026Q2,2026-05-19,2026-05-20,3510,3620,USDm,https://www.marketbeat.com/stocks/NASDAQ/ADI/earnings/,0.90
+management_guidance,ADI management guidance,company_guidance,Analog Devices,Adjusted diluted EPS,FY2025Q3,2025-05-22,2025-08-20,1.92,2.05,USD / share,challenge/offline-data/analog-devices/filings/2025-05-22__adi-us-20250522-q2-8k__102679.md,1.00
+management_guidance,ADI management guidance,company_guidance,Analog Devices,Revenue,FY2025Q3,2025-05-22,2025-08-20,2750,2880,USDm,challenge/offline-data/analog-devices/filings/2025-05-22__adi-us-20250522-q2-8k__102679.md,1.00
+public_consensus,Public analyst consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2024Q4,2024-11-20,2024-11-21,3.89,4.55,USD / share,https://www.marketbeat.com/stocks/NYSE/DE/earnings/,0.85
+public_consensus,Public analyst consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2025Q1,2025-02-12,2025-02-13,3.14,3.19,USD / share,https://www.marketbeat.com/stocks/NYSE/DE/earnings/,0.85
+public_consensus,Public analyst consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2025Q2,2025-05-14,2025-05-15,5.72,6.64,USD / share,https://www.marketbeat.com/stocks/NYSE/DE/earnings/,0.85
+public_consensus,Public analyst consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2025Q3,2025-08-13,2025-08-14,4.62,4.75,USD / share,https://www.marketbeat.com/stocks/NYSE/DE/earnings/,0.85
+public_consensus,Public analyst consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2025Q4,2025-11-25,2025-11-26,3.96,3.93,USD / share,https://www.marketbeat.com/stocks/NYSE/DE/earnings/,0.85
+public_consensus,Public analyst consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2026Q1,2026-02-18,2026-02-19,1.90,2.42,USD / share,https://www.marketbeat.com/stocks/NYSE/DE/earnings/,0.85
+public_consensus,Public analyst consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2026Q2,2026-05-20,2026-05-21,5.70,6.55,USD / share,https://www.marketbeat.com/stocks/NYSE/DE/earnings/,0.85

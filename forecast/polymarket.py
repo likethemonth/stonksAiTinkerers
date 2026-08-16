@@ -387,6 +387,25 @@ def beat_to_estimate(sig: BeatSignal) -> Estimate:
     )
 
 
+def market_estimate(
+    company: Company, metric_key: str, as_of: date | None = None
+) -> Estimate | None:
+    """Load one dated direct-market proxy for the orchestrator.
+
+    Absence is normal: most operating metrics have no economically equivalent
+    market and must be represented as an abstention by the caller.
+    """
+    # The canonical registry calls Deere's target ``diluted_eps_gaap`` while the
+    # original market prototype used ``gaap_eps``. Keep the prototype's public
+    # keys stable and adapt at this boundary.
+    market_key = "gaap_eps" if metric_key == "diluted_eps_gaap" else metric_key
+    slug = DIRECT_MARKETS.get((company, market_key))
+    if slug is None:
+        return None
+    signal = parse_beat_market(company, market_key, slug, as_of)
+    return beat_to_estimate(signal) if signal is not None else None
+
+
 @dataclass(frozen=True)
 class CriticVerdict:
     metric_key: str

@@ -1,0 +1,23 @@
+source_id,source_name,source_type,company,metric,period,forecast_date,event_date,forecast,actual,units,source_url,quality
+public_consensus,Refinitiv / S&P consensus,consensus,Home Depot,Net sales,FY2026Q2,2026-08-16,2026-08-18,47200,,USDm,https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks,0.95
+benzinga_consensus,Benzinga analyst consensus,consensus,Home Depot,Net sales,FY2026Q2,2026-08-16,2026-08-18,47350,,USDm,https://www.benzinga.com/quote/hd/earnings,0.85
+linkedin_beta_finch,Beta Finch LinkedIn post,social_explicit,Home Depot,Net sales,FY2026Q2,2026-08-15,2026-08-18,47200,,USDm,research/raw/linkedin-hd.txt,0.55
+public_consensus,Refinitiv / S&P consensus,consensus,Home Depot,Adjusted diluted EPS,FY2026Q2,2026-08-16,2026-08-18,4.73,,USD / share,https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks,0.95
+oppenheimer_nagel,Brian Nagel / Oppenheimer,analyst,Home Depot,Adjusted diluted EPS,FY2026Q2,2026-08-16,2026-08-18,4.66,,USD / share,https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks,0.90
+management_guidance,Home Depot FY2026 guidance midpoint,company_guidance,Home Depot,"Comparable sales, total company",FY2026Q2,2026-05-19,2026-08-18,1.0,,%,https://ir.homedepot.com/events-and-presentations,0.70
+fundamental_model,Driver model,model,Home Depot,"Comparable sales, total company",FY2026Q2,2026-08-16,2026-08-18,1.1,,%,challenge/offline-data/home-depot/INDEX.md,0.65
+public_consensus,Benzinga analyst consensus,consensus,Analog Devices,Revenue,FY2026Q3,2026-08-16,2026-08-19,3910,,USDm,https://www.benzinga.com/quote/adi/earnings,0.90
+management_guidance,ADI management guidance,company_guidance,Analog Devices,Revenue,FY2026Q3,2026-05-20,2026-08-19,3900,,USDm,https://www.sec.gov/Archives/edgar/data/6281/000000628126000050/adi2q26exhibit991earnings.htm,1.00
+public_consensus,Benzinga / S&P consensus,consensus,Analog Devices,Adjusted diluted EPS,FY2026Q3,2026-08-16,2026-08-19,3.33,,USD / share,https://www.benzinga.com/quote/adi/earnings,0.90
+management_guidance,ADI management guidance,company_guidance,Analog Devices,Adjusted diluted EPS,FY2026Q3,2026-05-20,2026-08-19,3.30,,USD / share,https://www.sec.gov/Archives/edgar/data/6281/000000628126000050/adi2q26exhibit991earnings.htm,1.00
+management_guidance,ADI management commentary,company_guidance,Analog Devices,Adjusted gross margin,FY2026Q3,2026-05-20,2026-08-19,72.5,,%,https://www.sec.gov/Archives/edgar/data/6281/000000628126000050/adi2q26exhibit991earnings.htm,0.95
+fundamental_model,Margin bridge model,model,Analog Devices,Adjusted gross margin,FY2026Q3,2026-08-16,2026-08-19,72.4,,%,challenge/offline-data/analog-devices/INDEX.md,0.70
+hays_company_consensus,Hays published nine-analyst consensus,company_consensus,Hays plc,Net fees,FY2026,2026-08-11,2026-08-27,902.4,,GBPm,https://www.haysplc.com/investors/analysts-consensus,1.00
+hays_company_consensus,Hays published nine-analyst consensus,company_consensus,Hays plc,Pre-exceptional basic EPS,FY2026,2026-08-11,2026-08-27,1.13,,GBp,https://www.haysplc.com/investors/analysts-consensus,1.00
+hays_company_consensus,Hays published nine-analyst consensus,company_consensus,Hays plc,Pre-exceptional operating profit,FY2026,2026-08-11,2026-08-27,45.3,,GBPm,https://www.haysplc.com/investors/analysts-consensus,1.00
+hays_trading_update,Hays trading update top-of-range signal,company_guidance,Hays plc,Pre-exceptional operating profit,FY2026,2026-08-03,2026-08-27,46.0,,GBPm,https://www.haysplc.com/investors/results-centre,0.95
+fundamental_model,Worldwide revenue bridge,model,Deere & Company,Worldwide net sales and revenues,FY2026Q3,2026-08-16,2026-08-20,12650,,USDm,challenge/offline-data/deere/call-transcripts/2026-05-21__de-us-20260521-call-pres__1042774.md,0.80
+public_consensus,Public analyst consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2026Q3,2026-08-16,2026-08-20,4.75,,USD / share,https://www.marketbeat.com/stocks/NYSE/DE/earnings/,0.85
+refinitiv_consensus,Refinitiv / S&P consensus,consensus,Deere & Company,Diluted EPS (GAAP),FY2026Q3,2026-08-16,2026-08-20,4.69,,USD / share,https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks,0.90
+fundamental_model,PPA quarterly bridge,model,Deere & Company,Production & Precision Ag operating profit,FY2026Q3,2026-08-16,2026-08-20,470,,USDm,challenge/offline-data/deere/call-transcripts/2026-05-21__de-us-20260521-call-pres__1042774.md,0.80
+derived_management,Full-year PPA margin guide allocation,derived_guidance,Deere & Company,Production & Precision Ag operating profit,FY2026Q3,2026-05-21,2026-08-20,480,,USDm,challenge/offline-data/deere/call-transcripts/2026-05-21__de-us-20260521-call-pres__1042774.md,0.75
