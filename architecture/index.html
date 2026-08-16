@@ -102,6 +102,7 @@
     td.weights { font: 11px/1.55 var(--mono); }
     .company-row td { padding-top: 28px; border-top: 2px solid var(--ink); }
     .pill { display: inline-block; padding: 4px 7px; background: var(--signal); font: 9px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .pill.abstain { background: var(--paper-deep); color: var(--muted); border: 1px solid var(--rule); }
     .two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
     .note { padding: 26px; border-top: 1px solid var(--ink); }
     .note p { font-size: 15px; }
@@ -478,6 +479,43 @@
             <li><code>forecast.backtest</code> is a walk-forward test of one specific claim: that correcting management guidance for its historical bias beats parroting it. The calibration is fitted only on the corpus as it stood the day before each guidance was issued. Across 54 held-out periods the correction improved 42 of them, with error ratios of 0.65, 0.74 and 0.77.</li>
             <li><code>forecasting.backtest</code> ranks Street sources rather than the system, scoring 39 closed observations by recency-weighted error and shrinking sparse histories toward an 8% prior. This is what turns Street reliability into a measured quantity instead of a chosen one.</li>
           </ul>
+          <h3>The ML lens, and the gate it has to clear to speak</h3>
+          <p>Classical models are an estimator inside the fundamental engine, never a fourth top-level vote. Validation is chronological only—a random split on a time series lets a model read its own future—and model choice is made by <code>TimeSeriesSplit</code> within the training window, never on the test period. Gates were fixed from what would be competitive against a Street benchmark before any model ran. A prediction is written only if it clears its gate <em>and</em> beats a seasonal naive baseline; sparse validation additionally widens sigma, so three good historical transitions cannot outvote current evidence. Seven of twelve metrics cleared. Five abstain.</p>
+          <div class="table-wrap" role="region" aria-label="ML lens gates" tabindex="0">
+          <table>
+            <thead><tr><th>Metric</th><th>Deployed model</th><th>Walk-forward</th><th>Gate</th><th>n</th><th>Verdict</th></tr></thead>
+            <tbody>
+              <tr class="company-row"><td>HD · Net sales</td><td>Share-of-category nowcast, zero parameters, blended with a CV-weighted voting ensemble</td><td class="num">0.40%</td><td class="num">2%</td><td class="num">6</td><td><span class="pill">pass</span></td></tr>
+              <tr><td>HD · Adjusted diluted EPS</td><td>Ridge on sequential ratios, plus the observed adjusted-to-GAAP wedge</td><td class="num">4.17%</td><td class="num">5%</td><td class="num">3</td><td><span class="pill">pass</span></td></tr>
+              <tr><td>HD · Comparable sales</td><td>Ridge on lag 1 and lag 4</td><td class="num">0.61pp</td><td class="num">0.8pp</td><td class="num">3</td><td><span class="pill">pass</span></td></tr>
+              <tr class="company-row"><td>ADI · Revenue</td><td>Guidance realization—guide × expanding mean of past realization ratios, zero parameters</td><td class="num">1.38%</td><td class="num">2%</td><td class="num">14</td><td><span class="pill">pass</span></td></tr>
+              <tr><td>ADI · Adjusted diluted EPS</td><td>Guidance realization</td><td class="num">3.44%</td><td class="num">5%</td><td class="num">14</td><td><span class="pill">pass</span></td></tr>
+              <tr><td>ADI · Adjusted gross margin</td><td>Guided operating margin × realization, plus a modelled opex spread</td><td class="num">0.89pp</td><td class="num">1.0pp</td><td class="num">14</td><td><span class="pill">pass</span></td></tr>
+              <tr class="company-row"><td>Hays · Net fees</td><td>Quarterly composition from four disclosed growth rates, zero parameters</td><td class="num">1.52%</td><td class="num">2%</td><td class="num">4</td><td><span class="pill">pass</span></td></tr>
+              <tr><td>Hays · Operating profit, EPS</td><td>None—seven annual observations</td><td class="num">&mdash;</td><td class="num">10%</td><td class="num">7</td><td><span class="pill abstain">abstain</span></td></tr>
+              <tr class="company-row"><td>DE · Revenue, EPS, PPA profit</td><td>Voting ensemble over Ridge, Random Forest, Gradient Boosting, SVR and KNN</td><td class="num">7.3&ndash;24.3%</td><td class="num">2&ndash;10%</td><td class="num">4&ndash;9</td><td><span class="pill abstain">abstain</span></td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="two-up">
+            <article class="note">
+              <span class="eyebrow">Model inventory</span>
+              <p>Ridge, Random Forest, Gradient Boosting, SVR with an RBF kernel and KNN, plus equal-weight voting, CV-weighted voting and ridge stacking. Features are scaled; COVID-era target rows are excluded as a documented exogenous shock rather than silently winsorized.</p>
+            </article>
+            <article class="note">
+              <span class="eyebrow">Intrinsic floor</span>
+              <p>Before blaming a model we measure the dispersion of the target transition&rsquo;s own history. Deere&rsquo;s Q2&rarr;Q3 ratio disperses 8.1% on revenue and 37.2% on PPA profit against gates of 2% and 10%, so no history-only estimator could pass. Given four times the samples the model scored 7.26%&mdash;landing on its predicted floor. That is an information limit, not a tuning failure.</p>
+            </article>
+            <article class="note">
+              <span class="eyebrow">What we abandoned</span>
+              <p>A year-over-year framing scored 5.40% against a 5.24% naive baseline and was cut. Ridge stacking was the worst ensemble at 6.04%, overfitting a meta-learner on twenty rows. Ensembling bought 0.2pp; reframing the target around already-published data bought an order of magnitude.</p>
+            </article>
+            <article class="note">
+              <span class="eyebrow">A bug the gates did not catch</span>
+              <p>Hays tags every quarterly update with the fiscal year rather than the quarter, so keying on period collapsed a twenty-point series into six and we concluded Hays was unmodelable. The loader now raises on a colliding key; an audit found the same fault in neither ADI nor Deere. Hays net fees became a passing metric at 1.52%.</p>
+            </article>
+          </div>
+
           <p class="note">Every figure on this page is re-derived from the run artefacts by <code>npm run check:architecture</code>, which fails if the page and the audit disagree.</p>
         </div>
       </div>
