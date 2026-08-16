@@ -38,8 +38,8 @@ QUARTER_WORDS = {"first": 1, "second": 2, "third": 3, "fourth": 4}
 _NUM = r"\d+(?:\.\d+)?"
 
 _OUTLOOK_RE = re.compile(
-    rf"For the (?P<qword>first|second|third|fourth) quarter of fiscal (?P<fy>\d{{4}}),"
-    rf"\s*we are forecasting revenue of \$(?P<rev>{_NUM})\s*billion,"
+    rf"For the (?P<qword>first|second|third|fourth) quarter of fiscal (?:year )?(?P<fy>\d{{4}}),"
+    rf"\s*we are forecasting revenue of \$(?P<rev>{_NUM})\s*billion\s*,"
     rf"\s*\+/-\s*\$(?P<rev_pm>{_NUM})\s*million"
     rf".*?adjusted operating margin of approximately (?P<aom>{_NUM})%,"
     rf"\s*\+/-\s*(?P<aom_pm>{_NUM})\s*bps"

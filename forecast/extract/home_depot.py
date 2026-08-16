@@ -61,7 +61,8 @@ _REPORTED_PERIOD_RE = re.compile(
 #: Comparable sales, total company. No table row exists, so prose it is.
 _COMPS_RE = re.compile(
     r"[Cc]omparable sales for the (?P<qword>first|second|third|fourth) quarter of "
-    r"fiscal (?P<fy>\d{4}) (?P<dir>increased|decreased) (?P<value>[\d.]+)\s*%"
+    r"fiscal (?P<fy>\d{4}) (?P<dir>increased|decreased) (?P<value>[\d.]+)\s*"
+    r"(?:%|percent)"
 )
 
 #: (metric_key, exact table label, unit). Matched against the whole first cell.
