@@ -20,10 +20,11 @@ assert.doesNotMatch(js, /playCinematicTrace|manim/i, "fixed cinematic playback m
 assert.match(html, /id="company-tabs"/, "four-company tab bar is missing");
 assert.match(html, /id="universe-list"/, "active-company metric selector is missing");
 assert.match(html, /id="history-chart"/, "five-year history chart is missing");
-assert.match(html, /id="engine-table"/, "engine monitor is missing");
+assert.doesNotMatch(html, /id="engine-table"|THREE-LENS CONTRIBUTIONS/, "source toggles must not duplicate the methodology controls");
 assert.match(html, /id="method-tabs"/, "Uri method explorer controls are missing");
 assert.doesNotMatch(html, /id="reasoning-tape"|id="coverage-monitor"/, "persistent reasoning and coverage panels must not crowd the graph");
 assert.match(html, /id="cinematic-reason"/, "cinematic reasoning card is missing");
+assert.match(html, /id="cinematic-reason"[^>]*hidden/, "reasoning card must start outside layout and interaction");
 assert.match(html, /id="cinematic-calculation"/, "trace calculation field is missing");
 assert.match(html, /id="cinematic-sources"/, "trace evidence list is missing");
 assert.match(html, /CLICK CARD OR NEXT TO ADVANCE/, "trace card does not expose its click progression");
@@ -46,6 +47,9 @@ assert.equal(audit.forecasts.length, 4, "submission audit must cover four compan
 assert.equal((js.match(/^\s+metric\("/gm) || []).length, 12, "terminal must represent twelve current metric forecasts");
 assert.match(js, /fetch\("data\/five-year-backtest\.json"\)/, "audited replay data is not loaded");
 assert.match(js, /function renderMainChart/, "prediction and actual renderer is missing");
+assert.match(js, /class: "prediction-line"/, "dashed historical prediction path is not rendered");
+assert.match(js, /class: `prediction-dot/, "hollow prediction points are not rendered");
+assert.match(js, /validationState = gate \? \(row\.record\.error <= gate\.threshold \? "passed" : "failed"\) : "neutral"/, "period errors are not classified against the selected gate");
 assert.match(js, /function runTrace/, "live lightning trace is missing");
 assert.match(js, /function electrifyPolyline/, "prediction path is not divided into electric segments");
 assert.match(js, /const offset = 0/, "forecast path must remain geometrically straight");
@@ -60,13 +64,15 @@ assert.match(js, /contribution\.source_families \|\| \[\]/, "source families are
 assert.match(js, /Precision weighting scales 1\/σ²/, "meta-forecast calculation is not explained");
 assert.match(js, /absolute \/ Math\.max\(Math\.abs\(actual\)/, "missing period errors are not derived from prediction and actual");
 assert.match(js, /function activeFinal/, "interactive meta-forecast recalculation is missing");
-assert.match(js, /renderMainChart\(previousFinal\)/, "lens toggles do not animate the live forecast path to its new value");
 assert.match(js, /function hydrateForecasts/, "Uri forecast explorer is not joined to the themed terminal");
-assert.match(js, /data-engine-toggle/, "engine contribution controls are missing");
+assert.doesNotMatch(js, /data-engine-toggle|renderEngineTable/, "three-lens contribution buttons must be removed");
+assert.match(js, /const labels = \{ anchor: "ANCHOR", driver: "DRIVER", ml: "ML", market: "MARKET" \}/, "the unified methodology row must contain the four selected methods");
 assert.match(js, /meta-source-dot/, "three engine forecast nodes are missing");
 assert.match(js, /traceStepIndex/, "click-to-advance reasoning state is missing");
 assert.match(js, /classList\.add\("trace-active"\)/, "trace does not compact the forecast controls while playing");
 assert.match(js, /hideCinematicReason\(\);\s*await straightenLightning/, "Finish must dismiss the reasoning card before resolving the trace");
+assert.match(js, /note\.hidden = false/, "trace start must explicitly reveal the reasoning card");
+assert.match(js, /note\.hidden = true/, "Finish must remove the reasoning card from layout and interaction");
 assert.match(js, /pointLeft - chartScroll\.clientWidth \/ 2/, "active reasoning node is not centred in the history scroller");
 assert.doesNotMatch(js, /classList\.add\("trace-mode"\)|classList\.add\("trace-zoom"\)/, "trace must not zoom or black out the terminal");
 
@@ -77,6 +83,13 @@ assert.match(css, /\.forecast-deck/, "compact full-width forecast controls are m
 assert.match(css, /\.terminal\.trace-active \.forecast-deck/, "trace-time compact layout is missing");
 assert.match(css, /\.terminal\.trace-active \.cinematic-reason/, "reasoning card does not use the recovered trace space");
 assert.match(css, /\.lightning-core/, "electric prediction styling is missing");
+assert.match(css, /\.prediction-line \{[^}]*stroke-dasharray: 6 5/s, "prediction series must use a dashed financial-chart treatment");
+assert.match(css, /\.actual-line \{[^}]*stroke: #1c1f1d/s, "actual series must remain solid near-black");
+assert.match(css, /\.method-tabs button\.active[^}]*background: #e7f5fc/s, "selected methodology highlight must persist in pale blue");
+assert.match(css, /#lightning-series \.resolved\.lightning-core \{ opacity: 1; \}/, "completed lightning segments must remain highlighted");
+assert.match(css, /\.error-period\.passed[^}]*var\(--pass\)/s, "passing errors need a green indicator");
+assert.match(css, /\.error-period\.failed[^}]*var\(--fail\)/s, "failing errors need a red indicator");
+assert.match(css, /\.storm-field \{[^}]*opacity: \.18/s, "real storm footage should be slightly stronger");
 assert.match(css, /#lightning-series \.drawing/, "lightning animation must target the SVG layer id");
 assert.match(css, /\.cinematic-reason\.visible/, "reasoning card reveal is missing");
 assert.match(css, /\.meta-source-dot\.active-source/, "active three-lens source is not highlighted");

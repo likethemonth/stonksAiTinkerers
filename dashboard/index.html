@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=32">
+  <link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
   <main class="terminal" id="terminal">
@@ -34,10 +34,6 @@
             <section class="quote-panel compact-quote" aria-label="Selected forecast">
               <span>FINAL FORECAST</span><strong id="quote-value">$46.94bn</strong>
               <div class="quote-change"><b id="quote-change">+0.8%</b><span>VS STREET</span></div>
-            </section>
-            <section class="engine-panel compact-engines" aria-label="Forecast source contributions">
-              <header><span>THREE-LENS CONTRIBUTIONS</span><b>CLICK TO TOGGLE</b></header>
-              <div class="engine-table" id="engine-table"></div>
             </section>
           </div>
 
@@ -71,7 +67,7 @@
               <header><span id="inspector-method">METHOD</span><button id="details-close" type="button" aria-label="Close details">×</button></header>
               <div id="inspector-content"></div>
             </aside>
-            <article class="cinematic-reason" id="cinematic-reason" aria-live="polite" role="button" tabindex="0" aria-label="Reasoning step. Click to advance.">
+            <article class="cinematic-reason" id="cinematic-reason" aria-live="polite" role="button" tabindex="0" aria-label="Reasoning step. Click to advance." hidden>
               <header><span id="cinematic-stage">STREET</span><b id="cinematic-count">01 / 05</b></header>
               <h2 id="cinematic-title">Reconstruct Street</h2>
               <p id="cinematic-claim">Public estimates establish the benchmark.</p>
@@ -91,6 +87,6 @@
     </section>
 
   </main>
-  <script src="app.js?v=32"></script>
+  <script src="app.js?v=34"></script>
 </body>
 </html>
