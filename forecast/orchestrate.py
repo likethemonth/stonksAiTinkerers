@@ -56,7 +56,7 @@ def _prediction_contribution(
         estimate=estimate,
         # One binary quantile is useful but not as well calibrated as a complete
         # earnings distribution. The consensus strike is also shared with Street.
-        reliability=0.15,
+        reliability=0.03,
         source_families=["prediction_market", "public_consensus"],
         note=(
             "direct beat market interpreted as one quantile, not a point observation; "

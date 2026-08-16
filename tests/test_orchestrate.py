@@ -75,3 +75,16 @@ def test_deere_registry_key_maps_to_direct_eps_market() -> None:
         if item.engine is Engine.PREDICTION_MARKET
     )
     assert market.status is ContributionStatus.AVAILABLE
+
+
+def test_binary_market_proxy_cannot_dominate_hd_eps() -> None:
+    metrics = orchestrate(
+        Company.HD,
+        baseline_metrics(Company.HD),
+        as_of=date(2026, 8, 16),
+    )
+    eps = next(metric for metric in metrics if metric.label == "Adjusted diluted EPS")
+    weight = next(
+        item for item in eps.meta_weights if item.engine is Engine.PREDICTION_MARKET
+    )
+    assert weight.normalized_weight < 0.25

@@ -3,289 +3,318 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agent architecture — Agents vs Wall Street</title>
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111112'/%3E%3Ctext x='6' y='21' fill='%23f3f0e9' font-family='monospace' font-size='12' font-weight='700'%3E3L%3C/text%3E%3C/svg%3E">
+  <title>Three-Lens Meta-Forecaster — Agents vs Wall Street</title>
   <style>
     :root {
-      color-scheme: light;
-      --ink:#101828; --muted:#667085; --line:#d0d5dd; --blue:#155eef; --paper:#fff;
-      --wash:#f8fafc; --good:#067647; --warn:#b54708; --tint:#eef4ff;
+      --paper: #f3f0e9;
+      --paper-deep: #e8e3d9;
+      --ink: #111112;
+      --muted: #68655f;
+      --rule: #c8c2b7;
+      --signal: #b8ff45;
+      --verified: #43bc82;
+      --warn: #bd5d23;
+      --sans: Inter, "Helvetica Neue", Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --content: 1280px;
     }
     * { box-sizing: border-box; }
-    body { margin: 0; color: var(--ink); background: var(--wash); font: 16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-    main { width: min(920px, calc(100% - 32px)); margin: 40px auto; padding: clamp(24px, 6vw, 64px); background: var(--paper); border: 1px solid var(--line); border-radius: 20px; }
-    h1 { margin: 0 0 8px; font-size: clamp(40px, 8vw, 72px); line-height: .98; letter-spacing: -.05em; text-wrap: balance; }
-    h2 { margin: 48px 0 12px; font-size: 24px; letter-spacing: -.02em; text-wrap: balance; }
-    h3 { margin: 28px 0 8px; font-size: 17px; letter-spacing: -.01em; }
-    p, li { max-width: 68ch; }
-    .eyebrow { color: var(--blue); font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-    .lede { color: var(--muted); font-size: 20px; max-width: 62ch; }
-    .card { margin-top: 24px; padding: 20px; background: var(--wash); border: 1px solid var(--line); border-radius: 12px; }
-    .card p { margin: 4px 0; }
-    code { padding: 2px 6px; border-radius: 5px; background: var(--tint); font-size: .92em; }
-    pre { overflow-x: auto; padding: 16px; background: var(--wash); border: 1px solid var(--line); border-radius: 10px; }
-    pre code { padding: 0; background: none; }
-    .scroll { overflow-x: auto; margin-top: 16px; }
-    table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
-    th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
-    th { font-size: 12.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
-    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-    .done { color: var(--good); font-weight: 700; }
-    .todo { color: var(--warn); font-weight: 700; }
-    figure { margin: 24px 0 0; }
-    figcaption { margin-top: 10px; color: var(--muted); font-size: 14px; }
-    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-    .flag { margin-top: 24px; padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); box-shadow: 0 1px 2px rgb(16 24 40 / .06); }
-    .flag p { margin: 6px 0; }
-    .flag .label { margin: 0 0 8px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--warn); }
+    html { scroll-behavior: smooth; scroll-padding-top: 78px; }
+    body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); }
+    a { color: inherit; }
+    a:focus-visible { outline: 3px solid var(--warn); outline-offset: 4px; }
+    code { font-family: var(--mono); font-size: .92em; }
+    .shell { width: min(var(--content), calc(100% - 48px)); margin-inline: auto; }
+    .site-header { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--rule); background: rgba(243, 240, 233, .97); }
+    .nav { min-height: 64px; display: flex; align-items: center; gap: 28px; }
+    .brand { display: flex; align-items: center; gap: 12px; margin-right: auto; text-decoration: none; font-weight: 700; }
+    .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; color: var(--paper); background: var(--ink); font: 700 11px var(--mono); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { text-decoration: none; font: 10px var(--mono); letter-spacing: .13em; text-transform: uppercase; }
+    .status { display: flex; align-items: center; gap: 9px; white-space: nowrap; font: 10px var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--verified); box-shadow: 0 0 0 5px rgba(67, 188, 130, .13); }
+    .eyebrow { margin: 0 0 22px; color: var(--muted); font: 10px/1.5 var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+    .hero { padding: 108px 0 72px; border-bottom: 1px solid var(--rule); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(340px, .75fr); gap: 72px; align-items: end; }
+    h1 { max-width: 880px; margin: 0; font-size: clamp(58px, 8vw, 116px); line-height: .86; letter-spacing: -.07em; }
+    .lede { max-width: 760px; margin: 34px 0 0; color: var(--muted); font-size: clamp(19px, 2vw, 25px); line-height: 1.45; }
+    .protocol { padding: 24px; color: #f4f2ec; background: #0e0f10; border: 1px solid #2d3032; border-radius: 10px; box-shadow: 18px 20px 0 #ded8cd; }
+    .protocol-head { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 22px; border-bottom: 1px solid #33363a; color: #a9adb3; font: 10px var(--mono); letter-spacing: .14em; text-transform: uppercase; }
+    .protocol dl { margin: 0; }
+    .protocol-row { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 13px 0; border-bottom: 1px solid #2a2d30; font: 12px/1.4 var(--mono); }
+    .protocol dt { color: #858990; text-transform: uppercase; }
+    .protocol dd { margin: 0; }
+    .dimensions { display: grid; grid-template-columns: repeat(5, 1fr); border-bottom: 1px solid var(--rule); }
+    .dimension { min-height: 160px; padding: 28px 30px; border-right: 1px solid var(--rule); }
+    .dimension:last-child { border-right: 0; }
+    .dimension strong { display: block; font-size: clamp(35px, 4vw, 54px); font-variant-numeric: tabular-nums; letter-spacing: -.045em; }
+    .dimension span { display: block; margin-top: 18px; font-weight: 700; }
+    .dimension small { display: block; margin-top: 6px; color: var(--muted); font: 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    section { padding: 88px 0; border-bottom: 1px solid var(--rule); }
+    .section-grid { display: grid; grid-template-columns: minmax(180px, .28fr) minmax(0, 1fr); gap: 60px; }
+    .section-grid > * { min-width: 0; }
+    .section-number { color: var(--muted); font: 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; }
+    h2 { max-width: 900px; margin: 0 0 28px; font-size: clamp(38px, 5vw, 68px); line-height: .95; letter-spacing: -.055em; }
+    h3 { margin: 38px 0 12px; font-size: 22px; letter-spacing: -.025em; }
+    p, li { max-width: 74ch; font-size: 17px; line-height: 1.7; }
+    .muted { color: var(--muted); }
+    .engine-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--rule); }
+    .engine { min-height: 330px; padding: 28px; border-right: 1px solid var(--rule); }
+    .engine:last-child { border-right: 0; }
+    .engine-index { font: 10px var(--mono); color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
+    .engine h3 { min-height: 56px; margin-top: 48px; font-size: 28px; }
+    .engine p { font-size: 15px; }
+    .flow { display: grid; grid-template-columns: 1fr 48px 1fr 48px 1fr; align-items: stretch; margin-top: 38px; }
+    .flow-node { padding: 24px; border: 1px solid var(--rule); background: rgba(255,255,255,.2); }
+    .flow-node.final { color: var(--paper); background: var(--ink); border-color: var(--ink); }
+    .flow-arrow { display: grid; place-items: center; color: var(--muted); font: 22px var(--mono); }
+    .flow-label { color: var(--muted); font: 9px var(--mono); letter-spacing: .13em; text-transform: uppercase; }
+    .flow-node.final .flow-label { color: #aeb2b6; }
+    .flow-node strong { display: block; margin-top: 12px; font-size: 21px; }
+    .formula { margin: 34px 0; padding: 24px; border-left: 5px solid var(--signal); background: var(--paper-deep); font: 15px/1.7 var(--mono); overflow-x: auto; }
+    .audit-strip { display: grid; grid-template-columns: repeat(4, 1fr); margin: 36px 0; border: 1px solid var(--rule); }
+    .audit-cell { padding: 24px; border-right: 1px solid var(--rule); }
+    .audit-cell:last-child { border-right: 0; }
+    .audit-cell strong { display: block; font-size: 34px; font-variant-numeric: tabular-nums; }
+    .audit-cell span { color: var(--muted); font: 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    .table-wrap { width: 100%; max-width: 100%; min-width: 0; overflow-x: auto; margin-top: 34px; border: 1px solid var(--rule); }
+    table { width: 100%; min-width: 900px; border-collapse: collapse; font-size: 14px; }
+    th, td { padding: 15px 18px; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+    th { color: var(--muted); background: var(--paper-deep); font: 9px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; font-weight: 750; }
+    td.weights { font: 11px/1.55 var(--mono); }
+    .company-row td { padding-top: 28px; border-top: 2px solid var(--ink); }
+    .pill { display: inline-block; padding: 4px 7px; background: var(--signal); font: 9px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .two-up { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .note { padding: 26px; border-top: 1px solid var(--ink); }
+    .note p { font-size: 15px; }
+    pre { margin: 28px 0 0; padding: 24px; overflow-x: auto; color: #f4f2ec; background: #0e0f10; border-radius: 8px; font: 13px/1.75 var(--mono); }
+    .footer { padding: 38px 0 70px; color: var(--muted); font: 10px/1.7 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hero { padding-top: 72px; }
+      .hero-grid, .section-grid { grid-template-columns: 1fr; gap: 36px; }
+      .protocol { max-width: 600px; }
+      .dimensions { grid-template-columns: repeat(2, 1fr); }
+      .dimension { border-bottom: 1px solid var(--rule); }
+      .engine-grid, .two-up { grid-template-columns: 1fr; }
+      .engine { min-height: 0; border-right: 0; border-bottom: 1px solid var(--rule); }
+      .engine:last-child { border-bottom: 0; }
+      .engine h3 { min-height: 0; margin-top: 24px; }
+      .flow { grid-template-columns: 1fr; }
+      .flow-arrow { min-height: 46px; transform: rotate(90deg); }
+      .audit-strip { grid-template-columns: 1fr 1fr; }
+      .audit-cell:nth-child(2) { border-right: 0; }
+      .audit-cell:nth-child(-n+2) { border-bottom: 1px solid var(--rule); }
+    }
+    @media (max-width: 520px) {
+      .shell { width: min(100% - 28px, var(--content)); }
+      .status span:last-child { display: none; }
+      h1 { font-size: clamp(52px, 16vw, 76px); }
+      .hero { padding-top: 60px; }
+      .protocol { box-shadow: 10px 12px 0 #ded8cd; }
+      .protocol-row { grid-template-columns: 88px 1fr; }
+      .dimensions, .audit-strip { grid-template-columns: 1fr; }
+      .dimension, .audit-cell { border-right: 0; border-bottom: 1px solid var(--rule); }
+      .dimension:last-child, .audit-cell:last-child { border-bottom: 0; }
+      section { padding: 64px 0; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
 </head>
 <body>
-  <main>
-    <h1>Calibrated&nbsp;Anchors</h1>
-    <p class="lede">Company disclosures are biased in measurable, persistent ways. This system measures that bias from the frozen corpus and corrects for it, instead of asking a model what it thinks a number will be.</p>
-    <p class="eyebrow">Agents vs Wall Street &middot; 16 August 2026</p>
+  <header class="site-header">
+    <nav class="shell nav" aria-label="Architecture sections">
+      <a class="brand" href="#top"><span class="brand-mark">3L</span><span>Three-Lens Forecaster</span></a>
+      <div class="nav-links">
+        <a href="#architecture">Architecture</a>
+        <a href="#controls">Controls</a>
+        <a href="#results">Forecasts</a>
+        <a href="#reproduce">Reproduce</a>
+      </div>
+      <div class="status"><span class="dot" aria-hidden="true"></span><span>Audited · 2026-08-16</span></div>
+    </nav>
+  </header>
 
-    <div class="card">
-      <p>Agent name: <strong>TODO before 17:15</strong></p>
-      <p>Team: <strong>TODO before 17:15</strong></p>
-      <p>Build style and harness: <strong>Deterministic Python batch pipeline, authored in Claude Code</strong></p>
-      <p>Models: <strong>TODO &mdash; state where a model is used and where it is not</strong></p>
-      <p>Repository: <code>github.com/likethemonth/stonksAiTinkerers</code></p>
+  <main id="top">
+    <section class="hero">
+      <div class="shell hero-grid">
+        <div>
+          <p class="eyebrow">Agents vs Wall Street / point-in-time run / 16 August 2026</p>
+          <h1>Three estimates.<br>One accountable number.</h1>
+          <p class="lede">The system reconstructs what the Street believes, independently models the company’s operating reality, and asks prediction markets where real-money evidence disagrees. A source-aware meta-forecaster decides how much each deserves to move the final number.</p>
+        </div>
+        <aside class="protocol" aria-label="Run protocol">
+          <div class="protocol-head"><span>Submission protocol</span><span>Validated</span></div>
+          <dl>
+            <div class="protocol-row"><dt>Targets</dt><dd>4 companies × 3 metrics</dd></div>
+            <div class="protocol-row"><dt>Cutoff</dt><dd>2026-08-16</dd></div>
+            <div class="protocol-row"><dt>Engines</dt><dd>Street · Fundamental · Market</dd></div>
+            <div class="protocol-row"><dt>Output</dt><dd>4 workbooks + JSON audit + log</dd></div>
+            <div class="protocol-row"><dt>Final run</dt><dd><code>npm run forecast</code></dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+
+    <div class="dimensions" aria-label="Verified run dimensions">
+      <div class="dimension"><strong>1,139</strong><span>frozen documents</span><small>filings · calls · slides</small></div>
+      <div class="dimension"><strong>12</strong><span>forecast targets</span><small>equal-weight metrics</small></div>
+      <div class="dimension"><strong>3</strong><span>explicit engines</span><small>estimate or abstention</small></div>
+      <div class="dimension"><strong>58</strong><span>passing tests</span><small>documented forecast suite</small></div>
+      <div class="dimension"><strong>4/4</strong><span>valid workbooks</span><small>submission checker</small></div>
     </div>
 
-    <div class="flag">
-      <p class="label">Build status</p>
-      <p>Analog Devices runs end to end. Home Depot, Hays and Deere have the schema, corpus access and calibration machinery available but no extractor yet, so <code>build_table</code> reports them as <span class="todo">PENDING</span> rather than silently emitting nothing.</p>
-      <p>This page is updated as the system is built. It describes what actually runs, not what is planned.</p>
-    </div>
+    <section id="architecture">
+      <div class="shell section-grid">
+        <div class="section-number">01 / Architecture</div>
+        <div>
+          <h2>Independence is a data contract, not a prompt.</h2>
+          <p class="muted">Each top-level engine must return a value, predictive sigma, citations, evidence-family labels and reliability—or explicitly abstain. The driver nowcast is nested inside fundamental research, so it cannot masquerade as a fourth independent vote.</p>
 
-    <section>
-      <h2>The idea in one paragraph</h2>
-      <p>We are not forecasting the future. Every target period had already closed before the corpus was frozen on 14&nbsp;August 2026 &mdash; Hays' financial year ended 30&nbsp;June, ADI's third quarter around 1&nbsp;August. The job is to <em>reconstruct an already-determined number from partial disclosure</em>. That reframing is what rules out macro nowcasting and prediction markets, and what makes company guidance the single most valuable object in the corpus.</p>
-      <p>Guidance is not neutral. ADI has beaten its own revenue midpoint in each of the last twelve quarters. So every forecast here has one shape:</p>
-      <pre><code>forecast = anchor × (1 + correction)</code></pre>
-      <p>where the <strong>anchor</strong> is something the company disclosed, and the <strong>correction</strong> is a ratio whose historical distribution we measure from the corpus. A team that parrots the guidance submits 3,900. We submit 3,965, and we can show why.</p>
-    </section>
+          <div class="engine-grid">
+            <article class="engine">
+              <span class="engine-index">Engine A</span>
+              <h3>Reconstructed Street</h3>
+              <p>Exact company × metric calls are scored point in time. Historical errors are recency weighted, persistent source bias is corrected, and sparse samples shrink toward a conservative prior.</p>
+              <p><strong>Inputs:</strong> public consensus, named analysts, company-published consensus, dated revisions.</p>
+            </article>
+            <article class="engine">
+              <span class="engine-index">Engine B</span>
+              <h3>Fundamental research</h3>
+              <p>Deterministic extractors turn repeating disclosure shapes into typed observations. Guidance calibration, seasonal models, regression bridges and post-guidance physical drivers produce the company forecast.</p>
+              <p><strong>Inputs:</strong> filings, transcripts, guidance, peer and macro driver snapshots.</p>
+            </article>
+            <article class="engine">
+              <span class="engine-index">Engine C</span>
+              <h3>Prediction markets</h3>
+              <p>Dated beat markets contribute one quantile, never a fabricated distribution. No equivalent market means abstention. A low precision factor stops a thin binary proxy from overruling the operating model.</p>
+              <p><strong>Inputs:</strong> snapshotted prices, strike, volume and parser self-tests.</p>
+            </article>
+          </div>
 
-    <section>
-      <h2>How it works</h2>
-
-      <figure>
-        <svg viewBox="0 0 880 400" width="100%" role="img" aria-hidden="true" focusable="false">
-          <defs>
-            <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M0 0 L10 5 L0 10 z" fill="#667085"/>
-            </marker>
-            <style>
-              .b { fill:#fff; stroke:#d0d5dd; }
-              .t { font: 600 13px Inter, system-ui, sans-serif; fill:#101828; }
-              .s { font: 11.5px Inter, system-ui, sans-serif; fill:#667085; }
-              .l { stroke:#667085; stroke-width:1.4; marker-end:url(#a); fill:none; }
-              .hi { fill:#eef4ff; stroke:#155eef; }
-            </style>
-          </defs>
-
-          <rect class="b" x="8" y="12" width="180" height="52" rx="9"/>
-          <text class="t" x="24" y="34">1,139 documents</text>
-          <text class="s" x="24" y="52">filings · calls · slides</text>
-
-          <path class="l" d="M100 68 V 100"/>
-          <rect class="hi" x="8" y="104" width="180" height="60" rx="9"/>
-          <text class="t" x="24" y="126">corpus.load()</text>
-          <text class="s" x="24" y="144">as_of cutoff — the</text>
-          <text class="s" x="24" y="158">point-in-time gate</text>
-
-          <path class="l" d="M188 134 H 250"/>
-          <rect class="b" x="250" y="104" width="190" height="60" rx="9"/>
-          <text class="t" x="266" y="126">extract</text>
-          <text class="s" x="266" y="144">regex over repeating</text>
-          <text class="s" x="266" y="158">disclosure shapes</text>
-
-          <path class="l" d="M440 134 H 500"/>
-          <rect class="hi" x="500" y="96" width="200" height="76" rx="9"/>
-          <text class="t" x="516" y="120">observation table</text>
-          <text class="s" x="516" y="138">metric · period · value</text>
-          <text class="s" x="516" y="153">kind · as_of · citation</text>
-          <text class="s" x="516" y="167">— the single source</text>
-
-          <path class="l" d="M600 172 V 208"/>
-          <rect class="b" x="500" y="212" width="200" height="60" rx="9"/>
-          <text class="t" x="516" y="234">calibrate</text>
-          <text class="s" x="516" y="252">pair guidance → actual,</text>
-          <text class="s" x="516" y="266">shrink bias, emit sigma</text>
-
-          <path class="l" d="M500 242 H 440"/>
-          <rect class="b" x="250" y="200" width="190" height="84" rx="9"/>
-          <text class="t" x="266" y="222">estimate ×3</text>
-          <text class="s" x="266" y="240">guidance realisation</text>
-          <text class="s" x="266" y="255">seasonal share</text>
-          <text class="s" x="266" y="270">spread bridge / OLS</text>
-
-          <path class="l" d="M345 284 V 316"/>
-          <rect class="b" x="250" y="320" width="190" height="60" rx="9"/>
-          <text class="t" x="266" y="342">reconcile</text>
-          <text class="s" x="266" y="360">inverse-variance,</text>
-          <text class="s" x="266" y="374">disagreement gate</text>
-
-          <path class="l" d="M440 350 H 500"/>
-          <rect class="b" x="500" y="320" width="180" height="60" rx="9"/>
-          <text class="t" x="516" y="342">validate</text>
-          <text class="s" x="516" y="360">units · bands ·</text>
-          <text class="s" x="516" y="374">clamp, never blank</text>
-
-          <path class="l" d="M680 350 H 730"/>
-          <rect class="hi" x="730" y="320" width="142" height="60" rx="9"/>
-          <text class="t" x="746" y="342">workbook</text>
-          <text class="s" x="746" y="360">exact template</text>
-          <text class="s" x="746" y="374">cells + run log</text>
-
-          <path class="l" d="M700 134 H 800 V 300" stroke-dasharray="4 4"/>
-          <text class="s" x="712" y="126">backtest replays</text>
-          <text class="s" x="712" y="140">with an earlier as_of</text>
-        </svg>
-        <figcaption>The pipeline. Highlighted stages are the ones that carry the design: the point-in-time gate, the observation table, and the workbook writer.</figcaption>
-      </figure>
-
-      <ol class="sr-only">
-        <li>1,139 corpus documents of filings, call transcripts and slides.</li>
-        <li>corpus.load() applies the as-of cutoff, the point-in-time gate.</li>
-        <li>Extraction runs regexes over repeating disclosure shapes.</li>
-        <li>Output is the observation table: metric, period, value, kind, as-of date and citation. It is the single source for everything downstream.</li>
-        <li>Calibration pairs each guidance figure to the actual that later reported the same period, shrinks the bias and emits a sigma.</li>
-        <li>Three estimators run per metric: guidance realisation, seasonal share, and a spread bridge or regression.</li>
-        <li>Reconciliation combines them by inverse variance, with a disagreement gate.</li>
-        <li>Validation checks units and plausibility bands, clamping rather than blanking.</li>
-        <li>The workbook writer fills the exact template cells and writes a run log.</li>
-        <li>The backtest replays the whole pipeline with an earlier as-of date.</li>
-      </ol>
-
-      <h3>Extraction is decoupled from inference</h3>
-      <p><code>python -m forecast.build_table</code> parses the corpus once and writes a frozen JSON table per company. Estimators read only that artefact. This keeps the expensive parse out of the inference loop and lets work on the four companies proceed independently.</p>
-
-      <h3>Why regex and not a language model for extraction</h3>
-      <p>The high-value disclosures repeat verbatim. ADI's outlook sentence has been worded identically for years:</p>
-      <pre><code>For the third quarter of fiscal 2026, we are forecasting revenue of
-$3.9 billion, +/- $100 million ... adjusted operating margin of
-approximately 49.0%, +/-100 bps ... adjusted EPS to be $3.30, +/-$0.15.</code></pre>
-      <p>One pattern yields 216 guidance rows going back to FY2023, deterministically and reproducibly. A model call would be slower, non-deterministic, and no more accurate on text this regular. Models earn their place on irregular prose, not on this.</p>
-    </section>
-
-    <section>
-      <h2>Research and financial reasoning</h2>
-      <p>The observation table is not only provenance. It is the training data for the corrections. Every estimator is an anchor plus a ratio measured from history, in one of three shapes.</p>
-
-      <div class="scroll">
-        <table>
-          <caption class="sr-only">The three estimator shapes and their anchors</caption>
-          <thead><tr><th>Shape</th><th>Anchor</th><th>Correction measured from history</th></tr></thead>
-          <tbody>
-            <tr><td>Guidance realisation</td><td>Guidance midpoint</td><td><code>actual / guide_mid</code> per closed quarter</td></tr>
-            <tr><td>Seasonal share</td><td>Full-year guide</td><td>Quarter's share of the fiscal year</td></tr>
-            <tr><td>Spread bridge</td><td>A guided sibling metric</td><td>Gap in percentage points between the two</td></tr>
-          </tbody>
-        </table>
+          <div class="flow" aria-label="Forecast data flow">
+            <div class="flow-node"><span class="flow-label">Evidence</span><strong>Point-in-time observations</strong></div>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <div class="flow-node"><span class="flow-label">Three lenses</span><strong>Estimate + sigma + provenance</strong></div>
+            <div class="flow-arrow" aria-hidden="true">→</div>
+            <div class="flow-node final"><span class="flow-label">Meta-forecast</span><strong>Workbook value + audit trail</strong></div>
+          </div>
+        </div>
       </div>
-
-      <p>The third shape matters more than it sounds. ADI guides adjusted <em>operating</em> margin, but the workbook asks for adjusted <em>gross</em> margin. We bridge from what management discloses to what we must submit, using a spread whose stability we can measure rather than a number we invent.</p>
-
-      <h3>Shrinkage, so a short history cannot swing a forecast</h3>
-      <p>With a dozen observations the sample mean is a noisy estimate of the true bias, and over-trusting it turns a good anchor into a bad forecast. Each raw correction is pulled toward "the company's guidance is right" by an empirical-Bayes factor:</p>
-      <pre><code>shrunk = neutral + (n / (n + 5)) × (raw − neutral)</code></pre>
-      <p>ADI's revenue bias is +2.35% raw, shrunk to +1.66%. A metric with two observations barely moves off its anchor; one with twenty moves most of the way. The prior strength of 5 is deliberately timid, because over-correcting a good anchor is the failure mode the accuracy rubric punishes hardest.</p>
-
-      <h3>Combining estimators by precision, not by taste</h3>
-      <p>Every estimator must report a sigma derived from its own historical dispersion. They are then combined by inverse variance, <code>w ∝ 1/σ²</code>, so a tight estimator dominates a loose one with nothing hand-tuned. An estimator that cannot state its dispersion honestly has no weight to contribute. Where the observed spread between estimators greatly exceeds their stated sigmas, the metric is flagged for human review rather than quietly averaged.</p>
-
-      <h3>Consensus, where it actually exists</h3>
-      <p>We grepped all 1,139 documents. Genuine analyst consensus appears for Hays only, because UK-listed companies publish company-compiled consensus; the hits for the other three are macroeconomic commentary and governance boilerplate. Hays' Q4 trading statement gives both the benchmark and a steer on where to sit relative to it: consensus of £43.5m for FY26 pre-exceptional operating profit against a £37.0&ndash;46.0m range, with management saying they expect to land at the top of it. There are no individual analyst estimates anywhere in the corpus.</p>
     </section>
 
-    <section>
-      <h2>Important design choices</h2>
+    <section id="controls">
+      <div class="shell section-grid">
+        <div class="section-number">02 / Controls</div>
+        <div>
+          <h2>The system knows what it does not know.</h2>
+          <p>The base weight is inverse predictive variance. Reliability scales that precision. If two engines reuse the same evidence family—such as a prediction-market strike copied from consensus—both receive an overlap penalty. The complete formula and every realized weight are written to <code>submission/forecast-audit.json</code>.</p>
+          <div class="formula">raw_weight = reliability × overlap_penalty ÷ sigma²<br>final = Σ(raw_weight × estimate) ÷ Σ(raw_weight)</div>
 
-      <h3>We do not try to reconstruct the Wall Street benchmark</h3>
-      <p>The obvious framing is "estimate what the Street thinks, then beat it". We rejected it. The score is <code>|our miss| / max(|Street miss|, floor)</code>, and the Street number appears only in the denominator &mdash; nothing we can influence. Estimating it would add a second layer of error to a quantity that never enters our half of the fraction. We minimise our own absolute error instead, and use consensus only where disclosed, as a sanity check and as a marker of when we are taking a differentiated bet.</p>
+          <div class="audit-strip">
+            <div class="audit-cell"><strong>0</strong><span>silent missing engines</span></div>
+            <div class="audit-cell"><strong>3</strong><span>direct EPS markets</span></div>
+            <div class="audit-cell"><strong>9</strong><span>market abstentions</span></div>
+            <div class="audit-cell"><strong>0</strong><span>run failures</span></div>
+          </div>
 
-      <h3>No fitted machine learning</h3>
-      <p>Twenty to forty observations per metric, twelve metrics with no shared feature space, and no holdout to validate against. A gradient-boosted tree here would learn noise and present it confidently. We use empirical-Bayes shrinkage and inverse-variance combination instead &mdash; methods whose assumptions we can state and whose parameters we measured on held-out quarters. The one exception planned is a single-regressor OLS for Deere's Production &amp; Precision Ag operating profit against segment sales, where operating leverage is a real and stable relationship.</p>
-
-      <h3>Validation clamps, it does not refuse</h3>
-      <p>A missing forecast scores 5.0, the worst outcome available. So implausible values are clamped to the plausibility band and a warning is recorded, rather than raising and leaving a blank cell. Only unit errors are fatal, because those are always bugs rather than judgements. An earlier draft of the schema raised on any out-of-band value; that would have been capable of destroying a metric at 17:40.</p>
-
-      <h3>Rejected as a poor fit for this event</h3>
-      <p>Prediction-market and macroeconomic priors (the target periods have already closed); peer and supplier read-through graphs (the corpus is siloed per company and the cost is high); analyst reliability modelling (no individual analyst estimates exist in the data); a UI (not in the judging rubric).</p>
-    </section>
-
-    <section>
-      <h2>Checks and tests</h2>
-      <p>33 tests run in 0.35s with no database and no network, covering fiscal-calendar anchors, point-in-time integrity, unit traps and the failure policy.</p>
-      <ul>
-        <li><strong>Point-in-time integrity.</strong> For every company, no document newer than the cutoff survives <code>load()</code>. This is the invariant the backtest rests on.</li>
-        <li><strong>Fiscal calendars.</strong> Eight anchors taken from real reported results. All four companies run different fiscal years and two label them in opposite directions, so the first implementation put every quarter-end date in the following quarter.</li>
-        <li><strong>Unit traps.</strong> A percentage outside &plusmn;100 and a Hays EPS below 1 (pounds entered where pence are required) both fail loudly.</li>
-        <li><strong>Magnitude filter.</strong> Extracted values outside a plausible range are dropped and logged rather than poisoning the calibration they feed.</li>
-        <li><strong>Registry agreement.</strong> Every run asserts the internal metric registry matches <code>companies.json</code> on labels and units before anything else happens.</li>
-      </ul>
-
-      <h3>Three real bugs this caught</h3>
-      <p>Found by cross-checking extracted values against the Q2 FY2026 8-K by hand. The outlook regex swallowed sentence-ending full stops, so <code>+/- $0.15.</code> failed to parse. Positional table parsing returned the wrong column for every percentage row &mdash; adjusted gross margin of 73.0% came back as 0.00. And one document has mangled table markup that merges cells:</p>
-      <pre><code>| Revenue | $ | 3,623 $ 2,640 | 37 % |</code></pre>
-      <p>which caused revenue to be read as 37. None of these would have been visible without checking against the source document. It is the reason the plausibility band and magnitude filter exist.</p>
-    </section>
-
-    <section>
-      <h2>Does the calibration actually work?</h2>
-      <p>The claim is that guidance is biased and correcting it helps. That is testable, so we test it out of sample. For each closed period the calibration is refit on a corpus loaded with <code>as_of</code> set to the day before that guidance was published, then applied to it. Leakage would require documents to travel backwards in time.</p>
-
-      <div class="scroll">
-        <table>
-          <caption class="sr-only">Walk-forward backtest results for Analog Devices</caption>
-          <thead>
-            <tr><th>Metric</th><th class="num">Periods</th><th class="num">Mean naive error</th><th class="num">Mean calibrated error</th><th class="num">Error ratio</th><th class="num">Improved</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><code>revenue</code></td><td class="num">17</td><td class="num">76.00</td><td class="num">43.81</td><td class="num"><strong>0.58</strong></td><td class="num">14/17</td></tr>
-            <tr><td><code>adj_eps</code></td><td class="num">17</td><td class="num">0.116</td><td class="num">0.076</td><td class="num"><strong>0.65</strong></td><td class="num">14/17</td></tr>
-            <tr><td><code>adj_operating_margin_pct</code></td><td class="num">17</td><td class="num">1.006</td><td class="num">0.723</td><td class="num"><strong>0.72</strong></td><td class="num">13/17</td></tr>
-          </tbody>
-        </table>
+          <div class="two-up">
+            <article class="note">
+              <span class="eyebrow">Point-in-time boundary</span>
+              <p>Corpus documents, Street calls, driver observations and market snapshots are each selected at or before <code>--as-of</code>. Historical source scores only use outcomes whose event date had resolved by the cutoff.</p>
+            </article>
+            <article class="note">
+              <span class="eyebrow">Disagreement boundary</span>
+              <p>Pairwise engine disagreement beyond two combined sigmas sets <code>needs_review</code>. Missing market coverage remains visible as an abstention warning instead of becoming a copied consensus value.</p>
+            </article>
+            <article class="note">
+              <span class="eyebrow">Unit boundary</span>
+              <p>Exact labels and units come from <code>challenge/companies.json</code>. Percentages are points, Hays EPS is pence, and non-submittable units hard-fail before a workbook is written.</p>
+            </article>
+            <article class="note">
+              <span class="eyebrow">One output path</span>
+              <p>The Street backtest is an input to <code>forecast.run</code>, not a second workbook builder. One Python orchestrator produces all four final templates and the machine-readable audit.</p>
+            </article>
+          </div>
+        </div>
       </div>
-
-      <p>Across <strong>51 held-out periods the correction beat parroting the guidance in 41 of them (80%)</strong>. Scored with the competition's own formula &mdash; error over benchmark error, floored and capped at 5.0, with management guidance standing in for the Wall Street benchmark we are never shown &mdash; the mean is 0.85 and the median 0.53.</p>
-
-      <p>One honest caveat. <code>adj_eps</code> has a mean score of 1.09 despite a 0.65 error ratio, because several quarters where guidance was almost exactly right hit the denominator floor. The median is the fairer summary of that metric, and both are reported here rather than only the flattering one. We also caught ourselves reporting an unfloored mean of 1.03 at first, which made a clearly good result look like no result; the ratio is unbounded above, so near-zero benchmark errors dominated it.</p>
-
-      <p>Full pairings, with both source documents cited per row, are in <code>data/calibration/</code>.</p>
     </section>
 
-    <section>
-      <h2>Reproducing the run</h2>
-      <pre><code>uv venv --python 3.12 .venv
-uv pip install --python .venv/bin/python pydantic openpyxl pytest
-
-.venv/bin/python -m pytest tests/ -q          # 33 tests
-.venv/bin/python -m forecast.build_table      # observation tables + calibration
-.venv/bin/python -m forecast.backtest         # walk-forward validation</code></pre>
-      <p>The company and metric specification is read from <code>challenge/companies.json</code> and never hardcoded; <code>verify_registry()</code> fails the run if the internal registry disagrees with it on any label or unit. Point-in-time replays write to suffixed artefacts so a deliberately blinded run cannot overwrite the production table.</p>
-      <p>Human input during the final run: <strong>TODO &mdash; state exactly what remains</strong>. Workbook upload to OpenStocks is manual by rule; the system never submits programmatically.</p>
+    <section id="results">
+      <div class="shell section-grid">
+        <div class="section-number">03 / Forecasts</div>
+        <div>
+          <h2>Twelve final numbers, with the realized engine mix.</h2>
+          <p class="muted">These are descriptive outputs from the 16 August run, not accuracy results; actuals were not available at forecast time. Weights are rounded for display. Full-precision values, sigmas, citations, abstentions and overlap penalties live in the JSON audit.</p>
+          <div class="table-wrap" role="region" aria-label="Forecast outputs" tabindex="0">
+            <table>
+              <thead><tr><th>Company</th><th>Metric</th><th>Final</th><th>Units</th><th>Engine weights</th></tr></thead>
+              <tbody>
+                <tr class="company-row"><td>HD</td><td>Net sales</td><td class="num">47,002.15</td><td>USDm</td><td class="weights">Street 13% · Fundamental 87% · Market abstained</td></tr>
+                <tr><td>HD</td><td>Adjusted diluted EPS</td><td class="num">4.66</td><td>USD / share</td><td class="weights">Street 22% · Fundamental 61% · Market 17%</td></tr>
+                <tr><td>HD</td><td>Comparable sales, total company</td><td class="num">1.32</td><td>%</td><td class="weights">Street 72% · Fundamental 28% · Market abstained</td></tr>
+                <tr class="company-row"><td>ADI</td><td>Revenue</td><td class="num">3,996.71</td><td>USDm</td><td class="weights">Street 4% · Fundamental 96% · Market abstained</td></tr>
+                <tr><td>ADI</td><td>Adjusted diluted EPS</td><td class="num">3.43</td><td>USD / share</td><td class="weights">Street 19% · Fundamental 79% · Market 3%</td></tr>
+                <tr><td>ADI</td><td>Adjusted gross margin</td><td class="num">73.15</td><td>%</td><td class="weights">Street 1% · Fundamental 99% · Market abstained</td></tr>
+                <tr class="company-row"><td>Hays</td><td>Net fees</td><td class="num">888.62</td><td>GBPm</td><td class="weights">Street 1% · Fundamental 99% · Market abstained</td></tr>
+                <tr><td>Hays</td><td>Pre-exceptional basic EPS</td><td class="num">1.19</td><td>GBp</td><td class="weights">Street 60% · Fundamental 40% · Market abstained</td></tr>
+                <tr><td>Hays</td><td>Pre-exceptional operating profit</td><td class="num">45.39</td><td>GBPm</td><td class="weights">Street 56% · Fundamental 44% · Market abstained</td></tr>
+                <tr class="company-row"><td>DE</td><td>Worldwide net sales and revenues</td><td class="num">12,486.77</td><td>USDm</td><td class="weights">Street 9% · Fundamental 91% · Market abstained</td></tr>
+                <tr><td>DE</td><td>Diluted EPS (GAAP)</td><td class="num">5.03</td><td>USD / share</td><td class="weights">Street 24% · Fundamental 75% · Market 1%</td></tr>
+                <tr><td>DE</td><td>Production &amp; Precision Ag operating profit</td><td class="num">522.65</td><td>USDm</td><td class="weights">Street 32% · Fundamental 68% · Market abstained</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Known weaknesses</h2>
-      <ul>
-        <li><strong>Three of four companies are not yet wired.</strong> Home Depot, Hays and Deere have no extractor at the time of writing. The framework generalises, but that is a claim until it is done.</li>
-        <li><strong>Extraction is brittle by construction.</strong> Regexes tuned to a company's house style break if that style changes. We accept this because it is deterministic and auditable, and because the magnitude filter turns a silent wrong number into a logged dropped row &mdash; but a reworded outlook sentence would yield nothing at all.</li>
-        <li><strong>The calibration assumes the bias persists.</strong> ADI has beaten guidance for twelve straight quarters during a semiconductor upcycle. If management resets its guidance philosophy, or the cycle turns, the correction points the wrong way. Shrinkage limits the damage; it does not prevent it.</li>
-        <li><strong>Twelve observations is a small sample.</strong> The lookback window is capped at 12 quarters deliberately, since older quarters describe a different business, but that leaves the sigma estimates themselves noisy.</li>
-        <li><strong>The backtest benchmark is guidance, not Wall Street.</strong> Beating management's midpoint is not the same as beating the Street, and we cannot measure the latter. It is the closest available proxy, and we label it as a proxy.</li>
-        <li><strong>Fiscal quarter boundaries are approximate.</strong> Period arithmetic uses month arithmetic with a five-day drift allowance rather than exact 52/53-week period tables. It is used for ordering and never for computing a value, but an unusual 53-week year could misplace a document.</li>
-      </ul>
+    <section id="evidence">
+      <div class="shell section-grid">
+        <div class="section-number">04 / Evidence</div>
+        <div>
+          <h2>Metric-specific models, not one generic earnings prompt.</h2>
+          <div class="two-up">
+            <article class="note"><span class="pill">Home Depot</span><h3>Housing and category demand</h3><p>Full-year guidance is divided by measured quarterly seasonality. Census NAICS 444 post-guidance data updates comparable sales through a calibrated category-to-company wedge.</p></article>
+            <article class="note"><span class="pill">Analog Devices</span><h3>Guidance realization and mix</h3><p>Revenue and EPS guidance are corrected by walk-forward realization history. Gross margin is bridged from guided operating margin by a fitted relationship, with TXN read-through as a physical driver.</p></article>
+            <article class="note"><span class="pill">Hays</span><h3>Closed-year reconstruction</h3><p>FY fees are H1 actual plus Q3/Q4 actual-basis growth on the prior H2 base, less disposed-country fees. Company-compiled consensus and the top-of-range management steer anchor profit.</p></article>
+            <article class="note"><span class="pill">Deere</span><h3>Units → segments → EPS</h3><p>AEM machinery units, price, FX and a calibrated shipment residual produce PPA sales and profit. Segment revenue and margin bridges then reconstruct worldwide revenue and diluted EPS.</p></article>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>How to reproduce the final run</h2>
-      <p><strong>TODO before 17:15</strong> &mdash; final command, declared commit hash, and the run log path under <code>logs/</code>.</p>
+    <section id="reproduce">
+      <div class="shell section-grid">
+        <div class="section-number">05 / Reproduce</div>
+        <div>
+          <h2>One final command, then structural validation.</h2>
+          <pre><code>python3 -m pip install -r requirements.txt
+npm ci
+
+npm run test:forecast
+npm run forecast
+npm run check:forecasts
+
+git rev-parse HEAD</code></pre>
+          <p><code>npm run forecast</code> first materializes the Street backtest at the frozen cutoff, then invokes <code>python3 -m forecast.run --as-of 2026-08-16</code>. The runner writes four workbooks, a timestamped log, and <code>submission/forecast-audit.json</code>. Upload remains manual by challenge rule.</p>
+
+          <h3>Known limits</h3>
+          <ul>
+            <li>The public exact-metric analyst panel is sparse for several operating metrics. Those Street reconstructions use a wider-sigma research fallback and lower reliability.</li>
+            <li>Direct prediction markets exist only for three EPS targets. A binary beat price supplies one quantile, so its precision is deliberately discounted; all other targets abstain.</li>
+            <li>Regex extractors depend on recurring issuer disclosure shapes. Magnitude checks and source excerpts turn format drift into an observable failure, but do not eliminate it.</li>
+            <li>Source-overlap labels are declared families, not learned causal dependence. The penalty is conservative and auditable, but still an approximation.</li>
+          </ul>
+        </div>
+      </div>
     </section>
   </main>
+
+  <footer class="shell footer">Three-Lens Meta-Forecaster · evidence cutoff 2026-08-16 · repository github.com/likethemonth/stonksAiTinkerers</footer>
 </body>
 </html>

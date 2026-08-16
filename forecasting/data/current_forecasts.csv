@@ -1,7 +1,7 @@
 source_id,source_name,source_type,company,metric,period,forecast_date,event_date,forecast,actual,units,source_url,quality
 public_consensus,Refinitiv / S&P consensus,consensus,Home Depot,Net sales,FY2026Q2,2026-08-16,2026-08-18,47200,,USDm,https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks,0.95
 benzinga_consensus,Benzinga analyst consensus,consensus,Home Depot,Net sales,FY2026Q2,2026-08-16,2026-08-18,47350,,USDm,https://www.benzinga.com/quote/hd/earnings,0.85
-linkedin_beta_finch,Beta Finch LinkedIn post,social_explicit,Home Depot,Net sales,FY2026Q2,2026-08-15,2026-08-18,47200,,USDm,research/raw/linkedin-hd.txt,0.55
+linkedin_beta_finch,Beta Finch LinkedIn post,social_explicit,Home Depot,Net sales,FY2026Q2,2026-08-15,2026-08-18,47200,,USDm,https://www.linkedin.com/company/beta-finch/posts/,0.55
 public_consensus,Refinitiv / S&P consensus,consensus,Home Depot,Adjusted diluted EPS,FY2026Q2,2026-08-16,2026-08-18,4.73,,USD / share,https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks,0.95
 oppenheimer_nagel,Brian Nagel / Oppenheimer,analyst,Home Depot,Adjusted diluted EPS,FY2026Q2,2026-08-16,2026-08-18,4.66,,USD / share,https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks,0.90
 management_guidance,Home Depot FY2026 guidance midpoint,company_guidance,Home Depot,"Comparable sales, total company",FY2026Q2,2026-05-19,2026-08-18,1.0,,%,https://ir.homedepot.com/events-and-presentations,0.70

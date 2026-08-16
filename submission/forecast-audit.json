@@ -1,0 +1,1584 @@
+{
+  "generated_at": "2026-08-16T13:01:03",
+  "as_of": "2026-08-16",
+  "forecasts": [
+    {
+      "ticker": "HD",
+      "company": "home-depot",
+      "period": {
+        "year": 2026,
+        "quarter": 2
+      },
+      "output_file": "HD-FY2026Q2.xlsx",
+      "as_of": "2026-08-16",
+      "metrics": [
+        {
+          "label": "Net sales",
+          "units": "USDm",
+          "value": 47002.14836446064,
+          "sigma": 807.523529905611,
+          "reasoning": "Meta-forecast: street 47,416.26 (sigma 2,107.84, reliability 90%, overlap penalty 100%, weight 13%); fundamental 46,939.12 (sigma 799.15, reliability 85%, overlap penalty 100%, weight 87%) -> 47,002.15.",
+          "estimates": [
+            {
+              "estimator": "street_reliability_blend",
+              "value": 47416.260041494286,
+              "sigma": 2107.839678817363,
+              "n_observations": 6,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Point-in-time Street reconstruction from 3 current source(s), bias-corrected and weighted by shrunk historical error.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                "https://www.benzinga.com/quote/hd/earnings",
+                "https://www.linkedin.com/company/beta-finch/posts/"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 46939.12208076868,
+              "sigma": 799.1492483174409,
+              "n_observations": 5,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "FY2025 net_sales was 164,683 summed across its four quarters. Guidance of +3.50% puts FY2026 at 170,447. Q2 took 27.54% of the year on average over 5 prior years (sd 0.39%), giving 46,939.12.",
+              "observation_ids": [],
+              "citations": [
+                "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_reliability_blend",
+                "value": 47416.260041494286,
+                "sigma": 2107.839678817363,
+                "n_observations": 6,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Point-in-time Street reconstruction from 3 current source(s), bias-corrected and weighted by shrunk historical error.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                  "https://www.benzinga.com/quote/hd/earnings",
+                  "https://www.linkedin.com/company/beta-finch/posts/"
+                ]
+              },
+              "reliability": 0.9,
+              "source_families": [
+                "analyst_research",
+                "public_consensus"
+              ],
+              "note": "numeric exact-metric Street panel"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 46939.12208076868,
+                "sigma": 799.1492483174409,
+                "n_observations": 5,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "FY2025 net_sales was 164,683 summed across its four quarters. Guidance of +3.50% puts FY2026 at 170,447. Q2 took 27.54% of the year on average over 5 prior years (sd 0.39%), giving 46,939.12.",
+                "observation_ids": [],
+                "citations": [
+                  "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 2.0256637591508765e-07,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.13209236925127854
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 1.3309542737883546e-06,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.8679076307487215
+            }
+          ],
+          "citations": [
+            "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+            "https://www.benzinga.com/quote/hd/earnings",
+            "https://www.linkedin.com/company/beta-finch/posts/",
+            "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+          ],
+          "plausible_low": 43772.0542448382,
+          "plausible_high": 50232.242484083086,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        },
+        {
+          "label": "Adjusted diluted EPS",
+          "units": "USD / share",
+          "value": 4.662876704119718,
+          "sigma": 0.14474144092557492,
+          "reasoning": "Meta-forecast: street 4.77 (sigma 0.25, reliability 80%, overlap penalty 83%, weight 22%); fundamental 4.59 (sigma 0.17, reliability 85%, overlap penalty 100%, weight 61%); prediction_market 4.77 (sigma 0.06, reliability 3%, overlap penalty 83%, weight 17%) -> 4.66.",
+          "estimates": [
+            {
+              "estimator": "street_reliability_blend",
+              "value": 4.774333168412735,
+              "sigma": 0.253035447750618,
+              "n_observations": 6,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Point-in-time Street reconstruction from 2 current source(s), bias-corrected and weighted by shrunk historical error.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 4.593291334871073,
+              "sigma": 0.17077569993321343,
+              "n_observations": 5,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "FY2025 adj_eps was 14.69 as reported for the full year. Guidance of +2.00% puts FY2026 at 14.98. Q2 took 30.66% of the year on average over 5 prior years (sd 0.97%), giving 4.59. The share is measured on diluted_eps_gaap, which has the quarterly history adj_eps lacks and seasonalises almost identically.",
+              "observation_ids": [],
+              "citations": [
+                "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+              ]
+            },
+            {
+              "estimator": "polymarket_proxy",
+              "value": 4.769,
+              "sigma": 0.0553,
+              "n_observations": 1,
+              "anchor": 4.73,
+              "correction": 0.039,
+              "reasoning": "Market prices P(actual > 4.73) = 0.79 ($4,360 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 4.769 under the MID surprise-sigma 0.05; scenario range 4.754-4.801 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+              "observation_ids": [],
+              "citations": [
+                "https://polymarket.com/event/hd-quarterly-earnings-nongaap-eps-08-18-2026-4pt73"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_reliability_blend",
+                "value": 4.774333168412735,
+                "sigma": 0.253035447750618,
+                "n_observations": 6,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Point-in-time Street reconstruction from 2 current source(s), bias-corrected and weighted by shrunk historical error.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+                  "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks"
+                ]
+              },
+              "reliability": 0.8,
+              "source_families": [
+                "analyst_research",
+                "public_consensus"
+              ],
+              "note": "numeric exact-metric Street panel"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 4.593291334871073,
+                "sigma": 0.17077569993321343,
+                "n_observations": 5,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "FY2025 adj_eps was 14.69 as reported for the full year. Guidance of +2.00% puts FY2026 at 14.98. Q2 took 30.66% of the year on average over 5 prior years (sd 0.97%), giving 4.59. The share is measured on diluted_eps_gaap, which has the quarterly history adj_eps lacks and seasonalises almost identically.",
+                "observation_ids": [],
+                "citations": [
+                  "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "available",
+              "estimate": {
+                "estimator": "polymarket_proxy",
+                "value": 4.769,
+                "sigma": 0.0553,
+                "n_observations": 1,
+                "anchor": 4.73,
+                "correction": 0.039,
+                "reasoning": "Market prices P(actual > 4.73) = 0.79 ($4,360 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 4.769 under the MID surprise-sigma 0.05; scenario range 4.754-4.801 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+                "observation_ids": [],
+                "citations": [
+                  "https://polymarket.com/event/hd-quarterly-earnings-nongaap-eps-08-18-2026-4pt73"
+                ]
+              },
+              "reliability": 0.03,
+              "source_families": [
+                "prediction_market",
+                "public_consensus"
+              ],
+              "note": "direct beat market interpreted as one quantile, not a point observation; low top-level reliability prevents false precision from dominating"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 10.41228410076394,
+              "overlap_penalty": 0.8333333333333334,
+              "normalized_weight": 0.2181382340523301
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 29.145182407784777,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.6105940406582597
+            },
+            {
+              "engine": "prediction_market",
+              "raw_weight": 8.175037359920735,
+              "overlap_penalty": 0.8333333333333334,
+              "normalized_weight": 0.17126772528941017
+            }
+          ],
+          "citations": [
+            "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+            "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+            "https://polymarket.com/event/hd-quarterly-earnings-nongaap-eps-08-18-2026-4pt73"
+          ],
+          "plausible_low": 4.083910940417418,
+          "plausible_high": 5.241842467822018,
+          "warnings": [],
+          "needs_review": false
+        },
+        {
+          "label": "Comparable sales, total company",
+          "units": "%",
+          "value": 1.316887413335493,
+          "sigma": 0.38050700804865917,
+          "reasoning": "Meta-forecast: street 1.30 (sigma 0.30, reliability 45%, overlap penalty 100%, weight 72%); fundamental 1.36 (sigma 0.67, reliability 85%, overlap penalty 100%, weight 28%) -> 1.32.",
+          "estimates": [
+            {
+              "estimator": "street_research_reconstruction",
+              "value": 1.3,
+              "sigma": 0.3,
+              "n_observations": 0,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Research-run reconstruction used because the numeric exact-metric panel has no eligible row. Anchor: US demand 'similar to fiscal 2025' (Q2 25 US comp +1.4%) plus ~+50bp FX tailwind -> +1.3. Driver nowcast: Census NAICS 444 accelerated to +5.9% y/y in July (post-guidance, covers quarter-end) minus the Q1-calibrated -3.3pp category-to-comp wedge -> +1.9. Inverse-variance reconciliation -> +1.4.",
+              "observation_ids": [],
+              "citations": [
+                "agent/FableResearchRun1.md"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 1.3611703040847283,
+              "sigma": 0.6676684826399722,
+              "n_observations": 6,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Inverse-variance combination of fundamental_core 1.03 (sigma 0.85, weight 62%); driver_nowcast 1.90 (sigma 1.08, weight 38%) -> 1.36.",
+              "observation_ids": [],
+              "citations": [
+                "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+                "https://fred.stlouisfed.org/series/RSBMGESD",
+                "https://www.census.gov/retail/sales.html"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_research_reconstruction",
+                "value": 1.3,
+                "sigma": 0.3,
+                "n_observations": 0,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Research-run reconstruction used because the numeric exact-metric panel has no eligible row. Anchor: US demand 'similar to fiscal 2025' (Q2 25 US comp +1.4%) plus ~+50bp FX tailwind -> +1.3. Driver nowcast: Census NAICS 444 accelerated to +5.9% y/y in July (post-guidance, covers quarter-end) minus the Q1-calibrated -3.3pp category-to-comp wedge -> +1.9. Inverse-variance reconciliation -> +1.4.",
+                "observation_ids": [],
+                "citations": [
+                  "agent/FableResearchRun1.md"
+                ]
+              },
+              "reliability": 0.45,
+              "source_families": [
+                "reconstructed_street_artifact"
+              ],
+              "note": "fallback Street reconstruction for HD-FY2026Q2.xlsx"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 1.3611703040847283,
+                "sigma": 0.6676684826399722,
+                "n_observations": 6,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Inverse-variance combination of fundamental_core 1.03 (sigma 0.85, weight 62%); driver_nowcast 1.90 (sigma 1.08, weight 38%) -> 1.36.",
+                "observation_ids": [],
+                "citations": [
+                  "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+                  "https://fred.stlouisfed.org/series/RSBMGESD",
+                  "https://www.census.gov/retail/sales.html"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings",
+                "external_drivers",
+                "management_guidance"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 5.0,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.7239279158707118
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 1.906765011245903,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.2760720841292882
+            }
+          ],
+          "citations": [
+            "agent/FableResearchRun1.md",
+            "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+            "https://fred.stlouisfed.org/series/RSBMGESD",
+            "https://www.census.gov/retail/sales.html"
+          ],
+          "plausible_low": -0.2051406188591436,
+          "plausible_high": 2.8389154455301298,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        }
+      ]
+    },
+    {
+      "ticker": "ADI",
+      "company": "analog-devices",
+      "period": {
+        "year": 2026,
+        "quarter": 3
+      },
+      "output_file": "ADI-FY2026Q3.xlsx",
+      "as_of": "2026-08-16",
+      "metrics": [
+        {
+          "label": "Revenue",
+          "units": "USDm",
+          "value": 3996.7129994753886,
+          "sigma": 41.93755787061358,
+          "reasoning": "Meta-forecast: street 4,021.17 (sigma 185.05, reliability 70%, overlap penalty 100%, weight 4%); fundamental 3,995.80 (sigma 39.38, reliability 85%, overlap penalty 100%, weight 96%) -> 3,996.71.",
+          "estimates": [
+            {
+              "estimator": "street_reliability_blend",
+              "value": 4021.17334321157,
+              "sigma": 185.05423476681912,
+              "n_observations": 8,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.benzinga.com/quote/adi/earnings"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 3995.8008426141955,
+              "sigma": 39.378843507611954,
+              "n_observations": 14,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Inverse-variance combination of fundamental_core 3,964.71 (sigma 72.14, weight 30%); driver_nowcast 4,009.00 (sigma 47.00, weight 70%) -> 3,995.80.",
+              "observation_ids": [],
+              "citations": [
+                "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+                "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+                "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md",
+                "https://www.stocktitan.net/sec-filings/TXN/8-k-texas-instruments-inc-reports-material-event-e3f3c5710542.html"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_reliability_blend",
+                "value": 4021.17334321157,
+                "sigma": 185.05423476681912,
+                "n_observations": 8,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.benzinga.com/quote/adi/earnings"
+                ]
+              },
+              "reliability": 0.7,
+              "source_families": [
+                "public_consensus"
+              ],
+              "note": "numeric exact-metric Street panel"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 3995.8008426141955,
+                "sigma": 39.378843507611954,
+                "n_observations": 14,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Inverse-variance combination of fundamental_core 3,964.71 (sigma 72.14, weight 30%); driver_nowcast 4,009.00 (sigma 47.00, weight 70%) -> 3,995.80.",
+                "observation_ids": [],
+                "citations": [
+                  "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+                  "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+                  "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md",
+                  "https://www.stocktitan.net/sec-filings/TXN/8-k-texas-instruments-inc-reports-material-event-e3f3c5710542.html"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings",
+                "external_drivers",
+                "management_guidance"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 2.0440898616450674e-05,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.03595060950704237
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 0.0005481419125441363,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.9640493904929576
+            }
+          ],
+          "citations": [
+            "https://www.benzinga.com/quote/adi/earnings",
+            "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+            "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+            "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md",
+            "https://www.stocktitan.net/sec-filings/TXN/8-k-texas-instruments-inc-reports-material-event-e3f3c5710542.html"
+          ],
+          "plausible_low": 3828.9627679929345,
+          "plausible_high": 4164.463230957843,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        },
+        {
+          "label": "Adjusted diluted EPS",
+          "units": "USD / share",
+          "value": 3.434672410122735,
+          "sigma": 0.1269376307661173,
+          "reasoning": "Meta-forecast: street 3.51 (sigma 0.21, reliability 70%, overlap penalty 75%, weight 19%); fundamental 3.42 (sigma 0.13, reliability 85%, overlap penalty 100%, weight 79%); prediction_market 3.47 (sigma 0.11, reliability 3%, overlap penalty 75%, weight 3%) -> 3.43.",
+          "estimates": [
+            {
+              "estimator": "street_reliability_blend",
+              "value": 3.507150541645225,
+              "sigma": 0.21344568568385636,
+              "n_observations": 8,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.benzinga.com/quote/adi/earnings"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 3.416306636054548,
+              "sigma": 0.13196893163238668,
+              "n_observations": 12,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Management guided 3.30 for FY2026Q3. Across 12 prior quarters the reported figure landed +3.52% (raw +4.99%) versus the guided midpoint; shrunk by n/(n+5) that correction puts the forecast 0.12 above the guide at 3.42.",
+              "observation_ids": [],
+              "citations": [
+                "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+                "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+                "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md"
+              ]
+            },
+            {
+              "estimator": "polymarket_proxy",
+              "value": 3.47,
+              "sigma": 0.114,
+              "n_observations": 1,
+              "anchor": 3.33,
+              "correction": 0.14,
+              "reasoning": "Market prices P(actual > 3.33) = 0.94 ($958 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 3.47 under the MID surprise-sigma 0.09; scenario range 3.408-3.548 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+              "observation_ids": [],
+              "citations": [
+                "https://polymarket.com/event/adi-quarterly-earnings-nongaap-eps-08-19-2026-3pt33"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_reliability_blend",
+                "value": 3.507150541645225,
+                "sigma": 0.21344568568385636,
+                "n_observations": 8,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.benzinga.com/quote/adi/earnings"
+                ]
+              },
+              "reliability": 0.7,
+              "source_families": [
+                "public_consensus"
+              ],
+              "note": "numeric exact-metric Street panel"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 3.416306636054548,
+                "sigma": 0.13196893163238668,
+                "n_observations": 12,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Management guided 3.30 for FY2026Q3. Across 12 prior quarters the reported figure landed +3.52% (raw +4.99%) versus the guided midpoint; shrunk by n/(n+5) that correction puts the forecast 0.12 above the guide at 3.42.",
+                "observation_ids": [],
+                "citations": [
+                  "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+                  "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+                  "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings",
+                "management_guidance"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "available",
+              "estimate": {
+                "estimator": "polymarket_proxy",
+                "value": 3.47,
+                "sigma": 0.114,
+                "n_observations": 1,
+                "anchor": 3.33,
+                "correction": 0.14,
+                "reasoning": "Market prices P(actual > 3.33) = 0.94 ($958 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 3.47 under the MID surprise-sigma 0.09; scenario range 3.408-3.548 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+                "observation_ids": [],
+                "citations": [
+                  "https://polymarket.com/event/adi-quarterly-earnings-nongaap-eps-08-19-2026-3pt33"
+                ]
+              },
+              "reliability": 0.03,
+              "source_families": [
+                "prediction_market",
+                "public_consensus"
+              ],
+              "note": "direct beat market interpreted as one quantile, not a point observation; low top-level reliability prevents false precision from dominating"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 11.523503590868273,
+              "overlap_penalty": 0.75,
+              "normalized_weight": 0.18568008137162265
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 48.80625942515065,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.7864231698324717
+            },
+            {
+              "engine": "prediction_market",
+              "raw_weight": 1.7313019390581716,
+              "overlap_penalty": 0.75,
+              "normalized_weight": 0.027896748795905688
+            }
+          ],
+          "citations": [
+            "https://www.benzinga.com/quote/adi/earnings",
+            "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+            "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+            "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md",
+            "https://polymarket.com/event/adi-quarterly-earnings-nongaap-eps-08-19-2026-3pt33"
+          ],
+          "plausible_low": 2.9269218870582656,
+          "plausible_high": 3.942422933187204,
+          "warnings": [],
+          "needs_review": false
+        },
+        {
+          "label": "Adjusted gross margin",
+          "units": "%",
+          "value": 73.15211878794265,
+          "sigma": 0.7070769029720735,
+          "reasoning": "Meta-forecast: street 72.50 (sigma 5.80, reliability 45%, overlap penalty 100%, weight 1%); fundamental 73.16 (sigma 0.65, reliability 85%, overlap penalty 100%, weight 99%) -> 73.15.",
+          "estimates": [
+            {
+              "estimator": "street_research_reconstruction",
+              "value": 72.5,
+              "sigma": 5.8,
+              "n_observations": 0,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Research-run reconstruction used because the numeric exact-metric panel has no eligible row. CFO guided ~50bp decline from 73.0% (one-time channel-repricing lapse) = 72.5% implied; mix slight tailwind, utilization maxed; ADI's GM plans have been conservative by 30-50bp.",
+              "observation_ids": [],
+              "citations": [
+                "agent/FableResearchRun1.md"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 73.15650945813363,
+              "sigma": 0.6540835865316129,
+              "n_observations": 16,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "adj_gross_margin_pct is not guided, but adj_operating_margin_pct is. Fitting adj_gross_margin_pct on adj_operating_margin_pct across 16 reported periods gives adj_gross_margin_pct = 45.56 + 0.557 x adj_operating_margin_pct (residual se 0.48). A slope away from 1.0 means the gap between the two is not constant, so a fixed spread would bias the answer. Applied to the adj_operating_margin_pct forecast of 49.54 this gives 73.16.",
+              "observation_ids": [],
+              "citations": [
+                "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+                "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+                "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_research_reconstruction",
+                "value": 72.5,
+                "sigma": 5.8,
+                "n_observations": 0,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Research-run reconstruction used because the numeric exact-metric panel has no eligible row. CFO guided ~50bp decline from 73.0% (one-time channel-repricing lapse) = 72.5% implied; mix slight tailwind, utilization maxed; ADI's GM plans have been conservative by 30-50bp.",
+                "observation_ids": [],
+                "citations": [
+                  "agent/FableResearchRun1.md"
+                ]
+              },
+              "reliability": 0.45,
+              "source_families": [
+                "reconstructed_street_artifact"
+              ],
+              "note": "fallback Street reconstruction for ADI-FY2026Q3.xlsx"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 73.15650945813363,
+                "sigma": 0.6540835865316129,
+                "n_observations": 16,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "adj_gross_margin_pct is not guided, but adj_operating_margin_pct is. Fitting adj_gross_margin_pct on adj_operating_margin_pct across 16 reported periods gives adj_gross_margin_pct = 45.56 + 0.557 x adj_operating_margin_pct (residual se 0.48). A slope away from 1.0 means the gap between the two is not constant, so a fixed spread would bias the answer. Applied to the adj_operating_margin_pct forecast of 49.54 this gives 73.16.",
+                "observation_ids": [],
+                "citations": [
+                  "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+                  "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+                  "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 0.0133769322235434,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.006687900892463155
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 1.9867920951940676,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.9933120991075369
+            }
+          ],
+          "citations": [
+            "agent/FableResearchRun1.md",
+            "analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md",
+            "analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md",
+            "analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md"
+          ],
+          "plausible_low": 70.32381117605436,
+          "plausible_high": 75.98042639983095,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        }
+      ]
+    },
+    {
+      "ticker": "LSE:HAS",
+      "company": "hays",
+      "period": {
+        "year": 2026,
+        "quarter": null
+      },
+      "output_file": "HAS-FY2026.xlsx",
+      "as_of": "2026-08-16",
+      "metrics": [
+        {
+          "label": "Net fees",
+          "units": "GBPm",
+          "value": 888.6202141743738,
+          "sigma": 8.09025481579122,
+          "reasoning": "Meta-forecast: street 902.40 (sigma 72.19, reliability 70%, overlap penalty 100%, weight 1%); fundamental 888.50 (sigma 7.49, reliability 85%, overlap penalty 100%, weight 99%) -> 888.62.",
+          "estimates": [
+            {
+              "estimator": "street_reliability_blend",
+              "value": 902.4,
+              "sigma": 72.192,
+              "n_observations": 0,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.haysplc.com/investors/analysts-consensus"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 888.498,
+              "sigma": 7.491849971802692,
+              "n_observations": 5,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "FY26 H1 net fees were 453.3. FY25 H2 was FY25 972.4 less H1 496.0 = 476.4. Applying Q3 actual-basis growth -7.0% and Q4 -4.0% at their midpoint gives H2 450.2; subtract 15.0 from disposed countries to align continuing operations, producing 888.5.",
+              "observation_ids": [],
+              "citations": [
+                "hays/filings/2026-02-27__has-ln-20260227-h1-8k__642921.md",
+                "hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md",
+                "hays/filings/2026-04-16__has-ln-20260416-filing-2__955810.md",
+                "hays/filings/2026-07-10__has-ln-20260710-filing-2__1572799.md",
+                "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_reliability_blend",
+                "value": 902.4,
+                "sigma": 72.192,
+                "n_observations": 0,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.haysplc.com/investors/analysts-consensus"
+                ]
+              },
+              "reliability": 0.7,
+              "source_families": [
+                "company_consensus"
+              ],
+              "note": "numeric exact-metric Street panel"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 888.498,
+                "sigma": 7.491849971802692,
+                "n_observations": 5,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "FY26 H1 net fees were 453.3. FY25 H2 was FY25 972.4 less H1 496.0 = 476.4. Applying Q3 actual-basis growth -7.0% and Q4 -4.0% at their midpoint gives H2 450.2; subtract 15.0 from disposed countries to align continuing operations, producing 888.5.",
+                "observation_ids": [],
+                "citations": [
+                  "hays/filings/2026-02-27__has-ln-20260227-h1-8k__642921.md",
+                  "hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md",
+                  "hays/filings/2026-04-16__has-ln-20260416-filing-2__955810.md",
+                  "hays/filings/2026-07-10__has-ln-20260710-filing-2__1572799.md",
+                  "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 0.00013431357003860472,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.008791121736002019
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 0.015144006315870193,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.991208878263998
+            }
+          ],
+          "citations": [
+            "https://www.haysplc.com/investors/analysts-consensus",
+            "hays/filings/2026-02-27__has-ln-20260227-h1-8k__642921.md",
+            "hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md",
+            "hays/filings/2026-04-16__has-ln-20260416-filing-2__955810.md",
+            "hays/filings/2026-07-10__has-ln-20260710-filing-2__1572799.md",
+            "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md"
+          ],
+          "plausible_low": 856.259194911209,
+          "plausible_high": 920.9812334375387,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        },
+        {
+          "label": "Pre-exceptional basic EPS",
+          "units": "GBp",
+          "value": 1.188304961613412,
+          "sigma": 0.0838484763990255,
+          "reasoning": "Meta-forecast: street 1.13 (sigma 0.09, reliability 70%, overlap penalty 100%, weight 60%); fundamental 1.28 (sigma 0.12, reliability 85%, overlap penalty 100%, weight 40%) -> 1.19.",
+          "estimates": [
+            {
+              "estimator": "street_reliability_blend",
+              "value": 1.13,
+              "sigma": 0.0904,
+              "n_observations": 0,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.haysplc.com/investors/analysts-consensus"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 1.276574038116768,
+              "sigma": 0.12256893369048705,
+              "n_observations": 8,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Inverse-variance combination of regression_bridge 1.00 (sigma 0.39, weight 10%); ratio_on_prior_actual 1.31 (sigma 0.13, weight 90%) -> 1.28.",
+              "observation_ids": [],
+              "citations": [
+                "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md",
+                "hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_reliability_blend",
+                "value": 1.13,
+                "sigma": 0.0904,
+                "n_observations": 0,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.haysplc.com/investors/analysts-consensus"
+                ]
+              },
+              "reliability": 0.7,
+              "source_families": [
+                "company_consensus"
+              ],
+              "note": "numeric exact-metric Street panel"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 1.276574038116768,
+                "sigma": 0.12256893369048705,
+                "n_observations": 8,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Inverse-variance combination of regression_bridge 1.00 (sigma 0.39, weight 10%); ratio_on_prior_actual 1.31 (sigma 0.13, weight 90%) -> 1.28.",
+                "observation_ids": [],
+                "citations": [
+                  "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md",
+                  "hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 85.65666849400893,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.602214946367491
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 56.57937033346062,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.39778505363250916
+            }
+          ],
+          "citations": [
+            "https://www.haysplc.com/investors/analysts-consensus",
+            "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md",
+            "hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md"
+          ],
+          "plausible_low": 0.8529110560173101,
+          "plausible_high": 1.523698867209514,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        },
+        {
+          "label": "Pre-exceptional operating profit",
+          "units": "GBPm",
+          "value": 45.38811434813075,
+          "sigma": 3.7409399570084747,
+          "reasoning": "Meta-forecast: street 45.30 (sigma 3.62, reliability 70%, overlap penalty 75%, weight 56%); fundamental 45.50 (sigma 4.50, reliability 85%, overlap penalty 75%, weight 44%) -> 45.39.",
+          "estimates": [
+            {
+              "estimator": "street_reliability_blend",
+              "value": 45.3,
+              "sigma": 3.6239999999999997,
+              "n_observations": 0,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.haysplc.com/investors/analysts-consensus"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 45.5,
+              "sigma": 4.5,
+              "n_observations": 1,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Company-compiled consensus for FY2026 pre_exc_operating_profit was 43.5 across a 37.0-46.0 range, published 2026-07-10 \u2014 after the year closed, so it is well informed. Management stated they expect to land at the top of that range, so we take 45.5, 80% of the way from consensus to the ceiling. Matching consensus would score 1.0 by construction; this is a deliberate deviation the company itself signposted.",
+              "observation_ids": [],
+              "citations": [
+                "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_reliability_blend",
+                "value": 45.3,
+                "sigma": 3.6239999999999997,
+                "n_observations": 0,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Point-in-time Street reconstruction from 1 current source(s), bias-corrected and weighted by shrunk historical error.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.haysplc.com/investors/analysts-consensus"
+                ]
+              },
+              "reliability": 0.7,
+              "source_families": [
+                "company_consensus"
+              ],
+              "note": "numeric exact-metric Street panel"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 45.5,
+                "sigma": 4.5,
+                "n_observations": 1,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Company-compiled consensus for FY2026 pre_exc_operating_profit was 43.5 across a 37.0-46.0 range, published 2026-07-10 \u2014 after the year closed, so it is well informed. Management stated they expect to land at the top of that range, so we take 45.5, 80% of the way from consensus to the ceiling. Matching consensus would score 1.0 by construction; this is a deliberate deviation the company itself signposted.",
+                "observation_ids": [],
+                "citations": [
+                  "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_consensus",
+                "company_filings"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 0.03997448942297852,
+              "overlap_penalty": 0.75,
+              "normalized_weight": 0.5594282593462525
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 0.03148148148148148,
+              "overlap_penalty": 0.75,
+              "normalized_weight": 0.4405717406537475
+            }
+          ],
+          "citations": [
+            "https://www.haysplc.com/investors/analysts-consensus",
+            "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md"
+          ],
+          "plausible_low": 30.42435452009685,
+          "plausible_high": 60.35187417616465,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        }
+      ]
+    },
+    {
+      "ticker": "DE",
+      "company": "deere",
+      "period": {
+        "year": 2026,
+        "quarter": 3
+      },
+      "output_file": "DE-FY2026Q3.xlsx",
+      "as_of": "2026-08-16",
+      "metrics": [
+        {
+          "label": "Worldwide net sales and revenues",
+          "units": "USDm",
+          "value": 12486.765869462864,
+          "sigma": 435.3639717569818,
+          "reasoning": "Meta-forecast: street 12,400.00 (sigma 992.00, reliability 45%, overlap penalty 100%, weight 9%); fundamental 12,495.00 (sigma 420.00, reliability 85%, overlap penalty 100%, weight 91%) -> 12,486.77.",
+          "estimates": [
+            {
+              "estimator": "street_research_reconstruction",
+              "value": 12400.0,
+              "sigma": 992.0,
+              "n_observations": 0,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Research-run reconstruction used because the numeric exact-metric panel has no eligible row. Segment guides (PPA -5-10%, SAT +15%, C&F +20%) give H2 equipment ~$21.65B, Q3 ~49% share (company: Q4>Q3) ~= $10.77B + financial-services/other ~$1.63B. Street equipment consensus ~$10.8B.",
+              "observation_ids": [],
+              "citations": [
+                "agent/FableResearchRun1.md"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 12495.0,
+              "sigma": 420.0,
+              "n_observations": 5,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Segment driver chain: PPA 4068, Small Ag & Turf 3175, Construction & Forestry 3622, and Financial Services/other 1630 -> group revenue 12495. PPA uses the AEM unit chain; other segments use Q3 FY25 bases, Q2 run-rate residuals, and the May segment outlook.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+                "deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_research_reconstruction",
+                "value": 12400.0,
+                "sigma": 992.0,
+                "n_observations": 0,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Research-run reconstruction used because the numeric exact-metric panel has no eligible row. Segment guides (PPA -5-10%, SAT +15%, C&F +20%) give H2 equipment ~$21.65B, Q3 ~49% share (company: Q4>Q3) ~= $10.77B + financial-services/other ~$1.63B. Street equipment consensus ~$10.8B.",
+                "observation_ids": [],
+                "citations": [
+                  "agent/FableResearchRun1.md"
+                ]
+              },
+              "reliability": 0.45,
+              "source_families": [
+                "reconstructed_street_artifact"
+              ],
+              "note": "fallback Street reconstruction for DE-FY2026Q3.xlsx"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 12495.0,
+                "sigma": 420.0,
+                "n_observations": 5,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Segment driver chain: PPA 4068, Small Ag & Turf 3175, Construction & Forestry 3622, and Financial Services/other 1630 -> group revenue 12495. PPA uses the AEM unit chain; other segments use Q3 FY25 bases, Q2 run-rate residuals, and the May segment outlook.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+                  "deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 4.57287330905307e-07,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.0866750582856464
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 4.81859410430839e-06,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.9133249417143535
+            }
+          ],
+          "citations": [
+            "agent/FableResearchRun1.md",
+            "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+            "deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md"
+          ],
+          "plausible_low": 10745.309982434937,
+          "plausible_high": 14228.221756490791,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        },
+        {
+          "label": "Diluted EPS (GAAP)",
+          "units": "USD / share",
+          "value": 5.029390786714938,
+          "sigma": 0.28634895109392244,
+          "reasoning": "Meta-forecast: street 5.09 (sigma 0.45, reliability 80%, overlap penalty 75%, weight 24%); fundamental 5.01 (sigma 0.30, reliability 85%, overlap penalty 100%, weight 75%); prediction_market 5.19 (sigma 0.42, reliability 3%, overlap penalty 75%, weight 1%) -> 5.03.",
+          "estimates": [
+            {
+              "estimator": "street_reliability_blend",
+              "value": 5.0922782429625935,
+              "sigma": 0.4523910824343267,
+              "n_observations": 7,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Point-in-time Street reconstruction from 2 current source(s), bias-corrected and weighted by shrunk historical error.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.marketbeat.com/stocks/NYSE/DE/earnings/",
+                "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 5.007,
+              "sigma": 0.305,
+              "n_observations": 5,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Driver segment operating profit 1419 (PPA 513, SAT 508, C&F 398) x 75.5% after-tax, plus Financial Services net income 215, x 1.05 corporate bridge = net income 1351; divided by 269.8m shares -> GAAP EPS 5.01.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+                "deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md"
+              ]
+            },
+            {
+              "estimator": "polymarket_proxy",
+              "value": 5.189,
+              "sigma": 0.4214,
+              "n_observations": 1,
+              "anchor": 4.72,
+              "correction": 0.469,
+              "reasoning": "Market prices P(actual > 4.72) = 0.91 ($1,086 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 5.189 under the MID surprise-sigma 0.35; scenario range 4.988-5.457 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+              "observation_ids": [],
+              "citations": [
+                "https://polymarket.com/event/de-quarterly-earnings-gaap-eps-08-20-2026-4pt72"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_reliability_blend",
+                "value": 5.0922782429625935,
+                "sigma": 0.4523910824343267,
+                "n_observations": 7,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Point-in-time Street reconstruction from 2 current source(s), bias-corrected and weighted by shrunk historical error.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.marketbeat.com/stocks/NYSE/DE/earnings/",
+                  "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks"
+                ]
+              },
+              "reliability": 0.8,
+              "source_families": [
+                "public_consensus"
+              ],
+              "note": "numeric exact-metric Street panel"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 5.007,
+                "sigma": 0.305,
+                "n_observations": 5,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Driver segment operating profit 1419 (PPA 513, SAT 508, C&F 398) x 75.5% after-tax, plus Financial Services net income 215, x 1.05 corporate bridge = net income 1351; divided by 269.8m shares -> GAAP EPS 5.01.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+                  "deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "available",
+              "estimate": {
+                "estimator": "polymarket_proxy",
+                "value": 5.189,
+                "sigma": 0.4214,
+                "n_observations": 1,
+                "anchor": 4.72,
+                "correction": 0.469,
+                "reasoning": "Market prices P(actual > 4.72) = 0.91 ($1,086 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 5.189 under the MID surprise-sigma 0.35; scenario range 4.988-5.457 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+                "observation_ids": [],
+                "citations": [
+                  "https://polymarket.com/event/de-quarterly-earnings-gaap-eps-08-20-2026-4pt72"
+                ]
+              },
+              "reliability": 0.03,
+              "source_families": [
+                "prediction_market",
+                "public_consensus"
+              ],
+              "note": "direct beat market interpreted as one quantile, not a point observation; low top-level reliability prevents false precision from dominating"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 2.9317246554565988,
+              "overlap_penalty": 0.75,
+              "normalized_weight": 0.24038887922129482
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 9.137328675087343,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.749221859969913
+            },
+            {
+              "engine": "prediction_market",
+              "raw_weight": 0.12670491315476312,
+              "overlap_penalty": 0.75,
+              "normalized_weight": 0.010389260808792182
+            }
+          ],
+          "citations": [
+            "https://www.marketbeat.com/stocks/NYSE/DE/earnings/",
+            "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
+            "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+            "deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md",
+            "https://polymarket.com/event/de-quarterly-earnings-gaap-eps-08-20-2026-4pt72"
+          ],
+          "plausible_low": 3.883994982339248,
+          "plausible_high": 6.174786591090628,
+          "warnings": [],
+          "needs_review": false
+        },
+        {
+          "label": "Production & Precision Ag operating profit",
+          "units": "USDm",
+          "value": 522.6515676407972,
+          "sigma": 34.93365639642209,
+          "reasoning": "Meta-forecast: street 520.00 (sigma 41.60, reliability 45%, overlap penalty 100%, weight 32%); fundamental 523.88 (sigma 38.98, reliability 85%, overlap penalty 100%, weight 68%) -> 522.65.",
+          "estimates": [
+            {
+              "estimator": "street_research_reconstruction",
+              "value": 520.0,
+              "sigma": 41.6,
+              "n_observations": 0,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Research-run reconstruction used because the numeric exact-metric panel has no eligible row. Q3 sales ~$3,960M (-7% y/y, H1 rate) x ~12.8% margin (H1 11.0%, FY guide 11-13%, best cost comps reserved for Q4); H2-implied profit share ~48%.",
+              "observation_ids": [],
+              "citations": [
+                "agent/FableResearchRun1.md"
+              ]
+            },
+            {
+              "estimator": "fundamental_engine",
+              "value": 523.8841250000847,
+              "sigma": 38.98062076659089,
+              "n_observations": 16,
+              "anchor": null,
+              "correction": null,
+              "reasoning": "Inverse-variance combination of driver_nowcast 513.00 (sigma 41.00, weight 90%); regression_bridge 626.28 (sigma 125.76, weight 10%) -> 523.88.",
+              "observation_ids": [],
+              "citations": [
+                "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+                "https://drgnews.com/2026/07/23/u-s-and-canadian-sales-of-combines-see-slight-increase-in-june-2026/",
+                "challenge/offline-data/deere/slides/2026-05-21__de-us-20260521-slide__1042212.md"
+              ]
+            }
+          ],
+          "engine_contributions": [
+            {
+              "engine": "street",
+              "status": "available",
+              "estimate": {
+                "estimator": "street_research_reconstruction",
+                "value": 520.0,
+                "sigma": 41.6,
+                "n_observations": 0,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Research-run reconstruction used because the numeric exact-metric panel has no eligible row. Q3 sales ~$3,960M (-7% y/y, H1 rate) x ~12.8% margin (H1 11.0%, FY guide 11-13%, best cost comps reserved for Q4); H2-implied profit share ~48%.",
+                "observation_ids": [],
+                "citations": [
+                  "agent/FableResearchRun1.md"
+                ]
+              },
+              "reliability": 0.45,
+              "source_families": [
+                "reconstructed_street_artifact"
+              ],
+              "note": "fallback Street reconstruction for DE-FY2026Q3.xlsx"
+            },
+            {
+              "engine": "fundamental",
+              "status": "available",
+              "estimate": {
+                "estimator": "fundamental_engine",
+                "value": 523.8841250000847,
+                "sigma": 38.98062076659089,
+                "n_observations": 16,
+                "anchor": null,
+                "correction": null,
+                "reasoning": "Inverse-variance combination of driver_nowcast 513.00 (sigma 41.00, weight 90%); regression_bridge 626.28 (sigma 125.76, weight 10%) -> 523.88.",
+                "observation_ids": [],
+                "citations": [
+                  "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+                  "https://drgnews.com/2026/07/23/u-s-and-canadian-sales-of-combines-see-slight-increase-in-june-2026/",
+                  "challenge/offline-data/deere/slides/2026-05-21__de-us-20260521-slide__1042212.md"
+                ]
+              },
+              "reliability": 0.85,
+              "source_families": [
+                "company_filings",
+                "external_drivers"
+              ],
+              "note": "deterministic company model with compatible driver nowcasts"
+            },
+            {
+              "engine": "prediction_market",
+              "status": "abstained",
+              "estimate": null,
+              "reliability": 1.0,
+              "source_families": [],
+              "note": "no direct, point-in-time market with a defensible metric mapping"
+            }
+          ],
+          "meta_weights": [
+            {
+              "engine": "street",
+              "raw_weight": 0.0002600314349112426,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.317332052717315
+            },
+            {
+              "engine": "fundamental",
+              "raw_weight": 0.000559398662630411,
+              "overlap_penalty": 1.0,
+              "normalized_weight": 0.682667947282685
+            }
+          ],
+          "citations": [
+            "agent/FableResearchRun1.md",
+            "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+            "https://drgnews.com/2026/07/23/u-s-and-canadian-sales-of-combines-see-slight-increase-in-june-2026/",
+            "challenge/offline-data/deere/slides/2026-05-21__de-us-20260521-slide__1042212.md"
+          ],
+          "plausible_low": 382.91694205510885,
+          "plausible_high": 662.3861932264856,
+          "warnings": [
+            "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
+          ],
+          "needs_review": false
+        }
+      ]
+    }
+  ],
+  "failures": []
+}

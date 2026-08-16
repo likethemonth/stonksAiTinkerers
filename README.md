@@ -68,13 +68,31 @@ less research/HD.md
 
 Use `HD`, `ADI`, `HAS` or `DE` for the four challenge companies. The output contains search leads rather than verified financial history, so check each figure in its cited document. Read [starter/README.md](starter/README.md) for narrower searches and testing instructions.
 
+## Three-engine forecast run
+
+This entry implements the approach in [agents-vs-wall-street-standalone-strategy.md](agents-vs-wall-street-standalone-strategy.md): a reconstructed Street estimate, an independent fundamental/driver model, and a prediction-market lens feed a source-overlap-aware meta-forecaster. Missing market coverage is an explicit abstention rather than a copied estimate.
+
+```bash
+python3 -m pip install -r requirements.txt
+npm ci
+npm run test:forecast
+npm run forecast
+npm run check:forecasts
+```
+
+The single authoritative runner writes four workbooks and `submission/forecast-audit.json`, which retains every engine estimate, sigma, citation, abstention, source-overlap penalty, and realized weight. A timestamped narrative trail is written under `logs/`.
+
+The Street preparation step rejects look-ahead rows, scores only outcomes resolved by the cutoff, ranks exact-metric histories, corrects persistent signed bias, and shrinks sparse samples. The fundamental engine uses company-specific extractors and deterministic models; Uri's dated physical-driver nowcasts live inside this engine so they are not double-counted as an independent vote.
+
 ## Repository map
 
 ```text
 challenge/                 Companies, metrics, workbooks and historical documents
 architecture/index.html    Template for the required architecture explanation
+forecast/                  Typed extractors, estimators, engines and orchestrator
+forecasting/               Point-in-time reconstructed-Street source backtest
 entry.template.json        Template for private team and agent details
-submission/                Put the four completed workbooks here
+submission/                Four completed workbooks plus forecast-audit.json
 logs/                      Save the final clear-run log here
 scripts/                   Local entry and workbook checks
 starter/                   Optional historical-document search helper
