@@ -269,7 +269,17 @@ def hays_full_year_net_fees(
     implementation did exactly that with Q4's -4%, producing GBP933.5m. This
     reconstruction uses the reported H1 level, derives the prior H2 base from
     FY25 less H1 FY25, applies the separately disclosed Q3/Q4 actual-basis rates,
-    and removes the six disposed countries from continuing operations.
+    The six disposed countries are deliberately NOT subtracted. The Q4 statement
+    reports that they "contributed c.GBP15m to reported group net fees in FY26"
+    — a forward-looking note in the FY27 outlook section, telling analysts what
+    will be absent NEXT year. They were sold on 16 June 2026, so they were owned
+    for essentially all of FY26 and that 15m is already inside reported FY26 net
+    fees. Subtracting it also double-counts, because the actual-basis growth
+    rates applied here already reflect the divestments: "net fees decreased by
+    4% ... partially offset by our previously communicated action to close our
+    operations in four countries and divest in the Czech Republic, Denmark,
+    Hungary, Luxembourg, Romania and Sweden". An earlier version subtracted it
+    and produced 888.5 against a Street estimate of 902.4.
     """
     prior = period.prior_year()
 
@@ -288,7 +298,6 @@ def hays_full_year_net_fees(
     h1 = actual("net_fees_h1", period)
     prior_h1 = actual("net_fees_h1", prior)
     prior_fy = actual("net_fees", prior)
-    disposed = actual("disposed_country_net_fees", period)
     growth_by_month: dict[int, MetricObservation] = {}
     for row in sorted(observations, key=lambda item: item.as_of):
         if (
@@ -299,19 +308,19 @@ def hays_full_year_net_fees(
         ):
             growth_by_month[row.as_of.month] = row
     growth = [growth_by_month[month] for month in (4, 7) if month in growth_by_month]
-    if not all((h1, prior_h1, prior_fy, disposed)) or len(growth) < 2:
+    if not all((h1, prior_h1, prior_fy)) or len(growth) < 2:
         return None
-    assert h1 and prior_h1 and prior_fy and disposed
+    assert h1 and prior_h1 and prior_fy
     q3, q4 = growth[-2], growth[-1]
     prior_h2 = prior_fy.value - prior_h1.value
     h2_growth = (q3.value + q4.value) / 2.0
     h2 = prior_h2 * (1.0 + h2_growth / 100.0)
-    value = h1.value + h2 - disposed.value
+    value = h1.value + h2
     growth_dispersion = abs(q3.value - q4.value) / 2.0
-    sigma = max(
-        (prior_h2 * growth_dispersion / 100.0) ** 2 + (disposed.value * 0.15) ** 2,
-        1.0,
-    ) ** 0.5
+    # Uncertainty is the spread between the two half-year growth rates, floored.
+    # The earlier version added a disposal term here; with the subtraction gone
+    # that term has nothing to describe.
+    sigma = max((prior_h2 * growth_dispersion / 100.0) ** 2, 1.0) ** 0.5
     return Estimate(
         estimator="hays_half_year_reconstruction",
         value=value,
@@ -323,16 +332,17 @@ def hays_full_year_net_fees(
             f"FY26 H1 net fees were {h1.value:.1f}. FY25 H2 was FY25 "
             f"{prior_fy.value:.1f} less H1 {prior_h1.value:.1f} = {prior_h2:.1f}. "
             f"Applying Q3 actual-basis growth {q3.value:+.1f}% and Q4 "
-            f"{q4.value:+.1f}% at their midpoint gives H2 {h2:.1f}; subtract "
-            f"{disposed.value:.1f} from disposed countries to align continuing "
-            f"operations, producing {value:.1f}."
+            f"{q4.value:+.1f}% at their midpoint gives H2 {h2:.1f}, and a full "
+            f"year of {value:.1f}. The disposed countries are not subtracted: "
+            f"they were owned for nearly all of FY26, so their contribution is "
+            f"already inside reported net fees, and the actual-basis growth "
+            f"rates used here already reflect the divestments."
         ),
         citations=[
             h1.source_file,
             prior_fy.source_file,
             q3.source_file,
             q4.source_file,
-            disposed.source_file,
         ],
     )
 

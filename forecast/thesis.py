@@ -74,11 +74,14 @@ class Thesis(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    direction: Literal["FOR", "AGAINST"] = Field(
+    direction: Literal["FOR", "AGAINST", "NEUTRAL"] = Field(
         ...,
         description=(
             "FOR = the reported figure lands ABOVE the anchor. "
-            "AGAINST = it lands BELOW."
+            "AGAINST = it lands BELOW. "
+            "NEUTRAL = the point is material context a reader should know, but "
+            "does not push the figure either way (for example, an effect already "
+            "reflected in the anchor, or a risk that cuts both ways)."
         ),
     )
     claim: str = Field(
@@ -161,6 +164,11 @@ Argue both sides. Give the strongest arguments that the reported figure will \
 land ABOVE this forecast (direction FOR), and the strongest that it will land \
 BELOW (direction AGAINST). Aim for two to three of each where the evidence \
 supports them; give fewer rather than padding with weak arguments.
+
+Where a point is genuinely material for a reader but does not push the figure \
+either way — an effect already reflected in the anchor, a risk that cuts both \
+ways, a caveat about the evidence itself — mark it NEUTRAL with an effect of 0 \
+rather than forcing it into a direction.
 
 Rules:
 - Cite only observation ids that appear in the table above. Do not introduce \
@@ -338,9 +346,12 @@ def run_theses(
     outcome.ran = True
 
     # Net the survivors, weighting each by its own confidence, then cap.
+    # NEUTRAL theses are recorded and displayed but never move the number —
+    # that is what makes them a useful place to put "already priced in".
     net = sum(
         (t.effect if t.direction == "FOR" else -t.effect) * t.confidence
         for t in survivors
+        if t.direction in ("FOR", "AGAINST")
     )
     cap = ADJUSTMENT_CAP_SIGMAS * abs(sigma)
     if abs(net) > cap:
