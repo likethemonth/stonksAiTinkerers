@@ -1,0 +1,642 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schema_name": "analyst-forecast-knowledge-base",
+  "schema_version": "1.0.0",
+  "status": "proposed",
+  "reference_model": "/Users/jooniverse/Downloads/praveenisomer-knowledge",
+  "design_principles": [
+    "Preserve immutable source captures separately from normalized records and generated knowledge views.",
+    "Use one stable record identifier in JSON, citations, generated Markdown, media filenames, outcomes, and backtests.",
+    "Represent every forecast revision as a new record linked to its predecessor; never overwrite history.",
+    "Store source-published, first-seen, ingested, effective, horizon, and resolved times separately.",
+    "Make point-in-time availability explicit so a backtest cannot use information unavailable at the decision timestamp.",
+    "Treat analyst, instrument, forecast type, horizon, sector, topic, and thesis tags as orthogonal facets.",
+    "Generate indexes and summaries from canonical data and validate them against a manifest to prevent count drift.",
+    "Keep verbatim evidence and analyst interpretation distinguishable at field and citation level."
+  ],
+  "folder_layout": {
+    "README.md": "Entry point, scope, quick navigation, current corpus counts, and data-health status.",
+    "RESEARCH.md": "Cross-corpus synthesis, methodology, limitations, load-bearing findings, and open questions.",
+    "knowledge/00-OVERVIEW.md": "Generated-first overview with coverage, quality, calibration, leaderboard, regime, and document map.",
+    "knowledge/01-analyst-profiles.md": "Analyst histories, styles, revision behaviour, and calibrated strengths/weaknesses.",
+    "knowledge/02-forecast-taxonomy.md": "Definitions for target types, horizons, directions, and comparability rules.",
+    "knowledge/03-sector-and-theme-playbooks.md": "Cross-analyst sector/theme synthesis.",
+    "knowledge/04-revision-and-catalyst-patterns.md": "Forecast changes, catalysts, and thesis invalidation patterns.",
+    "knowledge/05-calibration-and-bias.md": "Accuracy, calibration, optimism, herding, and coverage-selection analysis.",
+    "knowledge/06-market-regime-analysis.md": "Performance conditional on regime and volatility.",
+    "knowledge/07-backtest-results.md": "Auditable backtest methods, results, ablations, and failure modes.",
+    "knowledge/08-source-quality-and-limitations.md": "Source hierarchy, extraction confidence, gaps, corrections, and legal/licensing notes.",
+    "dataset/manifest.json": "Canonical corpus version, hashes, counts, enumerations, build metadata, and quality checks.",
+    "dataset/analysts.json": "Analyst/entity registry.",
+    "dataset/instruments.json": "Point-in-time instrument/security registry.",
+    "dataset/sources.jsonl": "Normalized source-document ledger, one record per source artifact.",
+    "dataset/forecasts.jsonl": "Canonical forecast-event ledger, one immutable event or revision per line.",
+    "dataset/outcomes.jsonl": "Resolved outcomes and benchmark-relative results.",
+    "dataset/backtest-runs.jsonl": "Immutable experiment ledger with configuration, dataset hash, and results.",
+    "dataset/overrides.tsv": "Human-reviewed corrections: record_id<TAB>field<TAB>old_value<TAB>new_value<TAB>reviewer<TAB>reviewed_at<TAB>reason.",
+    "dataset/indexes/analysts/<analyst-slug>.md": "Generated chronological analyst trail.",
+    "dataset/indexes/instruments/<instrument-slug>.md": "Generated chronological instrument trail.",
+    "dataset/indexes/sectors/<sector-slug>.md": "Generated sector trail.",
+    "dataset/indexes/topics/<topic-slug>.md": "Generated exclusive primary-topic trail.",
+    "dataset/indexes/theses/<thesis-tag>.md": "Generated multi-valued thesis/motif trail.",
+    "raw/<provider>/<YYYY>/<YYYY-MM-DD>/<capture-id>.json": "Immutable raw capture envelope and provider payload.",
+    "raw/<provider>/<YYYY>/<YYYY-MM-DD>/<capture-id>.<ext>": "Original HTML, PDF, transcript, image, audio, or attachment when permitted.",
+    "media/<source-id>/<ordinal>.<ext>": "Media and page assets, keyed by source ID rather than display text.",
+    "schemas/*.schema.json": "Standalone extracted schemas corresponding to the $defs below.",
+    "scripts/collect-*": "Acquisition only; writes raw captures and source manifests.",
+    "scripts/normalize-*": "Deterministic raw-to-canonical transformation.",
+    "scripts/classify-*": "Rule/model classification followed by explicit review overrides.",
+    "scripts/build-indexes-*": "Generated Markdown indexes and overview statistics.",
+    "scripts/run-backtest-*": "Point-in-time-safe evaluation and experiment logging.",
+    "scripts/validate-*": "Schema, referential-integrity, temporal, hash, and leakage checks."
+  },
+  "identifier_conventions": {
+    "record_id": "fcst_<source-platform>_<native-id>_<revision-ordinal>; if no native ID exists use fcst_<sha256-prefix-20>_<revision-ordinal>",
+    "source_id": "src_<source-platform>_<native-id>; fallback src_<sha256-prefix-20>",
+    "analyst_id": "anl_<lower-kebab-canonical-name>_<sha256-prefix-8>",
+    "instrument_id": "ins_<figi-or-provider-id>; never use ticker alone because tickers are reused and change",
+    "outcome_id": "out_<record-id>",
+    "backtest_run_id": "bt_<UTC-YYYYMMDDTHHMMSSZ>_<config-sha256-prefix-10>",
+    "capture_id": "cap_<provider>_<UTC-YYYYMMDDTHHMMSSZ>_<sha256-prefix-10>",
+    "slug_pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+    "opaque_id_pattern": "^[a-z]{2,8}_[A-Za-z0-9._:-]+$",
+    "rules": [
+      "IDs are immutable strings, never JSON numbers.",
+      "Native source IDs are preserved verbatim in source.native_id.",
+      "A display ticker is an attribute with valid_from/valid_to, not a primary key.",
+      "Generated filenames use lowercase kebab-case; canonical record IDs remain lossless.",
+      "Revision ordinals begin at 0 and increase monotonically within a forecast family."
+    ]
+  },
+  "canonical_enumerations": {
+    "source_kind": [
+      "research-report",
+      "rating-note",
+      "earnings-call",
+      "conference",
+      "interview",
+      "news-quote",
+      "social-post",
+      "regulatory-filing",
+      "data-vendor",
+      "manual-entry"
+    ],
+    "forecast_kind": [
+      "price-target",
+      "rating",
+      "return",
+      "earnings",
+      "revenue",
+      "margin",
+      "cash-flow",
+      "valuation-multiple",
+      "macro",
+      "event-probability",
+      "qualitative-direction"
+    ],
+    "direction": ["bullish", "bearish", "neutral", "mixed", "not-applicable"],
+    "action": ["initiate", "reiterate", "upgrade", "downgrade", "raise", "cut", "withdraw", "correct", "observe"],
+    "primary_topic": [
+      "company-fundamentals",
+      "industry",
+      "macro",
+      "valuation",
+      "catalyst",
+      "risk",
+      "technical",
+      "policy-regulatory",
+      "market-structure",
+      "uncategorized"
+    ],
+    "thesis_tag_examples": [
+      "earnings-revision",
+      "multiple-expansion",
+      "margin-inflection",
+      "product-cycle",
+      "market-share",
+      "capital-returns",
+      "m-and-a",
+      "regulatory-risk",
+      "balance-sheet",
+      "positioning-sentiment"
+    ],
+    "confidence_basis": ["explicit", "mapped-from-language", "model-inferred", "unknown"],
+    "resolution_status": ["unresolved", "resolved", "expired-unresolved", "withdrawn", "not-evaluable", "superseded"],
+    "source_tier": ["primary", "licensed-secondary", "reputable-secondary", "aggregator", "unverified"],
+    "extraction_method": ["structured-api", "document-parser", "ocr", "transcript", "manual", "model-assisted"],
+    "review_status": ["unreviewed", "machine-checked", "human-verified", "disputed", "corrected"]
+  },
+  "markdown_templates": {
+    "knowledge_document": [
+      "# NN — Title",
+      "",
+      "> Scope: <coverage window and inclusion rule>",
+      "> Data: `../dataset/forecasts.jsonl` at manifest version `<hash>`",
+      "> Evidence notation: `[forecast_id](source_url)` and local `source_id` citations.",
+      "",
+      "## 0. Thesis",
+      "## 1. Evidence",
+      "## 2. Quantitative results",
+      "## 3. Counterevidence and limitations",
+      "## 4. Reproducibility",
+      "## 5. Open questions"
+    ],
+    "generated_index_header": [
+      "# <Facet display name> (<facet-id>)",
+      "",
+      "<Definition and inclusion rule>",
+      "",
+      "- Forecasts N (resolved R) | hit rate H | mean excess return X | calibration score C",
+      "- Build: manifest `<sha256>` · generated `<UTC timestamp>`",
+      "",
+      "---"
+    ],
+    "generated_forecast_entry": [
+      "### <published-date> · <instrument> · <action> · <direction> · [<record-id>](<source-url>)",
+      "",
+      "> <verbatim forecast excerpt>",
+      "> Target: <value/unit/horizon> · Confidence: <value/basis>",
+      "> Source: `<source-id>` · First seen: <timestamp> · Review: <status>",
+      "> Outcome: <status/result> · Backtest eligibility: <yes/no + reason>"
+    ],
+    "citation_rules": [
+      "Every numerical or attributed claim in knowledge Markdown cites one or more canonical forecast_id/source_id values.",
+      "Every forecast record retains an exact source URL and, when lawful, a content hash and local raw path.",
+      "Verbatim excerpts are clearly quoted and kept separate from normalized interpretations.",
+      "Secondary reports cite both the secondary source and the named original analyst/report when available.",
+      "Citation locators use page, paragraph, timestamp, table, or character offsets where the source permits it."
+    ]
+  },
+  "validation_invariants": [
+    "dataset/manifest.json count fields equal actual JSON/JSONL record counts.",
+    "All files listed in manifest.files exist and match sha256 and byte_size.",
+    "Every foreign key resolves: analyst_id, instrument_id, source_id, prior_record_id, forecast_id, benchmark_instrument_id.",
+    "published_at <= first_seen_at <= ingested_at unless a documented clock anomaly is present.",
+    "effective_at >= published_at and horizon_end > effective_at.",
+    "No market observation with observed_at > decision_at may enter a backtest feature set.",
+    "No source with available_at > decision_at may enter a backtest feature set.",
+    "A forecast revision never mutates or deletes its predecessor.",
+    "Withdrawn and superseded records remain queryable and are excluded only by declared experiment rules.",
+    "Outcome observation window and price adjustment policy are fixed before score calculation.",
+    "Generated analyst/instrument/topic index counts equal canonical facet counts.",
+    "The exclusive primary_topic is exactly one value; thesis_tags is zero or more values.",
+    "Ticker joins are resolved through instrument_id and valid-time aliases.",
+    "Currency conversion uses a named FX source available as of the evaluation timestamp.",
+    "Corporate-action adjustment and benchmark return conventions are recorded per backtest run.",
+    "Every human override records reviewer, timestamp, old/new value, and reason."
+  ],
+  "$defs": {
+    "money": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "currency"],
+      "properties": {
+        "value": {"type": "number"},
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"}
+      }
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "url", "locator", "quote", "content_sha256"],
+      "properties": {
+        "source_id": {"type": "string"},
+        "url": {"type": "string", "format": "uri"},
+        "locator": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "page": {"type": ["integer", "null"], "minimum": 1},
+            "paragraph": {"type": ["integer", "null"], "minimum": 1},
+            "timestamp_seconds": {"type": ["number", "null"], "minimum": 0},
+            "start_char": {"type": ["integer", "null"], "minimum": 0},
+            "end_char": {"type": ["integer", "null"], "minimum": 0},
+            "table": {"type": ["string", "null"]}
+          }
+        },
+        "quote": {"type": "string"},
+        "content_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "source_document": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "provider",
+        "source_kind",
+        "source_tier",
+        "native_id",
+        "canonical_url",
+        "title",
+        "publisher",
+        "published_at",
+        "first_seen_at",
+        "ingested_at",
+        "available_at",
+        "capture_id",
+        "raw_path",
+        "content_sha256",
+        "extraction",
+        "license"
+      ],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^src_"},
+        "provider": {"type": "string"},
+        "source_kind": {"type": "string"},
+        "source_tier": {"type": "string"},
+        "native_id": {"type": ["string", "null"]},
+        "canonical_url": {"type": "string", "format": "uri"},
+        "title": {"type": "string"},
+        "publisher": {"type": "string"},
+        "published_at": {"type": ["string", "null"], "format": "date-time"},
+        "first_seen_at": {"type": "string", "format": "date-time"},
+        "ingested_at": {"type": "string", "format": "date-time"},
+        "available_at": {"type": "string", "format": "date-time"},
+        "capture_id": {"type": "string", "pattern": "^cap_"},
+        "raw_path": {"type": "string"},
+        "content_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "language": {"type": "string"},
+        "extraction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["method", "tool", "tool_version", "confidence", "review_status"],
+          "properties": {
+            "method": {"type": "string"},
+            "tool": {"type": "string"},
+            "tool_version": {"type": "string"},
+            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+            "review_status": {"type": "string"}
+          }
+        },
+        "license": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "redistribution_allowed"],
+          "properties": {
+            "status": {"type": "string"},
+            "redistribution_allowed": {"type": "boolean"},
+            "notes": {"type": "string"}
+          }
+        }
+      }
+    },
+    "analyst": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["analyst_id", "canonical_name", "slug", "aliases", "affiliations", "active_periods", "coverage"],
+      "properties": {
+        "analyst_id": {"type": "string", "pattern": "^anl_"},
+        "canonical_name": {"type": "string"},
+        "slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "aliases": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "external_ids": {"type": "object", "additionalProperties": {"type": "string"}},
+        "affiliations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["organization", "role", "valid_from", "valid_to"],
+            "properties": {
+              "organization": {"type": "string"},
+              "role": {"type": "string"},
+              "valid_from": {"type": ["string", "null"], "format": "date"},
+              "valid_to": {"type": ["string", "null"], "format": "date"}
+            }
+          }
+        },
+        "active_periods": {"type": "array", "items": {"type": "object"}},
+        "coverage": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "profile_source_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "instrument": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instrument_id", "name", "asset_class", "primary_exchange", "currency", "identifiers", "ticker_history"],
+      "properties": {
+        "instrument_id": {"type": "string", "pattern": "^ins_"},
+        "name": {"type": "string"},
+        "asset_class": {"type": "string"},
+        "primary_exchange": {"type": ["string", "null"]},
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "identifiers": {"type": "object", "additionalProperties": {"type": "string"}},
+        "ticker_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ticker", "exchange", "valid_from", "valid_to"],
+            "properties": {
+              "ticker": {"type": "string"},
+              "exchange": {"type": ["string", "null"]},
+              "valid_from": {"type": "string", "format": "date"},
+              "valid_to": {"type": ["string", "null"], "format": "date"}
+            }
+          }
+        },
+        "sector_history": {"type": "array", "items": {"type": "object"}},
+        "corporate_action_successor_id": {"type": ["string", "null"]}
+      }
+    },
+    "forecast": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_id",
+        "forecast_family_id",
+        "revision_ordinal",
+        "prior_record_id",
+        "source_id",
+        "analyst_id",
+        "instrument_id",
+        "published_at",
+        "first_seen_at",
+        "ingested_at",
+        "effective_at",
+        "horizon",
+        "forecast_kind",
+        "action",
+        "direction",
+        "primary_topic",
+        "thesis_tags",
+        "target",
+        "confidence",
+        "verbatim_excerpt",
+        "normalized_thesis",
+        "citations",
+        "review_status",
+        "resolution_status",
+        "backtest_eligibility"
+      ],
+      "properties": {
+        "record_id": {"type": "string", "pattern": "^fcst_"},
+        "forecast_family_id": {"type": "string", "pattern": "^ffam_"},
+        "revision_ordinal": {"type": "integer", "minimum": 0},
+        "prior_record_id": {"type": ["string", "null"]},
+        "source_id": {"type": "string", "pattern": "^src_"},
+        "analyst_id": {"type": "string", "pattern": "^anl_"},
+        "instrument_id": {"type": ["string", "null"]},
+        "published_at": {"type": "string", "format": "date-time"},
+        "first_seen_at": {"type": "string", "format": "date-time"},
+        "ingested_at": {"type": "string", "format": "date-time"},
+        "effective_at": {"type": "string", "format": "date-time"},
+        "horizon": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "end_at", "trading_days", "verbatim"],
+          "properties": {
+            "kind": {"enum": ["explicit-date", "duration", "event", "open-ended"]},
+            "end_at": {"type": ["string", "null"], "format": "date-time"},
+            "trading_days": {"type": ["integer", "null"], "minimum": 1},
+            "event": {"type": ["string", "null"]},
+            "verbatim": {"type": "string"}
+          }
+        },
+        "forecast_kind": {"type": "string"},
+        "action": {"type": "string"},
+        "direction": {"type": "string"},
+        "primary_topic": {"type": "string"},
+        "thesis_tags": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "target": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "lower", "upper", "unit", "currency", "basis", "previous_value"],
+          "properties": {
+            "value": {"type": ["number", "string", "null"]},
+            "lower": {"type": ["number", "null"]},
+            "upper": {"type": ["number", "null"]},
+            "unit": {"type": ["string", "null"]},
+            "currency": {"type": ["string", "null"], "pattern": "^[A-Z]{3}$"},
+            "basis": {"type": ["string", "null"]},
+            "previous_value": {"type": ["number", "string", "null"]}
+          }
+        },
+        "confidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value", "basis", "verbatim"],
+          "properties": {
+            "value": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+            "basis": {"type": "string"},
+            "verbatim": {"type": ["string", "null"]}
+          }
+        },
+        "verbatim_excerpt": {"type": "string"},
+        "normalized_thesis": {"type": "string"},
+        "catalysts": {"type": "array", "items": {"type": "string"}},
+        "risks": {"type": "array", "items": {"type": "string"}},
+        "invalidation_conditions": {"type": "array", "items": {"type": "string"}},
+        "citations": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/citation"}},
+        "review_status": {"type": "string"},
+        "resolution_status": {"type": "string"},
+        "backtest_eligibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["eligible", "reason_codes"],
+          "properties": {
+            "eligible": {"type": "boolean"},
+            "reason_codes": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+          }
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome_id",
+        "record_id",
+        "resolved_at",
+        "resolution_status",
+        "observation_policy",
+        "entry_observation",
+        "exit_observation",
+        "benchmark_observations",
+        "metrics",
+        "data_source_ids",
+        "calculated_at"
+      ],
+      "properties": {
+        "outcome_id": {"type": "string", "pattern": "^out_"},
+        "record_id": {"type": "string", "pattern": "^fcst_"},
+        "resolved_at": {"type": "string", "format": "date-time"},
+        "resolution_status": {"type": "string"},
+        "observation_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["entry_rule", "exit_rule", "price_type", "adjustment", "timezone", "calendar"],
+          "properties": {
+            "entry_rule": {"type": "string"},
+            "exit_rule": {"type": "string"},
+            "price_type": {"enum": ["open", "close", "vwap", "mid", "settlement", "fundamental-release"]},
+            "adjustment": {"enum": ["raw", "split-adjusted", "total-return-adjusted"]},
+            "timezone": {"type": "string"},
+            "calendar": {"type": "string"}
+          }
+        },
+        "entry_observation": {"type": "object"},
+        "exit_observation": {"type": "object"},
+        "benchmark_observations": {"type": "array", "items": {"type": "object"}},
+        "metrics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "absolute_error": {"type": ["number", "null"]},
+            "percentage_error": {"type": ["number", "null"]},
+            "direction_correct": {"type": ["boolean", "null"]},
+            "realized_return": {"type": ["number", "null"]},
+            "benchmark_return": {"type": ["number", "null"]},
+            "excess_return": {"type": ["number", "null"]},
+            "brier_score": {"type": ["number", "null"]},
+            "log_loss": {"type": ["number", "null"]},
+            "hit": {"type": ["boolean", "null"]}
+          }
+        },
+        "data_source_ids": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "calculated_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "backtest_run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "backtest_run_id",
+        "created_at",
+        "code_commit",
+        "dataset_manifest_sha256",
+        "hypothesis",
+        "decision_rule",
+        "universe",
+        "time_split",
+        "feature_availability_policy",
+        "execution_assumptions",
+        "metrics",
+        "results",
+        "artifacts",
+        "leakage_checks",
+        "status"
+      ],
+      "properties": {
+        "backtest_run_id": {"type": "string", "pattern": "^bt_"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "code_commit": {"type": "string"},
+        "dataset_manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "hypothesis": {"type": "string"},
+        "decision_rule": {"type": "object"},
+        "universe": {"type": "object"},
+        "time_split": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["train_start", "train_end", "validation_start", "validation_end", "test_start", "test_end", "method"],
+          "properties": {
+            "train_start": {"type": ["string", "null"], "format": "date"},
+            "train_end": {"type": ["string", "null"], "format": "date"},
+            "validation_start": {"type": ["string", "null"], "format": "date"},
+            "validation_end": {"type": ["string", "null"], "format": "date"},
+            "test_start": {"type": "string", "format": "date"},
+            "test_end": {"type": "string", "format": "date"},
+            "method": {"enum": ["fixed-holdout", "walk-forward", "rolling", "expanding"]}
+          }
+        },
+        "feature_availability_policy": {"type": "object"},
+        "execution_assumptions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["entry_delay", "fees_bps", "slippage_bps", "position_sizing", "max_concurrent_positions", "corporate_action_policy"],
+          "properties": {
+            "entry_delay": {"type": "string"},
+            "fees_bps": {"type": "number", "minimum": 0},
+            "slippage_bps": {"type": "number", "minimum": 0},
+            "position_sizing": {"type": "string"},
+            "max_concurrent_positions": {"type": ["integer", "null"], "minimum": 1},
+            "corporate_action_policy": {"type": "string"}
+          }
+        },
+        "metrics": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "results": {
+          "type": "object",
+          "required": ["eligible_n", "evaluated_n", "excluded_n", "exclusions", "aggregate", "by_facet", "confidence_intervals"],
+          "properties": {
+            "eligible_n": {"type": "integer", "minimum": 0},
+            "evaluated_n": {"type": "integer", "minimum": 0},
+            "excluded_n": {"type": "integer", "minimum": 0},
+            "exclusions": {"type": "object"},
+            "aggregate": {"type": "object"},
+            "by_facet": {"type": "object"},
+            "confidence_intervals": {"type": "object"}
+          }
+        },
+        "artifacts": {"type": "array", "items": {"type": "object"}},
+        "leakage_checks": {"type": "array", "items": {"type": "object"}, "minItems": 1},
+        "status": {"enum": ["planned", "running", "complete", "failed", "invalidated"]},
+        "notes": {"type": "string"}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "corpus_version", "generated_at", "coverage", "counts", "files", "enumerations", "build", "quality_checks"],
+      "properties": {
+        "schema_version": {"type": "string"},
+        "corpus_version": {"type": "string"},
+        "generated_at": {"type": "string", "format": "date-time"},
+        "coverage": {"type": "object"},
+        "counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "records", "byte_size", "sha256"],
+            "properties": {
+              "path": {"type": "string"},
+              "records": {"type": "integer", "minimum": 0},
+              "byte_size": {"type": "integer", "minimum": 0},
+              "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+            }
+          }
+        },
+        "enumerations": {"type": "object"},
+        "build": {"type": "object"},
+        "quality_checks": {"type": "array", "items": {"type": "object"}}
+      }
+    }
+  },
+  "entity_files": {
+    "dataset/manifest.json": {"$ref": "#/$defs/manifest"},
+    "dataset/analysts.json/items": {"$ref": "#/$defs/analyst"},
+    "dataset/instruments.json/items": {"$ref": "#/$defs/instrument"},
+    "dataset/sources.jsonl/line": {"$ref": "#/$defs/source_document"},
+    "dataset/forecasts.jsonl/line": {"$ref": "#/$defs/forecast"},
+    "dataset/outcomes.jsonl/line": {"$ref": "#/$defs/outcome"},
+    "dataset/backtest-runs.jsonl/line": {"$ref": "#/$defs/backtest_run"}
+  },
+  "backtest_minimum_report": {
+    "must_report": [
+      "Hypothesis and decision rule fixed before inspecting the test period.",
+      "Dataset manifest hash and code commit.",
+      "Coverage dates and train/validation/test split.",
+      "Eligible, evaluated, and excluded denominators with exclusion reasons.",
+      "Entry timing, market calendar, price adjustment, fees, slippage, position sizing, and benchmark.",
+      "Aggregate metrics with confidence intervals and results by analyst, forecast kind, horizon, sector, and regime.",
+      "Revision handling, overlapping-call handling, survivorship treatment, delisting treatment, and missing-data policy.",
+      "Explicit point-in-time leakage checks and their pass/fail evidence.",
+      "At least one naive baseline and one ablation.",
+      "Failure modes, multiplicity caveat, and whether the result survived the untouched test period."
+    ],
+    "default_baselines": [
+      "market or sector benchmark",
+      "equal-weight universe",
+      "analyst consensus when point-in-time consensus is available",
+      "no-change or historical-mean forecast for numeric fundamentals",
+      "randomized analyst labels preserving date and instrument distribution"
+    ],
+    "recommended_metrics": {
+      "price_and_return": ["directional accuracy", "realized return", "excess return", "MAE", "MAPE", "hit rate"],
+      "probability": ["Brier score", "log loss", "calibration slope", "expected calibration error"],
+      "portfolio": ["annualized return", "volatility", "Sharpe", "max drawdown", "turnover", "information ratio"],
+      "uncertainty": ["bootstrap confidence interval", "block bootstrap", "multiple-testing-adjusted p-value"]
+    }
+  }
+}

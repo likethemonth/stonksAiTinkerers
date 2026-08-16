@@ -1,0 +1,588 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-08-16T11:40:55.798029+00:00",
+  "counts": {
+    "claims": 68,
+    "events": 26,
+    "evaluations": 43,
+    "exclusions": 25,
+    "strict_rankings": 35,
+    "author_summaries": 23,
+    "raw_files": 32,
+    "thought_leader_claims": 52,
+    "thought_leader_scorecards": 20
+  },
+  "build": {
+    "as_of": "2026-08-16T23:59:59+00:00",
+    "revision_policy": "latest",
+    "minimum_n": 3,
+    "command": "python3 -m analyst_backtest.build --as-of <ISO-8601>"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 852,
+      "sha256": "cd0dbdedf04e02b4fe5cbabb1f5447a1d9520a883b8c3cdf41a79fbfdb041031"
+    },
+    {
+      "path": "dataset/backtest.json",
+      "bytes": 94035,
+      "sha256": "00d3b048bfc5b8dee370dc821c6a2d21dfa54db9b9646e74a8b0094baa0fac80"
+    },
+    {
+      "path": "dataset/claims.json",
+      "bytes": 117413,
+      "sha256": "a61421d5ad025b06ea0b7bdac394cea4bc3d6da164cf52476aa7229650e41263"
+    },
+    {
+      "path": "dataset/current_outlook.json",
+      "bytes": 14956,
+      "sha256": "86465f98422660e60f4cea718759c1c8adfd1f3c84759dbc0a70e1769d543ed7"
+    },
+    {
+      "path": "dataset/events.json",
+      "bytes": 19389,
+      "sha256": "dfe88ea12718b0716e4097ad90f146d5b5923cf324c836269125c9d070c5147c"
+    },
+    {
+      "path": "dataset/overrides.tsv",
+      "bytes": 63,
+      "sha256": "7a8c35315be19b7447a193d1d45e5b793e0b4cf7f860197241b30e8a3a49ab15"
+    },
+    {
+      "path": "dataset/thought_leader_scorecards.json",
+      "bytes": 21322,
+      "sha256": "d84b5d4e9bc83c35ca76244fcef2daf8143e3fe8c2c11269fd9d727c7261f7b8"
+    },
+    {
+      "path": "dataset/thought_leaders.json",
+      "bytes": 37640,
+      "sha256": "87382dac05b73f757fb62c02bcc3ab0ca206412b9409cfeb0711d57fc744f2db"
+    },
+    {
+      "path": "dossiers/ADI_DE_INDEPENDENT_HISTORY.md",
+      "bytes": 19585,
+      "sha256": "2cf1a9d3185a41e6736566886c13670beb7c12fa29a499fe4c781716244f3a53"
+    },
+    {
+      "path": "dossiers/ADI_DE_THOUGHT_LEADERS.md",
+      "bytes": 26920,
+      "sha256": "0442cfecebeb46078b8ef13b0072d1f4bd4820f100a75efbe9f7992f8b21c6b6"
+    },
+    {
+      "path": "dossiers/HD_HAYS_SOURCE_HISTORY.md",
+      "bytes": 19622,
+      "sha256": "1f135facc1747abe9b86251a73481065190cb64134234694733378a8fb1c8ab7"
+    },
+    {
+      "path": "dossiers/HD_HAYS_THOUGHT_LEADERS.md",
+      "bytes": 28550,
+      "sha256": "55826376670489fa7593e2459e88a8e382bf6d7c7822a59f7551d897c52222d1"
+    },
+    {
+      "path": "generated/authors/analyst-consensus-reported-by-investing-com.md",
+      "bytes": 978,
+      "sha256": "9e8f2c2ecb1e99c4ae260601261bdcf4aff7c60a261b106e8c67b0d8b88f0071"
+    },
+    {
+      "path": "generated/authors/benzinga-pro-analyst-consensus.md",
+      "bytes": 4462,
+      "sha256": "be9d86a60083c7784cf32f8d545705cc751cb784863c970276bf71a1f2894abd"
+    },
+    {
+      "path": "generated/authors/benzinga-pro-consensus.md",
+      "bytes": 944,
+      "sha256": "9bcd65f9d5be02a87f7bcffd82fa24704b856826d7fa1828d0c9b406b1ab0ba3"
+    },
+    {
+      "path": "generated/authors/bloomberg-consensus-reported-by-fiona-craig.md",
+      "bytes": 1191,
+      "sha256": "a254e4d570bdaff76102ff33b781610ff486fe760144bf4c1fa8c8d7a7135e2c"
+    },
+    {
+      "path": "generated/authors/bloomberg-hays-consensus.md",
+      "bytes": 514,
+      "sha256": "a533d6790371aa729de449d893526664277edfff80688118013823ba56bd03f1"
+    },
+    {
+      "path": "generated/authors/brian-colello.md",
+      "bytes": 424,
+      "sha256": "fa8e5e5fb315476227f7fb7711a94c7250ecccd65aae11ed582775c2f1e941a3"
+    },
+    {
+      "path": "generated/authors/cantor-fitzgerald-research-team.md",
+      "bytes": 1977,
+      "sha256": "bfd660812dda4a089b7a781c46603b58fb62e4900f74bd7ed44289087564da41"
+    },
+    {
+      "path": "generated/authors/christopher-horvers.md",
+      "bytes": 539,
+      "sha256": "2b257c136d3621e2abdab7729ed5d472d0c620273d034dbb8094890ff95abe4a"
+    },
+    {
+      "path": "generated/authors/hays-company-compiled-sell-side-consensus.md",
+      "bytes": 2412,
+      "sha256": "864367e8c051716f7e83d03039d0107ac9380b6b39385b48af9b3ad722b3937d"
+    },
+    {
+      "path": "generated/authors/hays-market-consensus-range.md",
+      "bytes": 564,
+      "sha256": "7c3480f81eee2eb290d438461c40d123da9c1298c156b3c933c54513c8f7b1cb"
+    },
+    {
+      "path": "generated/authors/hedgeye-retail-sector.md",
+      "bytes": 4128,
+      "sha256": "8889ace4e9591b33c09c70266bc6aa4ae7b5bce41113c1abdc282e1062e28730"
+    },
+    {
+      "path": "generated/authors/jefferies-equity-research.md",
+      "bytes": 472,
+      "sha256": "a3524003ccb655e043218b78e1e935a916588a9f352c8f7876d7fd21790a273b"
+    },
+    {
+      "path": "generated/authors/kristen-owen.md",
+      "bytes": 442,
+      "sha256": "266ecf6acc6ab307d97cbc40dd99245a1630d1091bb00a6b24cfff8ce7088de8"
+    },
+    {
+      "path": "generated/authors/luca-socci.md",
+      "bytes": 454,
+      "sha256": "104010cf49252be6d35bcf2e2eef4e4d7699acb5dc26c45de57cb39edbac9575"
+    },
+    {
+      "path": "generated/authors/michael-shlisky.md",
+      "bytes": 417,
+      "sha256": "4f4b81fe2cada08334e4b9609efb1313a000f9aa0bf5d3765d0fab3757805739"
+    },
+    {
+      "path": "generated/authors/neil-shah.md",
+      "bytes": 492,
+      "sha256": "c97a3a6895d7eeea2b17af93e41b65905ad9708f40ae88995533973f54acc7e3"
+    },
+    {
+      "path": "generated/authors/steven-fisher.md",
+      "bytes": 536,
+      "sha256": "0964ec5084ae34843754c80e76543b5d3b8f6c18a2ef2e3dc522768964eef7f6"
+    },
+    {
+      "path": "generated/authors/stifel-research-team.md",
+      "bytes": 2229,
+      "sha256": "5ce660565cfd07c99cc2d9bb584d7401e81158fa477ec7a4bed6316a6ce846eb"
+    },
+    {
+      "path": "generated/authors/ubs-equity-research.md",
+      "bytes": 916,
+      "sha256": "7672ba3ee6c4b35ab93d80e861e88343023661bc5c29b615af8d703643e3bb19"
+    },
+    {
+      "path": "generated/authors/unidentified-r-earningswhisper-poster.md",
+      "bytes": 809,
+      "sha256": "8e31a816120de1bc47619a3c6650600eb51d456831eb211b3cf68371f089a003"
+    },
+    {
+      "path": "generated/authors/value-voyager.md",
+      "bytes": 799,
+      "sha256": "ddb38809fc80755994fbbefdef3bf54ec54331ad196a96cd7bdc31712705bb3f"
+    },
+    {
+      "path": "generated/authors/w-andrew-carter.md",
+      "bytes": 468,
+      "sha256": "d911dff392bb332ca61fb8133768dc1abdcccdf7cb546faf2cff8242e47d2888"
+    },
+    {
+      "path": "generated/authors/wall-street-consensus-reported-by-adam-hejl.md",
+      "bytes": 928,
+      "sha256": "820098261ec20d2d49f8ac01951b078f3aaae08c3dc8d3e141dd08bd157eec8e"
+    },
+    {
+      "path": "generated/authors/wall-street-consensus-reported-by-asktraders-news-team.md",
+      "bytes": 1815,
+      "sha256": "9619317c35fe140f91df791b87ca5febf67c9c9a6de8c4ec38bd86550454d76f"
+    },
+    {
+      "path": "generated/authors/wall-street-consensus-reported-by-jabin-bastian.md",
+      "bytes": 923,
+      "sha256": "9102c76ade21044aefe1890f0c0c0c13bab5e36dbcb2198efedc1672d930b85a"
+    },
+    {
+      "path": "generated/authors/wall-street-consensus-reported-by-william-white.md",
+      "bytes": 903,
+      "sha256": "62f808b51ac58575c718800f649a7edef22329461b82d5d4f6f3301f205ba7b1"
+    },
+    {
+      "path": "generated/authors/zacks-consensus-estimate.md",
+      "bytes": 476,
+      "sha256": "28d2f9212574dee4998f1966e1327fbb4ed30330930520d99401783c05863930"
+    },
+    {
+      "path": "generated/companies/adi-analog-devices.md",
+      "bytes": 7877,
+      "sha256": "e93608163865c69b36f7736112d4c506d5c3877a646cbbd867f9ca7eabfede37"
+    },
+    {
+      "path": "generated/companies/de-deere-company.md",
+      "bytes": 6877,
+      "sha256": "6b6e55a5e2e116743d7c95c7768b6bd71071e17f0a15b606bcdfffe4cbab5520"
+    },
+    {
+      "path": "generated/companies/has-l-hays-plc.md",
+      "bytes": 5154,
+      "sha256": "1105ae07b9fbdc16d8b70f8e1af3e9ecc688c55b572dcdc4e3027505acca2a40"
+    },
+    {
+      "path": "generated/companies/hd-the-home-depot-inc.md",
+      "bytes": 10251,
+      "sha256": "dddfcc92d20fc1404751e149efebbef27b3038fe291bb5d59337652040d089eb"
+    },
+    {
+      "path": "generated/metrics/adjusted-diluted-eps.md",
+      "bytes": 1361,
+      "sha256": "de337b2f79390857924a07cb6d17b853fb2f96e2227782f715b30c705b0be4c8"
+    },
+    {
+      "path": "generated/metrics/adjusted-ebit.md",
+      "bytes": 460,
+      "sha256": "47f36a85191d1723ecebb504bc0f08d5f47c2b56b9cf2c53b6bafe61b6e046db"
+    },
+    {
+      "path": "generated/metrics/adjusted-ebita.md",
+      "bytes": 460,
+      "sha256": "a5cca430c2fa2a55ad5b21b605072085f51d8b13d071a37fdf20fc5a9ec96913"
+    },
+    {
+      "path": "generated/metrics/adjusted-eps-guidance-midpoint.md",
+      "bytes": 558,
+      "sha256": "a3b9347f6bb0f97505ab0c7ed3d4c1fa4683b333439f2febe81e60bbbdadeac5"
+    },
+    {
+      "path": "generated/metrics/adjusted-eps-guidance-versus-consensus.md",
+      "bytes": 528,
+      "sha256": "569a952e150bb8df2f254ec746cd414d512707f30e983e92b307eb52be3833bd"
+    },
+    {
+      "path": "generated/metrics/adjusted-eps.md",
+      "bytes": 1705,
+      "sha256": "2a6c40402ebf01e316349611b303ddb72ff9f453e755c527f7059db19503a908"
+    },
+    {
+      "path": "generated/metrics/basic-eps-pre-exceptional.md",
+      "bytes": 510,
+      "sha256": "70060502de765afa386fbd8d7d770e239dea7a349e6a66db086a3b461ccf3b62"
+    },
+    {
+      "path": "generated/metrics/comparable-sales-growth.md",
+      "bytes": 475,
+      "sha256": "54b87984a66ae1080a16fdd856f22cd592df12b6fb2d6915ea521c8aa4c310a8"
+    },
+    {
+      "path": "generated/metrics/demand-relative-to-supply-capacity.md",
+      "bytes": 436,
+      "sha256": "86623118e7c01ef1557c83940d78997cd335174686d8a4dd70c73104af0a413a"
+    },
+    {
+      "path": "generated/metrics/diluted-eps.md",
+      "bytes": 2900,
+      "sha256": "a53e63e94d6cd5906a8ff6217bb76909d87dcd7d4af9c9e17aeee3a3c5aa6558"
+    },
+    {
+      "path": "generated/metrics/earnings-quality.md",
+      "bytes": 460,
+      "sha256": "16f4313cd1800c11ec19f49aeaf85cdf079345f3f0226fdf63fb5669cac63279"
+    },
+    {
+      "path": "generated/metrics/eps.md",
+      "bytes": 433,
+      "sha256": "09daf4b371b370eb4bf542e14f0b4b9b7f91919d3931fdffbdf9ae530181f4d7"
+    },
+    {
+      "path": "generated/metrics/equipment-operations-net-sales-yoy-change.md",
+      "bytes": 471,
+      "sha256": "4861e30cf9c48b448bd2d07ea09347aa40dfe99e5bbfb01298126f3677677cfe"
+    },
+    {
+      "path": "generated/metrics/equipment-operations-net-sales.md",
+      "bytes": 1437,
+      "sha256": "04eb0159c8b272506d86b49d97e95d07754957b6f8cd3f64aef66d6ce5112193"
+    },
+    {
+      "path": "generated/metrics/fiscal-year-net-income-guidance.md",
+      "bytes": 554,
+      "sha256": "f465fcc79df847902fdacf81bcdd7886e93803f241ab46a53a38d86a5660cf85"
+    },
+    {
+      "path": "generated/metrics/net-fees.md",
+      "bytes": 493,
+      "sha256": "e9f51898df360d7a99a312c5500aa7035d52dda639ac6e7cba63f008876a302e"
+    },
+    {
+      "path": "generated/metrics/net-income-attributable-to-deere.md",
+      "bytes": 616,
+      "sha256": "3699bddcfebd04a935eabdb9d24b02ed64f265c1023cf706ad8c1b60f64641e4"
+    },
+    {
+      "path": "generated/metrics/net-sales-growth.md",
+      "bytes": 864,
+      "sha256": "365acdfa691ad5bcd70acd8f2cb1eab8eb4d055016e4b01ee006c1f0d22725d8"
+    },
+    {
+      "path": "generated/metrics/net-sales.md",
+      "bytes": 4273,
+      "sha256": "a7d7f8a371dd75b30da2d373692989ff415bcb6c1151c3ba31d670596edb427b"
+    },
+    {
+      "path": "generated/metrics/pre-exceptional-operating-profit-growth.md",
+      "bytes": 522,
+      "sha256": "c6799e1c7f8e97144fcb6b2131a1866d4e099ce03a915c2b03bd7a687c1d1450"
+    },
+    {
+      "path": "generated/metrics/pre-exceptional-operating-profit.md",
+      "bytes": 2911,
+      "sha256": "a45887975e53f7eb48fe1aa9a4e77d6f4b4decb3731e902ecc076cba25e222d2"
+    },
+    {
+      "path": "generated/metrics/relative-comparable-sales-growth.md",
+      "bytes": 552,
+      "sha256": "204092588310495c92d5797dbed0a32c346320cec280973a087b2422a2293037"
+    },
+    {
+      "path": "generated/metrics/revenue-and-adjusted-eps-versus-consensus.md",
+      "bytes": 502,
+      "sha256": "0a78e8c15a39402d2e84967ebc924495aadc091ecb2e505876c76a1f8afc5987"
+    },
+    {
+      "path": "generated/metrics/revenue-guidance-midpoint.md",
+      "bytes": 1496,
+      "sha256": "0ad468cb0cca7879c3fa3ddbc5472f0825e5fdb107ebfaac5f106e6cf09abc73"
+    },
+    {
+      "path": "generated/metrics/revenue.md",
+      "bytes": 3308,
+      "sha256": "91aaf7bae1d6aaaf5e201a2fdf9dd63c29d6f64e302c184fb8d30137908acd27"
+    },
+    {
+      "path": "generated/metrics/worldwide-net-sales-and-revenues.md",
+      "bytes": 1056,
+      "sha256": "25ee6e3b1e9391ed479c7edeb6b25d14016d2c31a72b0168b8166d4800689abb"
+    },
+    {
+      "path": "knowledge/00-OVERVIEW.md",
+      "bytes": 1341,
+      "sha256": "d2e708e91a4098128e695412ba122cfeac280a1c2e6f219ce459ad798c6323d5"
+    },
+    {
+      "path": "knowledge/01-METHODOLOGY.md",
+      "bytes": 2669,
+      "sha256": "10835799b00835443104e9d46ea2c727ee4a6d9026e3c7696f1e8b77f1e0f8ed"
+    },
+    {
+      "path": "knowledge/02-LEADERBOARD.md",
+      "bytes": 8105,
+      "sha256": "5ac195b18d5cd3583deef1b4fdb800a20470ba310b6c4a113325ea0af7cb2c0f"
+    },
+    {
+      "path": "knowledge/03-CURRENT-OUTLOOK.md",
+      "bytes": 6010,
+      "sha256": "5614b5e218124269d957513792edfe57e5052b7d5d2bbb3dae4b8e012295ac0a"
+    },
+    {
+      "path": "knowledge/04-REQUESTED-SOURCE-ARCHETYPES.md",
+      "bytes": 4238,
+      "sha256": "551caf2285c0e14c10045d5a0931cbad3fd69a81d7450937393c343e759d16c1"
+    },
+    {
+      "path": "knowledge/05-SOURCE-SELECTION.md",
+      "bytes": 5848,
+      "sha256": "f4b4393c2b96a8d1585f5d13517ee5eb2a9c052d9abce6a03144925820f4aacd"
+    },
+    {
+      "path": "knowledge/06-THOUGHT-LEADER-METHOD.md",
+      "bytes": 36437,
+      "sha256": "9762bb881fa0a6bc33ff1960ee9db808b5019f2f27e234d274c234ba1054f66f"
+    },
+    {
+      "path": "knowledge/07-THOUGHT-LEADERS.md",
+      "bytes": 33600,
+      "sha256": "0d8bda86f26f83b4f673fc5ae9c52ba19caac7cb54ae33666179d409f9bb42a1"
+    },
+    {
+      "path": "knowledge/08-FORECAST-OVERLAY.md",
+      "bytes": 2497,
+      "sha256": "60d4e9f3ca5ef77e06758cd8f1d850ed8fc659bc1f0bf62416f481abb0e28d42"
+    },
+    {
+      "path": "knowledge/09-EXPERT-MONITORING-STACK.md",
+      "bytes": 2967,
+      "sha256": "63f8f5e46741bee3f356ac428ca91121a6e9ce4673b7253e8008e54820f560f4"
+    },
+    {
+      "path": "raw/CAPTURE_LOG.md",
+      "bytes": 2906,
+      "sha256": "4d4baaa26142618fcc1a63d9f5d6f72796ff5b1ce5ef5105de41faa9fedff547"
+    },
+    {
+      "path": "raw/adi_de_candidate_claims.jsonl",
+      "bytes": 41874,
+      "sha256": "c7f9b9b2d3d5418999c8e3b785f71982aa0524bf86217285e157a8ee25a1fe51"
+    },
+    {
+      "path": "raw/adi_de_thought_leader_claims.jsonl",
+      "bytes": 43156,
+      "sha256": "ff776ac3c6e43bd7c8d24d8308c57ceadc8176971d3f09ff61324e67d0f861dc"
+    },
+    {
+      "path": "raw/github/serenity/aleabitoreddit_tweets.json",
+      "bytes": 4528730,
+      "sha256": "7224f5571b91721eebf93781a3565b41b24a8ee20ca0aa893655a1d73df4c763"
+    },
+    {
+      "path": "raw/github/serenity/archive_report.json",
+      "bytes": 8437,
+      "sha256": "63e554f1477a53cceb5fc2ff7d338edf96219b87aa8ec0cd1b83dfdc33a2cfbf"
+    },
+    {
+      "path": "raw/github/serenity/track-record.md",
+      "bytes": 24407,
+      "sha256": "c919896fdf0962b6fb0e4eae6b3ad730203a994bdd2fceff31a8a9c0f9d856b1"
+    },
+    {
+      "path": "raw/hd_hays_candidate_claims.jsonl",
+      "bytes": 44801,
+      "sha256": "8830b050a7f1da64870cad8a944a956f2dfc422d9d58ca4390df0be27e18b272"
+    },
+    {
+      "path": "raw/hd_hays_thought_leader_claims.jsonl",
+      "bytes": 32398,
+      "sha256": "dd3bc40a0d2754387a1aa45af7d241b8f632f7a2f924dae38c6048d13fb1d4fe"
+    },
+    {
+      "path": "raw/linkedin/adi_earnings_forecast.json",
+      "bytes": 17148,
+      "sha256": "a4bcca9c352b46d45cbadcf17ea2e579a7236e15b4016eae0fa0abeaeb6247dc"
+    },
+    {
+      "path": "raw/linkedin/hays_earnings_forecast.json",
+      "bytes": 14783,
+      "sha256": "2c7ef41a870b65bd04d84ef55feb1807353f411a9bfb5394398ab1636359ca79"
+    },
+    {
+      "path": "raw/linkedin/thought_leaders/greg_peterson_machinery_pete.json",
+      "bytes": 26676,
+      "sha256": "d37e4048df3ac89c630e25b28e5903ad039c871e4faa11833cf69a4fcc12c6a6"
+    },
+    {
+      "path": "raw/linkedin/thought_leaders/neil_carberry.json",
+      "bytes": 7218,
+      "sha256": "558e02c8ddaf1e0cd8e80995d2c6a248138d99eec841e601c6b9d3ed24737a1d"
+    },
+    {
+      "path": "raw/linkedin/thought_leaders/pawel_adrjan.json",
+      "bytes": 35094,
+      "sha256": "10b9389fc7ee7ddfb26c1dc8065e52569b513fc4913a2ba02ea5fe1706308acc"
+    },
+    {
+      "path": "raw/linkedin/thought_leaders/tera_allas.json",
+      "bytes": 49876,
+      "sha256": "897daf25817f444a7e3bfc7bbd77b040d5b486cdf77b606582f25b61275fed4b"
+    },
+    {
+      "path": "raw/linkedin/thought_leaders/todd_tomalak.json",
+      "bytes": 41922,
+      "sha256": "2c0bb4f6d9fb6bb2d08120acc06c1125e128454e7d39110b5560290462ab7fc9"
+    },
+    {
+      "path": "raw/reddit/adi_earnings_forecast.json",
+      "bytes": 84730,
+      "sha256": "cbb1712af844dc9fa3a8385736c5de8f17270823a3bad5b9d4f01b12d1d52799"
+    },
+    {
+      "path": "raw/reddit/deepfuckingvalue_submitted.json",
+      "bytes": 20315,
+      "sha256": "b695cbf0b44a332fdc427c74ad2afcb938cc64d49728c83d67aee9bbb07ff722"
+    },
+    {
+      "path": "raw/reddit/deere_earnings_forecast.json",
+      "bytes": 69189,
+      "sha256": "26c77e644b399549e245595f3fd12267eced50e110a1040c53156491cd52df7c"
+    },
+    {
+      "path": "raw/reddit/hays_forecast.json",
+      "bytes": 37665,
+      "sha256": "e097e854460be942a8a3b9d7cfeb93f7a9922fa780657af89fbe44161f26d6fa"
+    },
+    {
+      "path": "raw/reddit/home_depot_earnings_forecast.json",
+      "bytes": 77832,
+      "sha256": "aa6ed24a92a781e3fa79030c00d34e2abb4ef36dc81ee2bd6e9c00a2049317dd"
+    },
+    {
+      "path": "raw/web/keith_gill/congressional-testimony.pdf",
+      "bytes": 18775,
+      "sha256": "cbe97d05b8a3774dd6a7264f416dfa185b29a648540fe96fa582539f1a68ce98"
+    },
+    {
+      "path": "raw/web/semianalysis/compliance-policies.html",
+      "bytes": 240323,
+      "sha256": "3142a3a415ffafe1246b12a49aec0130ea33086e658356d218ef3f3af4ccb1f0"
+    },
+    {
+      "path": "raw/web/semianalysis/models-research.html",
+      "bytes": 234582,
+      "sha256": "9f78690c524f428ec2819dba0ec4889b86e5c280e46b375f63a9cd01bd88e79b"
+    },
+    {
+      "path": "raw/web/semianalysis/post-sitemap.xml",
+      "bytes": 36459,
+      "sha256": "49ea3303b8f6d0acb656c6fbcec57a57d41f23e8c7848620ace4f23f079bcb3e"
+    },
+    {
+      "path": "raw/x/roaringkitty_profile.json",
+      "bytes": 5763,
+      "sha256": "c34f837dabbac86fbf0a3770c3eecf5ba3fad4db2625e96d433d0940531ac8ac"
+    },
+    {
+      "path": "raw/x/serenity_adi.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/x/serenity_timeline.json",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "raw/x/target_companies_search.json",
+      "bytes": 8524,
+      "sha256": "ac6a2492ceebfca797e17ab82209a2dde9aabc0923ae5c79ebcf4ad71787e2e3"
+    },
+    {
+      "path": "raw/x/thought_leaders/alex_morris_tsoh.json",
+      "bytes": 9473,
+      "sha256": "94d1cdf60e4230d6275256bd642545cf4704b0817a588f0ef4792d566eea74df"
+    },
+    {
+      "path": "raw/x/thought_leaders/chip_stock_investor.json",
+      "bytes": 3100,
+      "sha256": "88bacc346738059b86a070b1d72bf7f322559662234269eb32b19b587273fead"
+    },
+    {
+      "path": "raw/x/thought_leaders/hedgeye_retail.json",
+      "bytes": 11963,
+      "sha256": "a606ddb5b5556184f006129ac17aad5cd496efa32605d1e8e95c6453e218d5a0"
+    },
+    {
+      "path": "raw/x/thought_leaders/machinery_pete.json",
+      "bytes": 8748,
+      "sha256": "f382aa472aef024c55ca2d7b33e1f364bd1d22583e3b8020abb9b5ed82ceb221"
+    },
+    {
+      "path": "reference/REFERENCE_FORMAT_AUDIT.md",
+      "bytes": 42625,
+      "sha256": "0c12efc850d4db23105507ebbebe349e1b9adb099083bae3e9e2cf7021ba6858"
+    },
+    {
+      "path": "reference/SCHEMA_PROPOSAL.json",
+      "bytes": 30312,
+      "sha256": "3b903db2d0bb15fb46d733f547e457334bef3ec4aa75ae9f50f9e3626c5f1904"
+    }
+  ]
+}

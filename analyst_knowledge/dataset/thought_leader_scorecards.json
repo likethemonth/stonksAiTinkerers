@@ -1,0 +1,210 @@
+{
+  "method": "knowledge/06-THOUGHT-LEADER-METHOD.md",
+  "as_of": "2026-08-16",
+  "note": "Reviewer-assigned integer levels are evidence judgments, not model-inferred facts. Popularity is excluded. Family denominators cluster revisions of one causal thesis.",
+  "scorecards": [
+    {
+      "leader_id": "brian-colello", "leader_display": "Brian Colello", "company": "Analog Devices", "ticker": "ADI",
+      "lane": "company-specific semiconductor cycle and moat", "searched_from": "2023-02-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Morningstar archive", "issuer results", "web search"], "families_found": 4, "matured_families": 2, "open_families": 2,
+      "dimension_levels": {"originality_lead": 3, "causal_depth": 4, "falsifiability": 3, "revision_conduct": 4, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 3, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "ADI cycle timing, inventory normalization, and moat-vs-cycle diagnosis",
+      "largest_miss": "His roughly $3.0bn FY2023 Q4 revenue model exceeded the $2.716bn result.",
+      "known_gaps": ["some full research is subscription-gated", "no probability history"],
+      "scorecard_sources": ["https://www.morningstar.com/stocks/analog-devices-earnings-cyclical-downturn-is-horizon-196-fair-value-estimate"]
+    },
+    {
+      "leader_id": "mark-landecker", "leader_display": "Mark Landecker, CFA", "company": "Analog Devices", "ticker": "ADI",
+      "lane": "long-duration owner economics", "searched_from": "2012-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["FPA letters and transcripts", "fund holdings", "web search"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 3, "causal_depth": 4, "falsifiability": 2, "revision_conduct": 2, "history_completeness": 2, "calibration_outcomes": 2, "conflict_disclosure": 4, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "ADI long-run product-life, design-in, and cash-generation economics",
+      "largest_miss": "No public point forecast; sparse target-specific updates prevent timing calibration.",
+      "known_gaps": ["fund/team attribution", "infrequent public ADI updates"],
+      "scorecard_sources": ["https://fpa.com/docs/default-source/funds/fpa-crescent-fund/quarterly-webcasts/fpa-crescent-fund-webcast-transcript-2022-12.pdf"]
+    },
+    {
+      "leader_id": "madison-investors-team", "leader_display": "Madison Investors team", "company": "Analog Devices", "ticker": "ADI",
+      "lane": "institutional cycle thesis", "searched_from": "2023-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["signed investor letters", "issuer results"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 2, "causal_depth": 3, "falsifiability": 2, "revision_conduct": 4, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 3, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "ADI cycle revision discipline and normalized earnings",
+      "largest_miss": "The team explicitly admitted the semiconductor downturn was worse than it had forecast.",
+      "known_gaps": ["team rather than individual attribution", "some letters expose period rather than exact publication day"],
+      "scorecard_sources": ["https://madisoninvestments.com/assets/img/resources/Commentary/2023-Year-End-US-Equity-Letter.pdf"]
+    },
+    {
+      "leader_id": "citrini-research", "leader_display": "Citrini Research", "company": "Analog Devices", "ticker": "ADI",
+      "lane": "independent edge-AI thematic thesis", "searched_from": "2024-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Substack", "X", "issuer results"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 4, "causal_depth": 4, "falsifiability": 2, "revision_conduct": 1, "history_completeness": 2, "calibration_outcomes": 2, "conflict_disclosure": 4, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "non-consensus on-device-AI and power-management scenarios",
+      "largest_miss": "ADI rose, but public reporting does not isolate the predicted iPhone/on-device-AI mechanism.",
+      "known_gaps": ["pseudonymous legal identity", "paid archive", "mechanism attribution unresolved"],
+      "scorecard_sources": ["https://www.citriniresearch.com/p/thematic-memo-inference-on-device"]
+    },
+    {
+      "leader_id": "jay-goldberg", "leader_display": "Jay Goldberg", "company": "Analog Devices", "ticker": "ADI",
+      "lane": "sell-side semiconductor cycle call", "searched_from": "2025-04-01", "searched_to": "2026-08-16",
+      "searched_channels": ["ratings archive", "public note excerpts"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 2, "causal_depth": 2, "falsifiability": 3, "revision_conduct": 4, "history_completeness": 2, "calibration_outcomes": 1, "conflict_disclosure": 2, "target_relevance": 4, "evidentiary_provenance": 2},
+      "best_use": "public negative-case postmortems",
+      "largest_miss": "The $155 Sell thesis was invalidated quickly; Goldberg later wrote that it was wrong.",
+      "known_gaps": ["full sell-side notes inaccessible"],
+      "scorecard_sources": ["https://www.streetinsider.com/Analyst%2BComments/Seaport%2BGlobal%2BSecurities%2BUpgrades%2BAnalog%2BDevices%2B%28ADI%29%2Bto%2BNeutral/25072601.html"]
+    },
+
+    {
+      "leader_id": "leandro-best-anchor-stocks", "leader_display": "Leandro (Best Anchor Stocks)", "company": "Deere & Company", "ticker": "DE",
+      "lane": "independent long-form owner thesis", "searched_from": "2024-05-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Best Anchor Stocks archive", "podcasts", "issuer results"], "families_found": 3, "matured_families": 2, "open_families": 1,
+      "dimension_levels": {"originality_lead": 4, "causal_depth": 4, "falsifiability": 4, "revision_conduct": 4, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 4, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "Deere installed-base/dealer moat, normalized cash flow, and revision-aware owner research",
+      "largest_miss": "The five-to-ten-year FCF thesis is still open; later performance claims are self-reported, not audited.",
+      "known_gaps": ["stable pseudonym without legal surname", "paid archive", "shorter than a full cycle"],
+      "scorecard_sources": ["https://www.bestanchorstocks.com/p/deere-cultivating-technology", "https://www.bestanchorstocks.com/p/the-reason-behind-the-drop"]
+    },
+    {
+      "leader_id": "george-maglares", "leader_display": "George Maglares", "company": "Deere & Company", "ticker": "DE",
+      "lane": "institutional Deere cycle and precision-ag thesis", "searched_from": "2025-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Morningstar archive", "issuer results"], "families_found": 2, "matured_families": 1, "open_families": 1,
+      "dimension_levels": {"originality_lead": 3, "causal_depth": 4, "falsifiability": 3, "revision_conduct": 4, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 3, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "Deere cycle trough, dealer inventory, and precision-technology penetration",
+      "largest_miss": "The 2025 earnings-trough assertion remains mixed until a complete later fiscal year is observed.",
+      "known_gaps": ["some reports are paid", "long-run technology target remains open"],
+      "scorecard_sources": ["https://www.morningstar.com/stocks/deere-earnings-north-american-ag-still-weak-company-holding-steady-prepped-2026"]
+    },
+    {
+      "leader_id": "temple-8-research", "leader_display": "Temple 8 Research", "company": "Deere & Company", "ticker": "DE",
+      "lane": "contrarian Deere credit and dealer-inventory short thesis", "searched_from": "2026-03-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Substack", "Deere filings", "JDCC filings", "market data"], "families_found": 2, "matured_families": 2, "open_families": 0,
+      "dimension_levels": {"originality_lead": 4, "causal_depth": 4, "falsifiability": 4, "revision_conduct": 1, "history_completeness": 2, "calibration_outcomes": 1, "conflict_disclosure": 4, "target_relevance": 4, "evidentiary_provenance": 4},
+      "best_use": "Deere Financial, lease residual, dealer inventory, and downside stress testing",
+      "largest_miss": "The March-June 2026 dealer/credit crisis did not occur in its declared window, though PPA weakness did.",
+      "known_gaps": ["one deep dive, not a multi-year archive", "pseudonymous identity", "author held June puts"],
+      "scorecard_sources": ["https://temple8capital.substack.com/p/john-deere-de-short-thesis-shadow-bank"]
+    },
+    {
+      "leader_id": "kristen-owen", "leader_display": "Kristen Owen, CFA", "company": "Deere & Company", "ticker": "DE",
+      "lane": "sell-side agricultural-equipment cycle", "searched_from": "2024-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["interviews", "earnings calls", "ratings summaries"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 2, "causal_depth": 3, "falsifiability": 4, "revision_conduct": 2, "history_completeness": 2, "calibration_outcomes": 2, "conflict_disclosure": 2, "target_relevance": 4, "evidentiary_provenance": 2},
+      "best_use": "Deere equipment-sales cycle, used inventory, and decremental-margin questions",
+      "largest_miss": "Only one clean public point call; the full note and revision archive is unavailable.",
+      "known_gaps": ["full Oppenheimer notes unavailable"],
+      "scorecard_sources": ["https://finance.yahoo.com/video/why-john-deere-bellwether-despite-152128085.html"]
+    },
+    {
+      "leader_id": "shawn-omalley", "leader_display": "Shawn O'Malley", "company": "Deere & Company", "ticker": "DE",
+      "lane": "normalized-value company thesis", "searched_from": "2025-10-01", "searched_to": "2026-08-16",
+      "searched_channels": ["TIP Intrinsic Value", "issuer results"], "families_found": 1, "matured_families": 0, "open_families": 1,
+      "dimension_levels": {"originality_lead": 3, "causal_depth": 4, "falsifiability": 3, "revision_conduct": 1, "history_completeness": 1, "calibration_outcomes": 1, "conflict_disclosure": 4, "target_relevance": 4, "evidentiary_provenance": 4},
+      "best_use": "normalized-cycle valuation and disciplined pass decisions",
+      "largest_miss": "No resolved accounting forecast and no subsequent Deere revision were found.",
+      "known_gaps": ["one-issue Deere archive"],
+      "scorecard_sources": ["https://www.theinvestorspodcast.com/intrinsic-value/john-deere-de/"]
+    },
+
+    {
+      "leader_id": "alex-morris-tsoh", "leader_display": "Alex Morris", "company": "The Home Depot, Inc.", "ticker": "HD",
+      "lane": "independent company-specific long-form thesis", "searched_from": "2022-12-01", "searched_to": "2026-08-16",
+      "searched_channels": ["TSOH archive", "X via Kernel CLI", "issuer results", "housing data"], "families_found": 2, "matured_families": 2, "open_families": 0,
+      "dimension_levels": {"originality_lead": 4, "causal_depth": 4, "falsifiability": 3, "revision_conduct": 4, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 2, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "Home Depot business quality, ticket-vs-volume, Pro mix, housing turnover, and thesis revision",
+      "largest_miss": "His February 2023 normalization argument was conditional and resolves mixed, not as a clean win.",
+      "known_gaps": ["later full text is partly paid", "no public trade diary or numeric probability history"],
+      "scorecard_sources": ["https://thescienceofhitting.com/p/home-depot-a-unique-environment", "https://thescienceofhitting.com/p/in-a-transitional-period"]
+    },
+    {
+      "leader_id": "jaime-katz-morningstar", "leader_display": "Jaime M. Katz", "company": "The Home Depot, Inc.", "ticker": "HD",
+      "lane": "company-specific operating model and moat", "searched_from": "2022-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Morningstar archive", "issuer results"], "families_found": 2, "matured_families": 0, "open_families": 2,
+      "dimension_levels": {"originality_lead": 2, "causal_depth": 4, "falsifiability": 4, "revision_conduct": 4, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 3, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "Home Depot five-year operating model, DCF, moat, and SRS scenario revisions",
+      "largest_miss": "The long-range growth thesis remains open and standalone SRS EBITDA is not disclosed on a comparable basis.",
+      "known_gaps": ["some model detail is paywalled", "important calls not mature"],
+      "scorecard_sources": ["https://www.morningstar.com/stocks/after-earnings-rally-is-home-depot-stock-buy-sell-or-fairly-valued"]
+    },
+    {
+      "leader_id": "neil-saunders-globaldata", "leader_display": "Neil Saunders", "company": "The Home Depot, Inc.", "ticker": "HD",
+      "lane": "retail and housing-demand interpreter", "searched_from": "2023-02-01", "searched_to": "2026-08-16",
+      "searched_channels": ["news quotations", "retail trade press", "issuer results"], "families_found": 2, "matured_families": 2, "open_families": 0,
+      "dimension_levels": {"originality_lead": 3, "causal_depth": 3, "falsifiability": 3, "revision_conduct": 3, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 2, "target_relevance": 3, "evidentiary_provenance": 3},
+      "best_use": "Home-improvement channel mechanics, housing lag, project size, and customer behavior",
+      "largest_miss": "Much of the archive is post-results interpretation, limiting pre-event scoring.",
+      "known_gaps": ["secondary quote trail", "not a public investment diary"],
+      "scorecard_sources": ["https://www.retaildive.com/news/home-depot-sales-fall-q1-soft-housing-market/716052/"]
+    },
+    {
+      "leader_id": "brian-nagel-oppenheimer", "leader_display": "Brian W. Nagel", "company": "The Home Depot, Inc.", "ticker": "HD",
+      "lane": "sell-side home-improvement cycle", "searched_from": "2024-02-01", "searched_to": "2026-08-16",
+      "searched_channels": ["media interviews", "LinkedIn via Kernel CLI", "issuer results"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 2, "causal_depth": 3, "falsifiability": 3, "revision_conduct": 3, "history_completeness": 2, "calibration_outcomes": 2, "conflict_disclosure": 2, "target_relevance": 4, "evidentiary_provenance": 2},
+      "best_use": "rates, big-ticket deferral, and retail channel timing",
+      "largest_miss": "The February rate-unlock claim was conditional and the public note archive is incomplete.",
+      "known_gaps": ["underlying sell-side research inaccessible"],
+      "scorecard_sources": ["https://www.linkedin.com/posts/brian-nagel_oppenheimers-brian-nagel-on-home-depot-activity-7229137434247073794-GGga"]
+    },
+    {
+      "leader_id": "christopher-horvers-jpmorgan", "leader_display": "Christopher Horvers", "company": "The Home Depot, Inc.", "ticker": "HD",
+      "lane": "sell-side relative event call", "searched_from": "2025-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["public note excerpts", "issuer results"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 2, "causal_depth": 2, "falsifiability": 4, "revision_conduct": 1, "history_completeness": 1, "calibration_outcomes": 2, "conflict_disclosure": 2, "target_relevance": 4, "evidentiary_provenance": 2},
+      "best_use": "Home Depot versus Lowe's quarterly relative calls",
+      "largest_miss": "Only one clean public target-specific observation was found.",
+      "known_gaps": ["fragmentary public archive"],
+      "scorecard_sources": ["https://www.benzinga.com/analyst-ratings/analyst-color/25/01/43166746/home-depot-likely-to-outcomp-lowes-in-q4-analyst-says-as-home-improvement-battle-heads-toward-earnings"]
+    },
+
+    {
+      "leader_id": "graham-neary-stockopedia", "leader_display": "Graham Neary", "company": "Hays plc", "ticker": "HAS.L",
+      "lane": "independent structural recruitment thesis", "searched_from": "2024-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Stockopedia archive", "issuer results", "sector search"], "families_found": 1, "matured_families": 0, "open_families": 1,
+      "dimension_levels": {"originality_lead": 4, "causal_depth": 4, "falsifiability": 2, "revision_conduct": 2, "history_completeness": 3, "calibration_outcomes": 1, "conflict_disclosure": 3, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "testing cyclical-recovery narratives against recruitment disintermediation",
+      "largest_miss": "The differentiated structural thesis is too recent to resolve.",
+      "known_gaps": ["one Hays thesis family", "subscription archive"],
+      "scorecard_sources": ["https://www.stockopedia.com/articles/1046559/"]
+    },
+    {
+      "leader_id": "paul-scott-stockopedia", "leader_display": "Paul Scott", "company": "Hays plc", "ticker": "HAS.L",
+      "lane": "UK small-cap accounting and valuation", "searched_from": "2024-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Stockopedia archive", "issuer results"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 3, "causal_depth": 3, "falsifiability": 3, "revision_conduct": 1, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 3, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "Hays recovery valuation, accounting quality, and downside protection",
+      "largest_miss": "One directionally correct judgment, not a point-estimate history.",
+      "known_gaps": ["subscription archive", "one Hays family"],
+      "scorecard_sources": ["https://www.stockopedia.com/articles/1005897"]
+    },
+    {
+      "leader_id": "mark-simpson-stockopedia", "leader_display": "Mark Simpson", "company": "Hays plc", "ticker": "HAS.L",
+      "lane": "UK small-cap accounting and structural model", "searched_from": "2025-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Stockopedia archive", "issuer results"], "families_found": 2, "matured_families": 2, "open_families": 0,
+      "dimension_levels": {"originality_lead": 2, "causal_depth": 3, "falsifiability": 3, "revision_conduct": 2, "history_completeness": 3, "calibration_outcomes": 2, "conflict_disclosure": 3, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "Hays EPS bridges, H2 weighting, and generalist-vs-niche recruiter risk",
+      "largest_miss": "Later results support pressure but do not prove structural displacement causation.",
+      "known_gaps": ["short target history", "subscription archive"],
+      "scorecard_sources": ["https://www.stockopedia.com/articles/1023450", "https://www.stockopedia.com/articles/1034728"]
+    },
+    {
+      "leader_id": "jemma-slingo-investors-chronicle", "leader_display": "Jemma Slingo", "company": "Hays plc", "ticker": "HAS.L",
+      "lane": "recruiter-sector early warning", "searched_from": "2023-01-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Investors' Chronicle archive", "issuer results"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 3, "causal_depth": 2, "falsifiability": 3, "revision_conduct": 1, "history_completeness": 2, "calibration_outcomes": 2, "conflict_disclosure": 3, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "early recruiter-cycle warnings and peer framing",
+      "largest_miss": "Insufficient repeated Hays history for author calibration.",
+      "known_gaps": ["not a Hays specialist"],
+      "scorecard_sources": ["https://www.investorschronicle.co.uk/news/2023/02/02/ftse-350-review-business-services-braced-for-slowdown/"]
+    },
+    {
+      "leader_id": "tom-callan-investec", "leader_display": "Tom Callan", "company": "Hays plc", "ticker": "HAS.L",
+      "lane": "sell-side rating and target revision path", "searched_from": "2023-07-01", "searched_to": "2026-08-16",
+      "searched_channels": ["Investec disclosure archive", "market prices"], "families_found": 1, "matured_families": 1, "open_families": 0,
+      "dimension_levels": {"originality_lead": 1, "causal_depth": 0, "falsifiability": 3, "revision_conduct": 4, "history_completeness": 4, "calibration_outcomes": 1, "conflict_disclosure": 2, "target_relevance": 4, "evidentiary_provenance": 3},
+      "best_use": "visible losing-bull and target-cut calibration history",
+      "largest_miss": "Four consecutive Buy targets stepped down as Hays shares and estimates deteriorated.",
+      "known_gaps": ["public disclosure chart omits causal reasoning"],
+      "scorecard_sources": ["https://researchpdf.investec.co.uk/Documents/WDisc.pdf"]
+    }
+  ]
+}

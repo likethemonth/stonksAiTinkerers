@@ -1,0 +1,546 @@
+{
+  "generated_at": "2026-08-16T11:13:38.118315+00:00",
+  "description": "Issuer outcomes deterministically separated from candidate claim ledgers.",
+  "events": [
+    {
+      "event_id": "evt-adi-fy2023-q4-2023-11-21",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2023 Q4",
+      "reported_at": "2023-11-21T00:00:00Z",
+      "actuals": {
+        "revenue": {
+          "value": 2.716484,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-fourth-quarter-and-record-fiscal",
+          "resolved_at": "2023-11-21"
+        },
+        "adjusted EPS": {
+          "value": 2.01,
+          "units": "USD per diluted share",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-fourth-quarter-and-record-fiscal",
+          "resolved_at": "2023-11-21"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2024-q3-2024-08-21",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2024 Q3",
+      "reported_at": "2024-08-21T00:00:00Z",
+      "actuals": {
+        "revenue": {
+          "value": 2.312,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-third-quarter-2024-financial",
+          "resolved_at": "2024-08-21"
+        },
+        "adjusted EPS": {
+          "value": 1.58,
+          "units": "USD per diluted share",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-third-quarter-2024-financial",
+          "resolved_at": "2024-08-21"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2025-q2-2025-05-22",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2025 Q2",
+      "reported_at": "2025-05-22T00:00:00Z",
+      "actuals": {
+        "revenue": {
+          "value": 2.64,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-second-quarter-2025-financial",
+          "resolved_at": "2025-05-22"
+        },
+        "adjusted EPS": {
+          "value": 1.85,
+          "units": "USD per diluted share",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-second-quarter-2025-financial",
+          "resolved_at": "2025-05-22"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2025-q3-2025-08-20",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2025 Q3",
+      "reported_at": "2025-08-20T00:00:00Z",
+      "actuals": {
+        "revenue": {
+          "value": 2.88,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-third-quarter-2025-financial/",
+          "resolved_at": "2025-08-20"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2025-q3-guidance-issued-with-q2-results-2025-05-22",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2025 Q3 guidance issued with Q2 results",
+      "reported_at": "2025-05-22T00:00:00Z",
+      "actuals": {
+        "revenue guidance midpoint": {
+          "value": 2.75,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-second-quarter-2025-financial",
+          "resolved_at": "2025-05-22"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2025-q4-2025-11-25",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2025 Q4",
+      "reported_at": "2025-11-25T00:00:00Z",
+      "actuals": {
+        "revenue": {
+          "value": 3.076117,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-strong-fourth-quarter-and-fiscal-2025",
+          "resolved_at": "2025-11-25"
+        },
+        "adjusted EPS": {
+          "value": 2.26,
+          "units": "USD per diluted share",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-strong-fourth-quarter-and-fiscal-2025",
+          "resolved_at": "2025-11-25"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2025-q4-guidance-issued-with-q3-results-2025-08-20",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2025 Q4 guidance issued with Q3 results",
+      "reported_at": "2025-08-20T00:00:00Z",
+      "actuals": {
+        "revenue guidance midpoint": {
+          "value": 3.0,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-third-quarter-2025-financial/",
+          "resolved_at": "2025-08-20"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2026-q2-2026-05-20",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2026 Q2",
+      "reported_at": "2026-05-20T00:00:00Z",
+      "actuals": {
+        "revenue": {
+          "value": 3.623,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-record-fiscal-second-quarter-2026",
+          "resolved_at": "2026-05-20"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2026-q2-guidance-issued-with-q1-results-2026-02-18",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2026 Q2 guidance issued with Q1 results",
+      "reported_at": "2026-02-18T00:00:00Z",
+      "actuals": {
+        "adjusted EPS guidance versus consensus": {
+          "value": 2.88,
+          "units": "unspecified",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-fiscal-first-quarter-2026-financial/",
+          "resolved_at": "2026-02-18"
+        }
+      }
+    },
+    {
+      "event_id": "evt-adi-fy2026-q3-guidance-issued-with-q2-results-2026-05-20",
+      "company": "Analog Devices",
+      "ticker": "ADI",
+      "target_period": "FY2026 Q3 guidance issued with Q2 results",
+      "reported_at": "2026-05-20T00:00:00Z",
+      "actuals": {
+        "revenue guidance midpoint": {
+          "value": 3.9,
+          "units": "USD billions",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-record-fiscal-second-quarter-2026",
+          "resolved_at": "2026-05-20"
+        },
+        "adjusted EPS guidance midpoint": {
+          "value": 3.3,
+          "units": "USD per diluted share",
+          "source_url": "https://investor.analog.com/news-releases/news-release-details/analog-devices-reports-record-fiscal-second-quarter-2026",
+          "resolved_at": "2026-05-20"
+        }
+      }
+    },
+    {
+      "event_id": "evt-de-fy2023-q4-2023-11-22",
+      "company": "Deere & Company",
+      "ticker": "DE",
+      "target_period": "FY2023 Q4",
+      "reported_at": "2023-11-22T00:00:00Z",
+      "actuals": {
+        "diluted EPS": {
+          "value": 8.26,
+          "units": "USD per diluted share",
+          "source_url": "https://www.deere.com/en/news/all-news/fy23-fourth-quarter-earnings/",
+          "resolved_at": "2023-11-22"
+        }
+      }
+    },
+    {
+      "event_id": "evt-de-fy2024-2024-11-21",
+      "company": "Deere & Company",
+      "ticker": "DE",
+      "target_period": "FY2024",
+      "reported_at": "2024-11-21T00:00:00Z",
+      "actuals": {
+        "equipment operations net sales YoY change": {
+          "value": -19.45,
+          "units": "percent",
+          "source_url": "https://www.deere.com/en/news/all-news/fy24-fourth-quarter-earnings/",
+          "resolved_at": "2024-11-21"
+        }
+      }
+    },
+    {
+      "event_id": "evt-de-fy2025-q2-2025-05-15",
+      "company": "Deere & Company",
+      "ticker": "DE",
+      "target_period": "FY2025 Q2",
+      "reported_at": "2025-05-15T00:00:00Z",
+      "actuals": {
+        "worldwide net sales and revenues": {
+          "value": 12.763,
+          "units": "USD billions",
+          "source_url": "https://www.deere.com/en/news/all-news/fy25-second-quarter-earnings/",
+          "resolved_at": "2025-05-15"
+        },
+        "EPS": {
+          "value": 6.64,
+          "units": "USD per diluted share",
+          "source_url": "https://www.deere.com/en/news/all-news/fy25-second-quarter-earnings/",
+          "resolved_at": "2025-05-15"
+        }
+      }
+    },
+    {
+      "event_id": "evt-de-fy2025-q4-2025-11-26",
+      "company": "Deere & Company",
+      "ticker": "DE",
+      "target_period": "FY2025 Q4",
+      "reported_at": "2025-11-26T00:00:00Z",
+      "actuals": {
+        "equipment operations net sales": {
+          "value": 10.579,
+          "units": "USD billions",
+          "source_url": "https://www.deere.com/assets/pdfs/common/news/deere-4q25-earnings-release.pdf",
+          "resolved_at": "2025-11-26"
+        },
+        "diluted EPS": {
+          "value": 3.93,
+          "units": "USD per diluted share",
+          "source_url": "https://www.deere.com/assets/pdfs/common/news/deere-4q25-earnings-release.pdf",
+          "resolved_at": "2025-11-26"
+        },
+        "net income attributable to Deere": {
+          "value": 1.065,
+          "units": "USD billions",
+          "source_url": "https://www.deere.com/assets/pdfs/common/news/deere-4q25-earnings-release.pdf",
+          "resolved_at": "2025-11-26"
+        },
+        "worldwide net sales and revenues": {
+          "value": 12.394,
+          "units": "USD billions",
+          "source_url": "https://www.deere.com/assets/pdfs/common/news/deere-4q25-earnings-release.pdf",
+          "resolved_at": "2025-11-26"
+        }
+      }
+    },
+    {
+      "event_id": "evt-de-fy2026-q2-2026-05-21",
+      "company": "Deere & Company",
+      "ticker": "DE",
+      "target_period": "FY2026 Q2",
+      "reported_at": "2026-05-21T00:00:00Z",
+      "actuals": {
+        "equipment operations net sales": {
+          "value": 11.778,
+          "units": "USD billions",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/315189/000110465926064747/de-20260521xex99d1.htm",
+          "resolved_at": "2026-05-21"
+        },
+        "diluted EPS": {
+          "value": 6.55,
+          "units": "USD per diluted share",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/315189/000110465926064747/de-20260521xex99d1.htm",
+          "resolved_at": "2026-05-21"
+        }
+      }
+    },
+    {
+      "event_id": "evt-has-l-fy2024-2024-08-22",
+      "company": "Hays plc",
+      "ticker": "HAS.L",
+      "target_period": "FY2024",
+      "reported_at": "2024-08-22T00:00:00Z",
+      "actuals": {
+        "pre_exceptional_operating_profit": {
+          "value": 105.1,
+          "units": "GBP millions",
+          "source_url": "https://www.investegate.co.uk/announcement/rns/hays--has/final-results/8378830",
+          "resolved_at": "2024-08-22"
+        },
+        "pre_exceptional_operating_profit_growth": {
+          "value": -46.0,
+          "units": "percent",
+          "source_url": "https://www.investegate.co.uk/announcement/rns/hays--has/final-results/8378830",
+          "resolved_at": "2024-08-22"
+        }
+      }
+    },
+    {
+      "event_id": "evt-has-l-fy2025-2025-08-21",
+      "company": "Hays plc",
+      "ticker": "HAS.L",
+      "target_period": "FY2025",
+      "reported_at": "2025-08-21T00:00:00Z",
+      "actuals": {
+        "pre_exceptional_operating_profit": {
+          "value": 45.6,
+          "units": "GBP millions",
+          "source_url": "https://www.investegate.co.uk/announcement/rns/hays--has/preliminary-report-2025/9066698",
+          "resolved_at": "2025-08-21"
+        },
+        "adjusted_ebit": {
+          "value": 45.6,
+          "units": "GBP millions",
+          "source_url": "https://www.investegate.co.uk/announcement/rns/hays--has/preliminary-report-2025/9066698",
+          "resolved_at": "2025-08-21"
+        },
+        "net_fees": {
+          "value": 972.4,
+          "units": "GBP millions",
+          "source_url": "https://www.investegate.co.uk/announcement/rns/hays--has/preliminary-report-2025/9066698",
+          "resolved_at": "2025-08-21"
+        },
+        "basic_eps_pre_exceptional": {
+          "value": 1.31,
+          "units": "GBP pence/share",
+          "source_url": "https://www.investegate.co.uk/announcement/rns/hays--has/preliminary-report-2025/9066698",
+          "resolved_at": "2025-08-21"
+        }
+      }
+    },
+    {
+      "event_id": "evt-has-l-h1-fy2024-2024-02-22",
+      "company": "Hays plc",
+      "ticker": "HAS.L",
+      "target_period": "H1 FY2024",
+      "reported_at": "2024-02-22T00:00:00Z",
+      "actuals": {
+        "adjusted_ebita": {
+          "value": 60.1,
+          "units": "GBP millions",
+          "source_url": "https://www.investegate.co.uk/announcement/rns/hays--has/half-year-report/8050045",
+          "resolved_at": "2024-02-22"
+        }
+      }
+    },
+    {
+      "event_id": "evt-hd-fy2023-2024-02-20",
+      "company": "The Home Depot, Inc.",
+      "ticker": "HD",
+      "target_period": "FY2023",
+      "reported_at": "2024-02-20T00:00:00Z",
+      "actuals": {
+        "comparable_sales_growth": {
+          "value": -3.2,
+          "units": "percent",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/02-20-2024-110037286",
+          "resolved_at": "2024-02-20"
+        },
+        "diluted_eps": {
+          "value": 15.11,
+          "units": "USD/share",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/02-20-2024-110037286",
+          "resolved_at": "2024-02-20"
+        },
+        "net_sales": {
+          "value": 152.7,
+          "units": "USD billions",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/02-20-2024-110037286",
+          "resolved_at": "2024-02-20"
+        },
+        "net_sales_growth": {
+          "value": -3.0,
+          "units": "percent",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/02-20-2024-110037286",
+          "resolved_at": "2024-02-20"
+        }
+      }
+    },
+    {
+      "event_id": "evt-hd-fy2024-2025-02-25",
+      "company": "The Home Depot, Inc.",
+      "ticker": "HD",
+      "target_period": "FY2024",
+      "reported_at": "2025-02-25T00:00:00Z",
+      "actuals": {
+        "diluted_eps": {
+          "value": 14.91,
+          "units": "USD/share",
+          "source_url": "https://ir.homedepot.com/news-releases/2025/02-25-2025-110147741",
+          "resolved_at": "2025-02-25"
+        },
+        "net_sales": {
+          "value": 159.5,
+          "units": "USD billions",
+          "source_url": "https://ir.homedepot.com/news-releases/2025/02-25-2025-110147741",
+          "resolved_at": "2025-02-25"
+        },
+        "net_sales_growth": {
+          "value": 4.5,
+          "units": "percent",
+          "source_url": "https://ir.homedepot.com/news-releases/2025/02-25-2025-110147741",
+          "resolved_at": "2025-02-25"
+        }
+      }
+    },
+    {
+      "event_id": "evt-hd-q1-fy2024-2024-05-14",
+      "company": "The Home Depot, Inc.",
+      "ticker": "HD",
+      "target_period": "Q1 FY2024",
+      "reported_at": "2024-05-14T00:00:00Z",
+      "actuals": {
+        "diluted_eps": {
+          "value": 3.63,
+          "units": "USD/share",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/05-14-2024-110058012",
+          "resolved_at": "2024-05-14"
+        },
+        "net_sales": {
+          "value": 36.4,
+          "units": "USD billions",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/05-14-2024-110058012",
+          "resolved_at": "2024-05-14"
+        }
+      }
+    },
+    {
+      "event_id": "evt-hd-q1-fy2025-2025-05-20",
+      "company": "The Home Depot, Inc.",
+      "ticker": "HD",
+      "target_period": "Q1 FY2025",
+      "reported_at": "2025-05-20T00:00:00Z",
+      "actuals": {
+        "adjusted_diluted_eps": {
+          "value": 3.56,
+          "units": "USD/share",
+          "source_url": "https://ir.homedepot.com/news-releases/2025/05-20-2025-110127912",
+          "resolved_at": "2025-05-20"
+        },
+        "net_sales": {
+          "value": 39.9,
+          "units": "USD billions",
+          "source_url": "https://ir.homedepot.com/news-releases/2025/05-20-2025-110127912",
+          "resolved_at": "2025-05-20"
+        }
+      }
+    },
+    {
+      "event_id": "evt-hd-q3-fy2023-2023-11-14",
+      "company": "The Home Depot, Inc.",
+      "ticker": "HD",
+      "target_period": "Q3 FY2023",
+      "reported_at": "2023-11-14T00:00:00Z",
+      "actuals": {
+        "diluted_eps": {
+          "value": 3.81,
+          "units": "USD/share",
+          "source_url": "https://ir.homedepot.com/news-releases/2023/11-14-2023-110056256",
+          "resolved_at": "2023-11-14"
+        },
+        "net_sales": {
+          "value": 37.7,
+          "units": "USD billions",
+          "source_url": "https://ir.homedepot.com/news-releases/2023/11-14-2023-110056256",
+          "resolved_at": "2023-11-14"
+        }
+      }
+    },
+    {
+      "event_id": "evt-hd-q3-fy2024-2024-11-12",
+      "company": "The Home Depot, Inc.",
+      "ticker": "HD",
+      "target_period": "Q3 FY2024",
+      "reported_at": "2024-11-12T00:00:00Z",
+      "actuals": {
+        "adjusted_diluted_eps": {
+          "value": 3.78,
+          "units": "USD/share",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/11-12-2024-110156861",
+          "resolved_at": "2024-11-12"
+        },
+        "net_sales": {
+          "value": 40.2,
+          "units": "USD billions",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/11-12-2024-110156861",
+          "resolved_at": "2024-11-12"
+        },
+        "diluted_eps": {
+          "value": 3.67,
+          "units": "USD/share",
+          "source_url": "https://ir.homedepot.com/news-releases/2024/11-12-2024-110156861",
+          "resolved_at": "2024-11-12"
+        }
+      }
+    },
+    {
+      "event_id": "evt-hd-q4-fy2024-2025-02-25",
+      "company": "The Home Depot, Inc.",
+      "ticker": "HD",
+      "target_period": "Q4 FY2024",
+      "reported_at": "2025-02-25T00:00:00Z",
+      "actuals": {
+        "adjusted_diluted_eps": {
+          "value": 3.13,
+          "units": "USD/share",
+          "source_url": "https://ir.homedepot.com/news-releases/2025/02-25-2025-110147741",
+          "resolved_at": "2025-02-25"
+        },
+        "net_sales": {
+          "value": 39.7,
+          "units": "USD billions",
+          "source_url": "https://ir.homedepot.com/news-releases/2025/02-25-2025-110147741",
+          "resolved_at": "2025-02-25"
+        }
+      }
+    },
+    {
+      "event_id": "evt-hd-q4-fy2024-2025-02-26",
+      "company": "The Home Depot, Inc.",
+      "ticker": "HD",
+      "target_period": "Q4 FY2024",
+      "reported_at": "2025-02-26T00:00:00Z",
+      "actuals": {
+        "relative_comparable_sales_growth": {
+          "value": 0.6,
+          "units": "percentage points",
+          "source_url": "https://ir.homedepot.com/news-releases/2025/02-25-2025-110147741",
+          "resolved_at": "2025-02-26"
+        }
+      }
+    }
+  ]
+}
