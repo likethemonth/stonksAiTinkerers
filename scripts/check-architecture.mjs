@@ -52,20 +52,26 @@ for (const row of forecastTable.match(/<tr[^>]*>[\s\S]*?<\/tr>/g) ?? []) {
   if (cells.length >= 5) tableRows.set(`${cells[0]}|${cells[1]}`, { value: cells[2], weights: cells[4] });
 }
 
-/**
- * The weight string the page should carry, rebuilt from the audit's own
- * reasoning sentence so the page can never drift from the realized mix.
- */
-function expectedWeights(metric) {
+// The final combination is the four-lens ensemble, so the weights column is
+// rebuilt from research/lens-ensemble.json — same rule as forecast/ensemble.py.
+const LENS_LABEL = { anchor: "Anchor", driver: "Driver", ml: "ML", market: "Market" };
+const ensembleRows = new Map();
+try {
+  const lensEnsemble = JSON.parse(
+    await fs.readFile(path.join(root, "research", "lens-ensemble.json"), "utf8"));
+  for (const row of lensEnsemble.rows) ensembleRows.set(`${row.ticker}|${row.label}`, row);
+} catch (error) {
+  fail(`cannot read research/lens-ensemble.json: ${error.message}`);
+}
+
+function expectedWeights(row) {
+  const voted = new Map(row.lenses.map((lens) => [lens.lens, lens]));
   const segments = [];
-  const pattern =
-    /(street|fundamental|prediction_market) [\d,.]+ \(sigma [\d,.]+, reliability \d+%, overlap penalty \d+%, weight (\d+)%\)/g;
-  for (const [, engine, weight] of metric.reasoning.matchAll(pattern)) {
-    segments.push(`${ENGINE_LABEL[engine]} ${weight}%`);
+  for (const key of ["anchor", "driver", "ml", "market"]) {
+    if (voted.has(key)) segments.push(`${LENS_LABEL[key]} ${Math.round(voted.get(key).weight * 100)}%`);
   }
-  for (const contribution of metric.engine_contributions) {
-    if (contribution.status === "abstained") segments.push(`${ENGINE_LABEL[contribution.engine]} abstained`);
-  }
+  const absent = ["anchor", "driver", "ml", "market"].filter((key) => !voted.has(key)).map((key) => LENS_LABEL[key]);
+  if (absent.length) segments.push(`${absent.join(" / ")} abstained`);
   return segments.join(" · ");
 }
 
@@ -86,9 +92,22 @@ for (const forecast of audit.forecasts) {
     if (row.value !== expectedValue) {
       fail(`${key.replace("|", " · ")}: page says ${row.value}, audit says ${expectedValue}`);
     }
-    const weights = expectedWeights(metric);
+    const ensembleRow = ensembleRows.get(key);
+    if (!ensembleRow) {
+      fail(`ensemble artifact is missing ${key.replace("|", " · ")}`);
+      continue;
+    }
+    // The audit's submitted value must BE the ensemble final (forecast.run's
+    // last stage), and the audit must say so explicitly.
+    if (Math.abs(metric.value - ensembleRow.final) > 0.005) {
+      fail(`${key.replace("|", " · ")}: audit value ${metric.value} != ensemble final ${ensembleRow.final}`);
+    }
+    if (metric.final_combination !== "four_lens_ensemble") {
+      fail(`${key.replace("|", " · ")}: audit does not record the four-lens final combination`);
+    }
+    const weights = expectedWeights(ensembleRow);
     if (row.weights !== weights) {
-      fail(`${key.replace("|", " · ")} weights: page says "${row.weights}", audit says "${weights}"`);
+      fail(`${key.replace("|", " · ")} weights: page says "${row.weights}", ensemble says "${weights}"`);
     }
   }
 }

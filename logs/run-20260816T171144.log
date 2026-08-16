@@ -1,0 +1,112 @@
+[17:11:44] Agents vs Wall Street — forecast run started 2026-08-16T17:11:44
+[17:11:44] as_of: 2026-08-16
+
+[17:11:44] registry verified against challenge/companies.json
+
+[17:11:44] === Home Depot (HD) FY2026Q2 ===
+[17:11:45]   319 docs -> 144 observations, 0 rejected
+[17:11:45]   ensemble Net sales: 47,750.71 (anchor 13% · driver 24% · ml 63%)
+[17:11:45]   ensemble Adjusted diluted EPS: 4.72 (anchor 17% · driver 31% · ml 20% · market 32%)
+[17:11:45]   ensemble Comparable sales, total company: 1.10 (anchor 20% · driver 39% · ml 40%)
+[17:11:45]   Net sales: 47,750.71 USDm
+[17:11:45]       Meta-forecast: street 47,416.26 (sigma 2,107.84, reliability 90%, overlap penalty 100%, weight 10%); fundamental 47,070.75 (sigma 682.89, reliability 85%, overlap penalty 100%, weight 90%) -> 47,105.31. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 13% · driver 24% · ml 63%) -> 47,750.71; constant-reliability engine value 47,105.31 retained for the audit.
+[17:11:45]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:45]       engine street: 10% (overlap penalty 100%)
+[17:11:45]       engine fundamental: 90% (overlap penalty 100%)
+[17:11:45]       sources: https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks, https://www.benzinga.com/quote/hd/earnings, https://www.linkedin.com/company/beta-finch/posts/
+[17:11:45]   Adjusted diluted EPS: 4.72 USD / share
+[17:11:45]       Meta-forecast: street 4.77 (sigma 0.25, reliability 80%, overlap penalty 83%, weight 19%); fundamental 4.58 (sigma 0.15, reliability 85%, overlap penalty 100%, weight 67%); prediction_market 4.77 (sigma 0.06, reliability 3%, overlap penalty 83%, weight 15%) -> 4.64. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 17% · driver 31% · ml 20% · market 32%) -> 4.72; constant-reliability engine value 4.64 retained for the audit.
+[17:11:45]       engine street: 19% (overlap penalty 83%)
+[17:11:45]       engine fundamental: 67% (overlap penalty 100%)
+[17:11:45]       engine prediction_market: 15% (overlap penalty 83%)
+[17:11:45]       sources: https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks, home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md, agent/ml-prediction-forecast.json
+[17:11:45]   Comparable sales, total company: 1.10 %
+[17:11:45]       Meta-forecast: street 1.30 (sigma 0.30, reliability 45%, overlap penalty 100%, weight 63%); fundamental 0.83 (sigma 0.54, reliability 85%, overlap penalty 100%, weight 37%) -> 1.13. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 20% · driver 39% · ml 40%) -> 1.10; constant-reliability engine value 1.13 retained for the audit.
+[17:11:45]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:45]       engine street: 63% (overlap penalty 100%)
+[17:11:45]       engine fundamental: 37% (overlap penalty 100%)
+[17:11:45]       sources: agent/FableResearchRun1.md, home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md, https://fred.stlouisfed.org/series/RSBMGESD
+[17:11:45]   wrote submission/HD-FY2026Q2.xlsx
+
+[17:11:45] === Analog Devices (ADI) FY2026Q3 ===
+[17:11:46]   271 docs -> 375 observations, 0 rejected, 3 calibrated metrics
+[17:11:46]   ensemble Revenue: 4,006.93 (anchor 15% · driver 44% · ml 41%)
+[17:11:46]   ensemble Adjusted diluted EPS: 3.49 (anchor 15% · driver 30% · ml 24% · market 30%)
+[17:11:46]   ensemble Adjusted gross margin: 73.01 (anchor 25% · driver 47% · ml 28%)
+[17:11:46]   Revenue: 4,006.93 USDm
+[17:11:46]       Meta-forecast: street 4,021.17 (sigma 185.05, reliability 70%, overlap penalty 100%, weight 4%); fundamental 3,995.80 (sigma 39.38, reliability 85%, overlap penalty 100%, weight 96%) -> 3,996.71. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 15% · driver 44% · ml 41%) -> 4,006.93; constant-reliability engine value 3,996.71 retained for the audit.
+[17:11:46]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:46]       engine street: 4% (overlap penalty 100%)
+[17:11:46]       engine fundamental: 96% (overlap penalty 100%)
+[17:11:46]       sources: https://www.benzinga.com/quote/adi/earnings, analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md, analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md
+[17:11:46]   Adjusted diluted EPS: 3.49 USD / share
+[17:11:46]       Meta-forecast: street 3.51 (sigma 0.21, reliability 70%, overlap penalty 75%, weight 19%); fundamental 3.42 (sigma 0.13, reliability 85%, overlap penalty 100%, weight 79%); prediction_market 3.47 (sigma 0.11, reliability 3%, overlap penalty 75%, weight 3%) -> 3.43. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 15% · driver 30% · ml 24% · market 30%) -> 3.49; constant-reliability engine value 3.43 retained for the audit.
+[17:11:46]       engine street: 19% (overlap penalty 75%)
+[17:11:46]       engine fundamental: 79% (overlap penalty 100%)
+[17:11:46]       engine prediction_market: 3% (overlap penalty 75%)
+[17:11:46]       sources: https://www.benzinga.com/quote/adi/earnings, analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md, analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md
+[17:11:46]   Adjusted gross margin: 73.01 %
+[17:11:46]       Meta-forecast: street 72.50 (sigma 5.80, reliability 45%, overlap penalty 100%, weight 1%); fundamental 73.16 (sigma 0.65, reliability 85%, overlap penalty 100%, weight 99%) -> 73.15. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 25% · driver 47% · ml 28%) -> 73.01; constant-reliability engine value 73.15 retained for the audit.
+[17:11:46]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:46]       engine street: 1% (overlap penalty 100%)
+[17:11:46]       engine fundamental: 99% (overlap penalty 100%)
+[17:11:46]       sources: agent/FableResearchRun1.md, analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md, analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md
+[17:11:46]   wrote submission/ADI-FY2026Q3.xlsx
+
+[17:11:46] === Hays plc (LSE:HAS) FY2026 ===
+[17:11:47]   239 docs -> 71 observations, 5 conflicts/rejections
+[17:11:47]   RESOLVED FY2024 pre_exc_operating_profit: -5.8 outside [1.0, 5000.0] (hays/filings/2025-08-21__has-ln-20250821-h2-8k-2__671218.md)
+[17:11:47]   RESOLVED DISAGREEMENT FY2023 net_fees: documents report [225.7, 1294.6] — kept 1294.6 (reported by 3 of 4 extractions)
+[17:11:47]   RESOLVED DISAGREEMENT FY2024 net_fees: documents report [192.2, 351.8, 1113.6] — kept 1113.6 (reported by 3 of 5 extractions)
+[17:11:47]   RESOLVED DISAGREEMENT FY2025 net_fees: documents report [308.9, 972.4] — kept 972.4 (reported by 2 of 3 extractions)
+[17:11:47]   RESOLVED DISAGREEMENT FY2025 pre_exc_operating_profit: documents report [45.6, 52.1] — kept 45.6 (reported by 2 of 3 extractions)
+[17:11:47]   ensemble Net fees: 890.16 (anchor 43% · ml 57%)
+[17:11:47]   ensemble Pre-exceptional basic EPS: 1.14 (anchor 100%)
+[17:11:47]   ensemble Pre-exceptional operating profit: 46.10 (anchor 100%)
+[17:11:47]   Net fees: 890.16 GBPm
+[17:11:47]       Meta-forecast: street 902.40 (sigma 72.19, reliability 70%, overlap penalty 100%, weight 1%); fundamental 903.50 (sigma 7.15, reliability 85%, overlap penalty 100%, weight 99%) -> 903.49. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 43% · ml 57%) -> 890.16; constant-reliability engine value 903.49 retained for the audit.
+[17:11:47]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:47]       engine street: 1% (overlap penalty 100%)
+[17:11:47]       engine fundamental: 99% (overlap penalty 100%)
+[17:11:47]       sources: https://www.haysplc.com/investors/analysts-consensus, hays/filings/2026-02-27__has-ln-20260227-h1-8k__642921.md, hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md
+[17:11:47]   Pre-exceptional basic EPS: 1.14 GBp
+[17:11:47]       Meta-forecast: street 1.13 (sigma 0.09, reliability 70%, overlap penalty 100%, weight 60%); fundamental 1.28 (sigma 0.12, reliability 85%, overlap penalty 100%, weight 40%) -> 1.19. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 100%) -> 1.14; constant-reliability engine value 1.19 retained for the audit.
+[17:11:47]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:47]       engine street: 60% (overlap penalty 100%)
+[17:11:47]       engine fundamental: 40% (overlap penalty 100%)
+[17:11:47]       sources: https://www.haysplc.com/investors/analysts-consensus, hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md, hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md
+[17:11:47]   Pre-exceptional operating profit: 46.10 GBPm
+[17:11:47]       Meta-forecast: street 45.30 (sigma 3.62, reliability 70%, overlap penalty 75%, weight 56%); fundamental 45.50 (sigma 4.50, reliability 85%, overlap penalty 75%, weight 44%) -> 45.39. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 100%) -> 46.10; constant-reliability engine value 45.39 retained for the audit.
+[17:11:47]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:47]       engine street: 56% (overlap penalty 75%)
+[17:11:47]       engine fundamental: 44% (overlap penalty 75%)
+[17:11:47]       sources: https://www.haysplc.com/investors/analysts-consensus, hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md
+[17:11:47]   wrote submission/HAS-FY2026.xlsx
+
+[17:11:47] === Deere & Company (DE) FY2026Q3 ===
+[17:11:49]   310 docs -> 116 observations, 0 rejected
+[17:11:49]   ensemble Worldwide net sales and revenues: 12,438.57 (anchor 45% · driver 55%)
+[17:11:49]   ensemble Diluted EPS (GAAP): 5.03 (anchor 33% · driver 44% · market 23%)
+[17:11:49]   ensemble Production & Precision Ag operating profit: 510.63 (anchor 79% · driver 21%)
+[17:11:49]   Worldwide net sales and revenues: 12,438.57 USDm
+[17:11:49]       Meta-forecast: street 12,400.00 (sigma 992.00, reliability 45%, overlap penalty 100%, weight 9%); fundamental 12,495.00 (sigma 420.00, reliability 85%, overlap penalty 100%, weight 91%) -> 12,486.77. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 45% · driver 55%) -> 12,438.57; constant-reliability engine value 12,486.77 retained for the audit.
+[17:11:49]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:49]       engine street: 9% (overlap penalty 100%)
+[17:11:49]       engine fundamental: 91% (overlap penalty 100%)
+[17:11:49]       sources: agent/FableResearchRun1.md, https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html, deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md
+[17:11:49]   Diluted EPS (GAAP): 5.03 USD / share
+[17:11:49]       Meta-forecast: street 5.09 (sigma 0.45, reliability 80%, overlap penalty 75%, weight 24%); fundamental 5.01 (sigma 0.30, reliability 85%, overlap penalty 100%, weight 75%); prediction_market 5.19 (sigma 0.42, reliability 3%, overlap penalty 75%, weight 1%) -> 5.03. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 33% · driver 44% · market 23%) -> 5.03; constant-reliability engine value 5.03 retained for the audit.
+[17:11:49]       engine street: 24% (overlap penalty 75%)
+[17:11:49]       engine fundamental: 75% (overlap penalty 100%)
+[17:11:49]       engine prediction_market: 1% (overlap penalty 75%)
+[17:11:49]       sources: https://www.marketbeat.com/stocks/NYSE/DE/earnings/, https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks, https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html
+[17:11:49]   Production & Precision Ag operating profit: 510.63 USDm
+[17:11:49]       Meta-forecast: street 520.00 (sigma 41.60, reliability 45%, overlap penalty 100%, weight 32%); fundamental 518.65 (sigma 39.39, reliability 85%, overlap penalty 100%, weight 68%) -> 519.09. Final combination: four-lens ensemble, weight ∝ 1/backtested error (anchor 79% · driver 21%) -> 510.63; constant-reliability engine value 519.09 retained for the audit.
+[17:11:49]       WARNING prediction_market abstained: no direct, point-in-time market with a defensible metric mapping
+[17:11:49]       engine street: 32% (overlap penalty 100%)
+[17:11:49]       engine fundamental: 68% (overlap penalty 100%)
+[17:11:49]       sources: agent/FableResearchRun1.md, https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html, https://drgnews.com/2026/07/23/u-s-and-canadian-sales-of-combines-see-slight-increase-in-june-2026/
+[17:11:49]   wrote submission/DE-FY2026Q3.xlsx
+
+[17:11:49] audit: submission/forecast-audit.json
+[17:11:49] OK — 4 workbooks written in 5.0s

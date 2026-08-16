@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T16:23:51",
+  "generated_at": "2026-08-16T17:11:49",
   "as_of": "2026-08-16",
   "forecasts": [
     {
@@ -15,9 +15,9 @@
         {
           "label": "Net sales",
           "units": "USDm",
-          "value": 47105.30598541335,
+          "value": 47750.71,
           "sigma": 702.6807057815287,
-          "reasoning": "Meta-forecast: street 47,416.26 (sigma 2,107.84, reliability 90%, overlap penalty 100%, weight 10%); fundamental 47,070.75 (sigma 682.89, reliability 85%, overlap penalty 100%, weight 90%) -> 47,105.31.",
+          "reasoning": "Meta-forecast: street 47,416.26 (sigma 2,107.84, reliability 90%, overlap penalty 100%, weight 10%); fundamental 47,070.75 (sigma 682.89, reliability 85%, overlap penalty 100%, weight 90%) -> 47,105.31. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 13% \u00b7 driver 24% \u00b7 ml 63%) -> 47,750.71; constant-reliability engine value 47,105.31 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -138,14 +138,16 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 47105.306,
+          "final_combination": "four_lens_ensemble"
         },
         {
           "label": "Adjusted diluted EPS",
           "units": "USD / share",
-          "value": 4.6415518801485,
+          "value": 4.72,
           "sigma": 0.13350361342616685,
-          "reasoning": "Meta-forecast: street 4.77 (sigma 0.25, reliability 80%, overlap penalty 83%, weight 19%); fundamental 4.58 (sigma 0.15, reliability 85%, overlap penalty 100%, weight 67%); prediction_market 4.77 (sigma 0.06, reliability 3%, overlap penalty 83%, weight 15%) -> 4.64.",
+          "reasoning": "Meta-forecast: street 4.77 (sigma 0.25, reliability 80%, overlap penalty 83%, weight 19%); fundamental 4.58 (sigma 0.15, reliability 85%, overlap penalty 100%, weight 67%); prediction_market 4.77 (sigma 0.06, reliability 3%, overlap penalty 83%, weight 15%) -> 4.64. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 17% \u00b7 driver 31% \u00b7 ml 20% \u00b7 market 32%) -> 4.72; constant-reliability engine value 4.64 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -295,14 +297,16 @@
           "plausible_low": 4.107537426443832,
           "plausible_high": 5.175566333853167,
           "warnings": [],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 4.6416,
+          "final_combination": "four_lens_ensemble"
         },
         {
           "label": "Comparable sales, total company",
           "units": "%",
-          "value": 1.1255076461852835,
+          "value": 1.1,
           "sigma": 0.35437524071984633,
-          "reasoning": "Meta-forecast: street 1.30 (sigma 0.30, reliability 45%, overlap penalty 100%, weight 63%); fundamental 0.83 (sigma 0.54, reliability 85%, overlap penalty 100%, weight 37%) -> 1.13.",
+          "reasoning": "Meta-forecast: street 1.30 (sigma 0.30, reliability 45%, overlap penalty 100%, weight 63%); fundamental 0.83 (sigma 0.54, reliability 85%, overlap penalty 100%, weight 37%) -> 1.13. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 20% \u00b7 driver 39% \u00b7 ml 40%) -> 1.10; constant-reliability engine value 1.13 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_research_reconstruction",
@@ -423,7 +427,9 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 1.1255,
+          "final_combination": "four_lens_ensemble"
         }
       ]
     },
@@ -440,9 +446,9 @@
         {
           "label": "Revenue",
           "units": "USDm",
-          "value": 3996.7129994753886,
+          "value": 4006.93,
           "sigma": 41.93755787061358,
-          "reasoning": "Meta-forecast: street 4,021.17 (sigma 185.05, reliability 70%, overlap penalty 100%, weight 4%); fundamental 3,995.80 (sigma 39.38, reliability 85%, overlap penalty 100%, weight 96%) -> 3,996.71.",
+          "reasoning": "Meta-forecast: street 4,021.17 (sigma 185.05, reliability 70%, overlap penalty 100%, weight 4%); fundamental 3,995.80 (sigma 39.38, reliability 85%, overlap penalty 100%, weight 96%) -> 3,996.71. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 15% \u00b7 driver 44% \u00b7 ml 41%) -> 4,006.93; constant-reliability engine value 3,996.71 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -559,14 +565,16 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 3996.713,
+          "final_combination": "four_lens_ensemble"
         },
         {
           "label": "Adjusted diluted EPS",
           "units": "USD / share",
-          "value": 3.434672410122735,
+          "value": 3.49,
           "sigma": 0.1269376307661173,
-          "reasoning": "Meta-forecast: street 3.51 (sigma 0.21, reliability 70%, overlap penalty 75%, weight 19%); fundamental 3.42 (sigma 0.13, reliability 85%, overlap penalty 100%, weight 79%); prediction_market 3.47 (sigma 0.11, reliability 3%, overlap penalty 75%, weight 3%) -> 3.43.",
+          "reasoning": "Meta-forecast: street 3.51 (sigma 0.21, reliability 70%, overlap penalty 75%, weight 19%); fundamental 3.42 (sigma 0.13, reliability 85%, overlap penalty 100%, weight 79%); prediction_market 3.47 (sigma 0.11, reliability 3%, overlap penalty 75%, weight 3%) -> 3.43. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 15% \u00b7 driver 30% \u00b7 ml 24% \u00b7 market 30%) -> 3.49; constant-reliability engine value 3.43 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -712,14 +720,16 @@
           "plausible_low": 2.9269218870582656,
           "plausible_high": 3.942422933187204,
           "warnings": [],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 3.4347,
+          "final_combination": "four_lens_ensemble"
         },
         {
           "label": "Adjusted gross margin",
           "units": "%",
-          "value": 73.15211878794265,
+          "value": 73.01,
           "sigma": 0.7070769029720735,
-          "reasoning": "Meta-forecast: street 72.50 (sigma 5.80, reliability 45%, overlap penalty 100%, weight 1%); fundamental 73.16 (sigma 0.65, reliability 85%, overlap penalty 100%, weight 99%) -> 73.15.",
+          "reasoning": "Meta-forecast: street 72.50 (sigma 5.80, reliability 45%, overlap penalty 100%, weight 1%); fundamental 73.16 (sigma 0.65, reliability 85%, overlap penalty 100%, weight 99%) -> 73.15. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 25% \u00b7 driver 47% \u00b7 ml 28%) -> 73.01; constant-reliability engine value 73.15 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_research_reconstruction",
@@ -831,7 +841,9 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 73.1521,
+          "final_combination": "four_lens_ensemble"
         }
       ]
     },
@@ -848,9 +860,9 @@
         {
           "label": "Net fees",
           "units": "GBPm",
-          "value": 903.4892110091354,
+          "value": 890.16,
           "sigma": 7.719841613659561,
-          "reasoning": "Meta-forecast: street 902.40 (sigma 72.19, reliability 70%, overlap penalty 100%, weight 1%); fundamental 903.50 (sigma 7.15, reliability 85%, overlap penalty 100%, weight 99%) -> 903.49.",
+          "reasoning": "Meta-forecast: street 902.40 (sigma 72.19, reliability 70%, overlap penalty 100%, weight 1%); fundamental 903.50 (sigma 7.15, reliability 85%, overlap penalty 100%, weight 99%) -> 903.49. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 43% \u00b7 ml 57%) -> 890.16; constant-reliability engine value 903.49 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -965,14 +977,16 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 903.4892,
+          "final_combination": "four_lens_ensemble"
         },
         {
           "label": "Pre-exceptional basic EPS",
           "units": "GBp",
-          "value": 1.1887001375785915,
+          "value": 1.14,
           "sigma": 0.08387260191951434,
-          "reasoning": "Meta-forecast: street 1.13 (sigma 0.09, reliability 70%, overlap penalty 100%, weight 60%); fundamental 1.28 (sigma 0.12, reliability 85%, overlap penalty 100%, weight 40%) -> 1.19.",
+          "reasoning": "Meta-forecast: street 1.13 (sigma 0.09, reliability 70%, overlap penalty 100%, weight 60%); fundamental 1.28 (sigma 0.12, reliability 85%, overlap penalty 100%, weight 40%) -> 1.19. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 100%) -> 1.14; constant-reliability engine value 1.19 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -1081,14 +1095,16 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 1.1887,
+          "final_combination": "four_lens_ensemble"
         },
         {
           "label": "Pre-exceptional operating profit",
           "units": "GBPm",
-          "value": 45.38811434813075,
+          "value": 46.1,
           "sigma": 3.7409399570084747,
-          "reasoning": "Meta-forecast: street 45.30 (sigma 3.62, reliability 70%, overlap penalty 75%, weight 56%); fundamental 45.50 (sigma 4.50, reliability 85%, overlap penalty 75%, weight 44%) -> 45.39.",
+          "reasoning": "Meta-forecast: street 45.30 (sigma 3.62, reliability 70%, overlap penalty 75%, weight 56%); fundamental 45.50 (sigma 4.50, reliability 85%, overlap penalty 75%, weight 44%) -> 45.39. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 100%) -> 46.10; constant-reliability engine value 45.39 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -1195,7 +1211,9 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 45.3881,
+          "final_combination": "four_lens_ensemble"
         }
       ]
     },
@@ -1212,9 +1230,9 @@
         {
           "label": "Worldwide net sales and revenues",
           "units": "USDm",
-          "value": 12486.765869462864,
+          "value": 12438.57,
           "sigma": 435.3639717569818,
-          "reasoning": "Meta-forecast: street 12,400.00 (sigma 992.00, reliability 45%, overlap penalty 100%, weight 9%); fundamental 12,495.00 (sigma 420.00, reliability 85%, overlap penalty 100%, weight 91%) -> 12,486.77.",
+          "reasoning": "Meta-forecast: street 12,400.00 (sigma 992.00, reliability 45%, overlap penalty 100%, weight 9%); fundamental 12,495.00 (sigma 420.00, reliability 85%, overlap penalty 100%, weight 91%) -> 12,486.77. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 45% \u00b7 driver 55%) -> 12,438.57; constant-reliability engine value 12,486.77 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_research_reconstruction",
@@ -1323,14 +1341,16 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 12486.7659,
+          "final_combination": "four_lens_ensemble"
         },
         {
           "label": "Diluted EPS (GAAP)",
           "units": "USD / share",
-          "value": 5.029390786714938,
+          "value": 5.03,
           "sigma": 0.28634895109392244,
-          "reasoning": "Meta-forecast: street 5.09 (sigma 0.45, reliability 80%, overlap penalty 75%, weight 24%); fundamental 5.01 (sigma 0.30, reliability 85%, overlap penalty 100%, weight 75%); prediction_market 5.19 (sigma 0.42, reliability 3%, overlap penalty 75%, weight 1%) -> 5.03.",
+          "reasoning": "Meta-forecast: street 5.09 (sigma 0.45, reliability 80%, overlap penalty 75%, weight 24%); fundamental 5.01 (sigma 0.30, reliability 85%, overlap penalty 100%, weight 75%); prediction_market 5.19 (sigma 0.42, reliability 3%, overlap penalty 75%, weight 1%) -> 5.03. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 33% \u00b7 driver 44% \u00b7 market 23%) -> 5.03; constant-reliability engine value 5.03 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -1475,14 +1495,16 @@
           "plausible_low": 3.883994982339248,
           "plausible_high": 6.174786591090628,
           "warnings": [],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 5.0294,
+          "final_combination": "four_lens_ensemble"
         },
         {
           "label": "Production & Precision Ag operating profit",
           "units": "USDm",
-          "value": 519.0856856393771,
+          "value": 510.63,
           "sigma": 35.18003106644076,
-          "reasoning": "Meta-forecast: street 520.00 (sigma 41.60, reliability 45%, overlap penalty 100%, weight 32%); fundamental 518.65 (sigma 39.39, reliability 85%, overlap penalty 100%, weight 68%) -> 519.09.",
+          "reasoning": "Meta-forecast: street 520.00 (sigma 41.60, reliability 45%, overlap penalty 100%, weight 32%); fundamental 518.65 (sigma 39.39, reliability 85%, overlap penalty 100%, weight 68%) -> 519.09. Final combination: four-lens ensemble, weight \u221d 1/backtested error (anchor 79% \u00b7 driver 21%) -> 510.63; constant-reliability engine value 519.09 retained for the audit.",
           "estimates": [
             {
               "estimator": "street_research_reconstruction",
@@ -1595,7 +1617,9 @@
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
-          "needs_review": false
+          "needs_review": false,
+          "engine_value": 519.0857,
+          "final_combination": "four_lens_ensemble"
         }
       ]
     }

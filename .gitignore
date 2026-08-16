@@ -25,3 +25,8 @@ research/*
 !.env.example
 entry.json
 submission/*.xlsx
+# ...but the four final workbooks ARE the final prediction; keep them visible.
+!submission/HD-FY2026Q2.xlsx
+!submission/ADI-FY2026Q3.xlsx
+!submission/HAS-FY2026.xlsx
+!submission/DE-FY2026Q3.xlsx

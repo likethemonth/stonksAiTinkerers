@@ -53,6 +53,10 @@ from forecast.writer import write_workbook
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LOG_DIR = REPO_ROOT / "logs"
+ENSEMBLE_PATH = REPO_ROOT / "research" / "lens-ensemble.json"
+
+#: Ensemble artifact tickers vs the registry's ("Hays" is the display ticker).
+_ENSEMBLE_TICKER = {"LSE:HAS": "Hays"}
 
 
 class Log:
@@ -421,6 +425,45 @@ FORECASTERS = {
 }
 
 
+def _apply_lens_ensemble(
+    company: Company, metrics: list[MetricForecast], log: Log
+) -> dict[tuple[str, str], float]:
+    """The final combination stage: four lenses weighted by measured error.
+
+    The engine pipeline above produces the constant-reliability meta-forecast;
+    this stage replaces each value with the four-lens ensemble from
+    research/lens-ensemble.json (anchor, driver, ML, market, weight ∝ 1 /
+    backtested error — see forecast/ensemble.py for the rule and exclusions).
+    The engine value is kept in the reasoning and returned so the audit
+    records both. Missing artifact or row degrades to the engine value —
+    a missing file must never cost a workbook.
+    """
+    engine_values: dict[tuple[str, str], float] = {}
+    if not ENSEMBLE_PATH.exists():
+        log("  WARNING lens ensemble artifact missing; engine values submitted")
+        return engine_values
+    tick = ticker(company)
+    key_tick = _ENSEMBLE_TICKER.get(tick, tick)
+    rows = {(r["ticker"], r["label"]): r
+            for r in json.loads(ENSEMBLE_PATH.read_text())["rows"]}
+    for metric in metrics:
+        row = rows.get((key_tick, metric.label))
+        if row is None:
+            log(f"  WARNING no ensemble row for {tick} {metric.label}; engine value kept")
+            continue
+        engine_values[(tick, metric.label)] = metric.value
+        mix = " · ".join(f"{item['lens']} {item['weight'] * 100:.0f}%"
+                         for item in row["lenses"])
+        metric.reasoning += (
+            f" Final combination: four-lens ensemble, weight ∝ 1/backtested error "
+            f"({mix}) -> {row['final']:,.2f}; constant-reliability engine value "
+            f"{metric.value:,.2f} retained for the audit."
+        )
+        metric.value = row["final"]
+        log(f"  ensemble {metric.label}: {row['final']:,.2f} ({mix})")
+    return engine_values
+
+
 def run_company(company: Company, as_of: date | None, log: Log) -> CompanyForecast:
     log(f"=== {display_name(company)} ({ticker(company)}) "
         f"{target_period(company).key} ===")
@@ -432,6 +475,7 @@ def run_company(company: Company, as_of: date | None, log: Log) -> CompanyForeca
         metrics = _forecast_baseline(company, log)
 
     metrics = orchestrate(company, metrics, as_of=as_of)
+    engine_values = _apply_lens_ensemble(company, metrics, log)
 
     forecast = CompanyForecast(
         ticker=ticker(company),
@@ -459,7 +503,7 @@ def run_company(company: Company, as_of: date | None, log: Log) -> CompanyForeca
     path = write_workbook(forecast)
     log(f"  wrote {path.relative_to(REPO_ROOT)}")
     log()
-    return forecast
+    return forecast, engine_values
 
 
 def main() -> int:
@@ -493,9 +537,12 @@ def main() -> int:
 
     failures: list[str] = []
     forecasts: list[CompanyForecast] = []
+    engine_values: dict[tuple[str, str], float] = {}
     for company in Company:
         try:
-            forecasts.append(run_company(company, args.as_of, log))
+            forecast, company_engine_values = run_company(company, args.as_of, log)
+            forecasts.append(forecast)
+            engine_values.update(company_engine_values)
         except Exception as exc:  # noqa: BLE001 - one company must not kill the run
             failures.append(company.value)
             log(f"  FAILED {company.value}: {exc}")
@@ -543,12 +590,22 @@ def main() -> int:
 
     audit_path = REPO_ROOT / "submission" / "forecast-audit.json"
     audit_path.parent.mkdir(parents=True, exist_ok=True)
+    dumped = [forecast.model_dump(mode="json") for forecast in forecasts]
+    # Record the pre-ensemble engine value explicitly beside each final, so the
+    # audit shows both combinations rather than burying one in prose.
+    for forecast_dict in dumped:
+        for metric_dict in forecast_dict["metrics"]:
+            engine_value = engine_values.get(
+                (forecast_dict["ticker"], metric_dict["label"]))
+            if engine_value is not None:
+                metric_dict["engine_value"] = round(engine_value, 4)
+                metric_dict["final_combination"] = "four_lens_ensemble"
     audit_path.write_text(
         json.dumps(
             {
                 "generated_at": datetime.now().isoformat(timespec="seconds"),
                 "as_of": (args.as_of or date.today()).isoformat(),
-                "forecasts": [forecast.model_dump(mode="json") for forecast in forecasts],
+                "forecasts": dumped,
                 "theses": theses,
                 "failures": failures,
             },

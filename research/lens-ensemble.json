@@ -3,7 +3,7 @@
     "title": "Four-lens ensemble, weighted by measured error",
     "generated": "2026-08-16",
     "rule": "weight \u221d 1/err within each metric; err = validated backtest error where one exists, the market's implied-mean MAPE for the market lens, and the pre-declared gate for unvalidated lenses; abstentions and declared carries contribute nothing",
-    "note": "Companion output. The twelve submitted numbers are locked and produced by the constant-reliability meta-forecaster documented in the audit; this is the same evidence re-combined by measured skill."
+    "note": "This IS the final combination: forecast.run applies these finals as its last stage before the workbooks are written; the constant-reliability engine value is retained beside each final in the audit."
   },
   "rows": [
     {
@@ -12,7 +12,6 @@
       "unit": "USDm",
       "final": 4006.93,
       "expectedErr": 0.56,
-      "submitted": 3996.71,
       "lenses": [
         {
           "lens": "anchor",
@@ -43,7 +42,6 @@
       "unit": "USD / share",
       "final": 3.49,
       "expectedErr": 0.84,
-      "submitted": 3.43,
       "lenses": [
         {
           "lens": "anchor",
@@ -81,7 +79,6 @@
       "unit": "%",
       "final": 73.01,
       "expectedErr": 0.25,
-      "submitted": 73.15,
       "lenses": [
         {
           "lens": "anchor",
@@ -112,7 +109,6 @@
       "unit": "USDm",
       "final": 47750.71,
       "expectedErr": 0.25,
-      "submitted": 47105.31,
       "lenses": [
         {
           "lens": "anchor",
@@ -143,7 +139,6 @@
       "unit": "USD / share",
       "final": 4.72,
       "expectedErr": 0.83,
-      "submitted": 4.64,
       "lenses": [
         {
           "lens": "anchor",
@@ -181,7 +176,6 @@
       "unit": "%",
       "final": 1.1,
       "expectedErr": 0.16,
-      "submitted": 1.13,
       "lenses": [
         {
           "lens": "anchor",
@@ -212,7 +206,6 @@
       "unit": "GBPm",
       "final": 890.16,
       "expectedErr": 0.86,
-      "submitted": 903.49,
       "lenses": [
         {
           "lens": "anchor",
@@ -236,7 +229,6 @@
       "unit": "GBPm",
       "final": 46.1,
       "expectedErr": 10.0,
-      "submitted": 45.39,
       "lenses": [
         {
           "lens": "anchor",
@@ -253,7 +245,6 @@
       "unit": "GBp",
       "final": 1.14,
       "expectedErr": 10.0,
-      "submitted": 1.19,
       "lenses": [
         {
           "lens": "anchor",
@@ -270,7 +261,6 @@
       "unit": "USDm",
       "final": 12438.57,
       "expectedErr": 0.9,
-      "submitted": 12486.77,
       "lenses": [
         {
           "lens": "anchor",
@@ -294,7 +284,6 @@
       "unit": "USD / share",
       "final": 5.03,
       "expectedErr": 1.64,
-      "submitted": 5.03,
       "lenses": [
         {
           "lens": "anchor",
@@ -325,7 +314,6 @@
       "unit": "USDm",
       "final": 510.63,
       "expectedErr": 7.89,
-      "submitted": 519.09,
       "lenses": [
         {
           "lens": "anchor",

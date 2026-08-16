@@ -149,7 +149,7 @@
             ],
             "seriesLabel": "Guidance midpoint vs reported actual (the calibration this lens rests on)",
             "predLabel": "ADI guidance midpoint",
-            "final": 3996.71
+            "final": 4006.93
           },
           {
             "label": "Adjusted diluted EPS",
@@ -292,7 +292,7 @@
             ],
             "seriesLabel": "Guidance midpoint vs reported actual",
             "predLabel": "ADI guidance midpoint",
-            "final": 3.43
+            "final": 3.49
           },
           {
             "label": "Adjusted gross margin",
@@ -301,7 +301,7 @@
             "why": "CFO guided ~50bp decline from 73.0% (one-time channel-repricing lapse) = 72.5% implied; mix slight tailwind, utilization maxed; ADI's GM plans have been conservative by 30-50bp.",
             "series": [],
             "seriesLabel": "No direct guide \u2014 derived from the CFO's stated ~50bp decline",
-            "final": 73.15
+            "final": 73.01
           }
         ],
         "derivation": [
@@ -399,7 +399,7 @@
               "passed": true
             },
             "llmLive": 4008.6633,
-            "final": 3996.71
+            "final": 4006.93
           },
           {
             "label": "Adjusted diluted EPS",
@@ -458,7 +458,7 @@
               "passed": true
             },
             "llmLive": 3.4805,
-            "final": 3.43
+            "final": 3.49
           },
           {
             "label": "Adjusted gross margin",
@@ -517,7 +517,7 @@
               "passed": true
             },
             "llmLive": 73.8,
-            "final": 73.15
+            "final": 73.01
           }
         ],
         "derivation": [
@@ -667,7 +667,7 @@
               "n": 14,
               "passed": true
             },
-            "final": 3996.71
+            "final": 4006.93
           },
           {
             "label": "Adjusted diluted EPS",
@@ -769,7 +769,7 @@
               "n": 14,
               "passed": true
             },
-            "final": 3.43
+            "final": 3.49
           },
           {
             "label": "Adjusted gross margin",
@@ -871,7 +871,7 @@
               "n": 14,
               "passed": true
             },
-            "final": 73.15
+            "final": 73.01
           }
         ],
         "derivation": [
@@ -932,7 +932,7 @@
             "seriesLabel": "Market-implied P(YES) the day before each print, with how each market resolved",
             "chartType": "prob",
             "predLabel": "Market P(YES), day before",
-            "final": 3.43
+            "final": 3.49
           }
         ],
         "derivation": [
@@ -1018,7 +1018,7 @@
             "why": "Q2 25 $45,283M x (1 + 1.3% comp + ~3.3% GMS inorganic + ~0.3% new stores); Q1 26 ran +4.8% with the same structure.",
             "series": [],
             "seriesLabel": "",
-            "final": 47105.31
+            "final": 47750.71
           },
           {
             "label": "Adjusted diluted EPS",
@@ -1027,7 +1027,7 @@
             "why": "Consensus $4.73; HD averages small beats; FY guide needs H2 recovery; Polymarket P(>4.73)=78.5%.",
             "series": [],
             "seriesLabel": "",
-            "final": 4.64
+            "final": 4.72
           },
           {
             "label": "Comparable sales, total company",
@@ -1036,7 +1036,7 @@
             "why": "Anchor: US demand 'similar to fiscal 2025' (Q2 25 US comp +1.4%) plus ~+50bp FX tailwind -> +1.3. Driver nowcast: Census NAICS 444 accelerated to +5.9% y/y in July (post-guidance, covers quarter-end) minus the Q1-calibrated -3.3pp category-to-comp wedge -> +1.9. Inverse-variance reconciliation -> +1.4.",
             "series": [],
             "seriesLabel": "",
-            "final": 1.13
+            "final": 1.1
           }
         ],
         "derivation": [
@@ -1141,7 +1141,7 @@
               "passed": true
             },
             "llmLive": 48003.3628,
-            "final": 47105.31
+            "final": 47750.71
           },
           {
             "label": "Adjusted diluted EPS",
@@ -1212,7 +1212,7 @@
               "passed": true
             },
             "llmLive": 4.4557,
-            "final": 4.64
+            "final": 4.72
           },
           {
             "label": "Comparable sales, total company",
@@ -1283,7 +1283,7 @@
               "passed": true
             },
             "llmLive": 1.8,
-            "final": 1.13
+            "final": 1.1
           }
         ],
         "derivation": [
@@ -1386,7 +1386,7 @@
               "beats_naive": true,
               "passed": true
             },
-            "final": 47105.31
+            "final": 47750.71
           },
           {
             "label": "Adjusted diluted EPS",
@@ -1422,7 +1422,7 @@
               "beats_naive": true,
               "passed": true
             },
-            "final": 4.64
+            "final": 4.72
           },
           {
             "label": "Comparable sales, total company",
@@ -1458,7 +1458,7 @@
               "beats_naive": true,
               "passed": true
             },
-            "final": 1.13
+            "final": 1.1
           }
         ],
         "derivation": [
@@ -1529,7 +1529,7 @@
             "seriesLabel": "Market-implied P(YES) the day before each print, with how each market resolved",
             "chartType": "prob",
             "predLabel": "Market P(YES), day before",
-            "final": 4.64
+            "final": 4.72
           }
         ],
         "derivation": [
@@ -1614,7 +1614,7 @@
             "why": "Continuing-ops headline: H1 453.3 + Q3 (-7% actual) + Q4 (-4% actual) = ~903 on old basis, minus c.GBP15m from six countries Hays states are 'no longer considered continuing operations'. Company-compiled consensus (11 Aug, GBP902.4m, min 894) is still on the stale basis - the core edge of this entry.",
             "series": [],
             "seriesLabel": "",
-            "final": 903.49
+            "final": 890.16
           },
           {
             "label": "Pre-exceptional operating profit",
@@ -1623,7 +1623,7 @@
             "why": "Company steer 10 Jul with the year closed: 'at the top of the GBP37.0-46.0m consensus range'; such steers print at/slightly above the top; consensus converged to 45.3 (range top 46.1).",
             "series": [],
             "seriesLabel": "",
-            "final": 45.39
+            "final": 46.1
           },
           {
             "label": "Pre-exceptional basic EPS",
@@ -1632,7 +1632,7 @@
             "why": "(46.1 op profit - c.13 guided net finance charge) x (1 - c.45% guided ETR) / ~1,595m weighted shares = 1.14p. H1 actual 0.46p + H2 model 0.68p cross-check.",
             "series": [],
             "seriesLabel": "",
-            "final": 1.19
+            "final": 1.14
           }
         ],
         "derivation": [
@@ -1690,7 +1690,7 @@
             "why": "Fiscal year ended 30 Jun - nothing to nowcast. The value is built entirely from disclosed actuals (H1 453.3 + Q3 at -7% + Q4 at -4%, minus c.15 from the six disposed countries), which is the most driver-pure number in either file: zero management opinion in it.",
             "series": [],
             "seriesLabel": "",
-            "final": 903.49
+            "final": 890.16
           },
           {
             "label": "Pre-exceptional operating profit",
@@ -1699,7 +1699,7 @@
             "why": "Company steer ('top of 37.0-46.0 range') given after the year closed. External drivers (UK/DE vacancy indices) are strictly older information than the steer; carried.",
             "series": [],
             "seriesLabel": "",
-            "final": 45.39
+            "final": 46.1
           },
           {
             "label": "Pre-exceptional basic EPS",
@@ -1708,7 +1708,7 @@
             "why": "Mechanical from op profit via guided finance charge (13) and ETR (45%): no external driver can improve on closed-year arithmetic. Carried.",
             "series": [],
             "seriesLabel": "",
-            "final": 1.19
+            "final": 1.14
           }
         ],
         "derivation": [
@@ -1771,7 +1771,7 @@
               "n": 4,
               "passed": true
             },
-            "final": 903.49
+            "final": 890.16
           },
           {
             "label": "Pre-exceptional operating profit",
@@ -1780,7 +1780,7 @@
             "why": "abstained \u2014 7 annual observations, and the consensus-bias substitute points the wrong way",
             "series": [],
             "seriesLabel": "",
-            "final": 45.39
+            "final": 46.1
           },
           {
             "label": "Pre-exceptional basic EPS",
@@ -1789,7 +1789,7 @@
             "why": "abstained \u2014 derived from operating profit, which abstained",
             "series": [],
             "seriesLabel": "",
-            "final": 1.19
+            "final": 1.14
           }
         ],
         "derivation": [
@@ -1858,7 +1858,7 @@
             "why": "Segment guides (PPA -5-10%, SAT +15%, C&F +20%) give H2 equipment ~$21.65B, Q3 ~49% share (company: Q4>Q3) ~= $10.77B + financial-services/other ~$1.63B. Street equipment consensus ~$10.8B.",
             "series": [],
             "seriesLabel": "",
-            "final": 12486.77
+            "final": 12438.57
           },
           {
             "label": "Diluted EPS (GAAP)",
@@ -1876,7 +1876,7 @@
             "why": "Q3 sales ~$3,960M (-7% y/y, H1 rate) x ~12.8% margin (H1 11.0%, FY guide 11-13%, best cost comps reserved for Q4); H2-implied profit share ~48%.",
             "series": [],
             "seriesLabel": "",
-            "final": 519.09
+            "final": 510.63
           }
         ],
         "derivation": [
@@ -1974,7 +1974,7 @@
               "passed": true
             },
             "llmLive": 12569.3379,
-            "final": 12486.77
+            "final": 12438.57
           },
           {
             "label": "Diluted EPS (GAAP)",
@@ -2092,7 +2092,7 @@
               "passed": false
             },
             "llmLive": 389.4724,
-            "final": 519.09
+            "final": 510.63
           }
         ],
         "derivation": [
@@ -2232,7 +2232,7 @@
               "passed": false
             },
             "floor": 8.1,
-            "final": 12486.77
+            "final": 12438.57
           },
           {
             "label": "Diluted EPS (GAAP)",
@@ -2348,7 +2348,7 @@
               "passed": false
             },
             "floor": 37.2,
-            "final": 519.09
+            "final": 510.63
           }
         ],
         "derivation": [
