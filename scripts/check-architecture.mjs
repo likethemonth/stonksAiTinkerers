@@ -118,6 +118,61 @@ if (!html.includes(`${abstentions} OF 12`) && !html.includes(`>${abstentions}<`)
 
 if (audit.failures.length) fail(`the audit records ${audit.failures.length} run failure(s)`);
 
+// --- the system backtest ----------------------------------------------------
+
+// The validation section quotes the replay's own scores. Those move whenever an
+// extractor is repaired, so they are re-derived here for the same reason the
+// forecast rows are: a judge should not be the one to find the page has drifted.
+const backtestPath = path.join(root, "research", "system-backtest.json");
+let backtest = null;
+try {
+  backtest = JSON.parse(await fs.readFile(backtestPath, "utf8"));
+} catch {
+  fail("research/system-backtest.json is missing; run npm run forecast before uploading");
+}
+
+if (backtest) {
+  const overall = backtest.summary.overall;
+  if (!overall) {
+    fail("the system backtest scored no cells");
+  } else {
+    claim("system backtest cell count", overall.n);
+    for (const [label, value] of [
+      ["mean score", overall.meanScore.toFixed(2)],
+      ["median score", overall.medianScore.toFixed(2)],
+    ]) {
+      if (!html.includes(value)) fail(`page never states the current system backtest ${label} (${value})`);
+    }
+    if (!html.includes(`beat the benchmark on ${overall.beat}`)) {
+      fail(`page never states the current system backtest win count (${overall.beat})`);
+    }
+  }
+
+  for (const [key, block] of Object.entries(backtest.summary.byMetric)) {
+    const [ticker, metric] = key.split(" · ");
+    const rowLabel = `${TICKER_LABEL[ticker] ?? ticker} · ${metric}`;
+    const pattern = new RegExp(
+      `<td>${rowLabel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/&/g, "&amp;")}</td>` +
+        `\\s*<td class="num">(\\d+)</td>` +
+        `\\s*<td class="num">([\\d.]+)</td>` +
+        `\\s*<td class="num">(\\d+) / (\\d+)</td>`
+    );
+    const match = html.match(pattern);
+    if (!match) {
+      fail(`validation table is missing a row for ${rowLabel}`);
+      continue;
+    }
+    const [, n, mean, beat] = match;
+    if (Number(n) !== block.n) fail(`${rowLabel}: page says ${n} cells, backtest says ${block.n}`);
+    if (mean !== block.meanScore.toFixed(2)) {
+      fail(`${rowLabel}: page says mean ${mean}, backtest says ${block.meanScore.toFixed(2)}`);
+    }
+    if (Number(beat) !== block.beat) {
+      fail(`${rowLabel}: page says beat ${beat}, backtest says ${block.beat}`);
+    }
+  }
+}
+
 // --- report -----------------------------------------------------------------
 
 if (problems.length) {

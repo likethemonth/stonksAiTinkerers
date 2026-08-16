@@ -146,6 +146,7 @@
         <a href="#architecture">Architecture</a>
         <a href="#controls">Controls</a>
         <a href="#results">Forecasts</a>
+        <a href="#validation">Validation</a>
         <a href="#reproduce">Reproduce</a>
       </div>
       <div class="status"><span class="dot" aria-hidden="true"></span><span>Audited · 2026-08-16</span></div>
@@ -439,9 +440,50 @@
       </div>
     </section>
 
+    <section id="validation">
+      <div class="shell section-grid">
+        <div class="section-number">05 / Validation</div>
+        <div>
+          <h2>The system is scored on history, not asserted.</h2>
+          <p>A forecasting system that has never been held out is a claim. <code>forecast.system_backtest</code> replays the pipeline that writes the twelve submitted numbers: for every closed period it rebuilds the corpus as of the day before the actual was published, runs the same extractors, calibration, estimators, <code>reconcile</code> and three-engine meta-forecaster the final command runs, and scores what comes out. Look-ahead is structural rather than conventional—a leak would require a filing to travel backwards in time.</p>
+          <p>Each cell is scored with the competition's own formula: absolute error divided by the benchmark's, floored at 0.5 percentage points for percentage metrics and 0.5% of the reported result otherwise, capped at 5.0. The benchmark is a seasonal median year-over-year replay, standing in for the Wall Street consensus teams are never shown. <strong>Below 1.00 means the system earned its complexity against a model you could write in twenty lines.</strong></p>
+
+          <p class="note">75 held-out cells · mean score 0.37 · median 0.15 · beat the benchmark on 68</p>
+
+          <div class="table-wrap" role="region" aria-label="System backtest scores by metric" tabindex="0">
+          <table>
+            <thead><tr><th>Company · Metric</th><th>Held-out cells</th><th>Mean score</th><th>Beat benchmark</th></tr></thead>
+            <tbody>
+              <tr class="company-row"><td>ADI · Revenue</td><td class="num">19</td><td class="num">0.20</td><td class="num">17 / 19</td></tr>
+              <tr><td>ADI · Adjusted diluted EPS</td><td class="num">19</td><td class="num">0.16</td><td class="num">19 / 19</td></tr>
+              <tr><td>ADI · Adjusted gross margin</td><td class="num">19</td><td class="num">0.48</td><td class="num">18 / 19</td></tr>
+              <tr class="company-row"><td>HD · Net sales</td><td class="num">5</td><td class="num">0.96</td><td class="num">3 / 5</td></tr>
+              <tr><td>HD · Adjusted diluted EPS</td><td class="num">5</td><td class="num">0.76</td><td class="num">4 / 5</td></tr>
+              <tr><td>HD · Comparable sales, total company</td><td class="num">5</td><td class="num">0.52</td><td class="num">4 / 5</td></tr>
+              <tr class="company-row"><td>Hays · Net fees</td><td class="num">1</td><td class="num">0.15</td><td class="num">1 / 1</td></tr>
+              <tr><td>Hays · Pre-exceptional basic EPS</td><td class="num">1</td><td class="num">0.39</td><td class="num">1 / 1</td></tr>
+              <tr><td>Hays · Pre-exceptional operating profit</td><td class="num">1</td><td class="num">0.27</td><td class="num">1 / 1</td></tr>
+            </tbody>
+          </table>
+          </div>
+
+          <h3>What the replay refuses to score</h3>
+          <p>60 further cells are recorded as engine failures rather than quietly dropped, because each one is the system declining to forecast on inputs it did not have. Deere abstains from the replay entirely: its engine is an AEM units-to-dollars driver chain anchored to a dated snapshot rather than to a fiscal period, so no historical cutoff carries what it consumes, and scoring it would mean scoring a model that could not have existed at the time. Hays scores one period for the same reason—its engine needs a company-compiled consensus the corpus holds only for recent years.</p>
+          <p>Running this backtest is what exposed the Home Depot guidance gap. HD does not always guide a range, and the extractor matched only the &ldquo;X to Y&rdquo; wording, so guidance existed for FY2026 alone and the HD engine refused every older cutoff. Reading single-point guidance as a fallback—never as an override, so a published range always wins—took Home Depot from 3 scored cells to 15 and left all four submitted workbooks byte-identical.</p>
+
+          <h3>Two further backtests, both in the final command</h3>
+          <ul>
+            <li><code>forecast.backtest</code> is a walk-forward test of one specific claim: that correcting management guidance for its historical bias beats parroting it. The calibration is fitted only on the corpus as it stood the day before each guidance was issued. Across 54 held-out periods the correction improved 42 of them, with error ratios of 0.65, 0.74 and 0.77.</li>
+            <li><code>forecasting.backtest</code> ranks Street sources rather than the system, scoring 39 closed observations by recency-weighted error and shrinking sparse histories toward an 8% prior. This is what turns Street reliability into a measured quantity instead of a chosen one.</li>
+          </ul>
+          <p class="note">Every figure on this page is re-derived from the run artefacts by <code>npm run check:architecture</code>, which fails if the page and the audit disagree.</p>
+        </div>
+      </div>
+    </section>
+
     <section id="reproduce">
       <div class="shell section-grid">
-        <div class="section-number">05 / Reproduce</div>
+        <div class="section-number">06 / Reproduce</div>
         <div>
           <h2>One final command, then structural validation.</h2>
           <pre><code>python3 -m venv .venv
@@ -453,7 +495,7 @@ npm run forecast
 npm run check:forecasts
 
 git rev-parse HEAD</code></pre>
-          <p><code>npm run forecast</code> regenerates the gated Home Depot ML artifact, materializes the Street backtest, and invokes the final orchestrator—all at the frozen cutoff. The runner writes four workbooks, a timestamped log, and <code>submission/forecast-audit.json</code>. Upload remains manual by challenge rule.</p>
+          <p><code>npm run forecast</code> regenerates the gated Home Depot ML artifact, materializes the Street backtest, runs the walk-forward skill test and the system replay, and invokes the final orchestrator—all at the frozen cutoff. The runner writes four workbooks, a timestamped log, <code>submission/forecast-audit.json</code>, and the backtest evidence under <code>research/</code>. Upload remains manual by challenge rule.</p>
 
           <h3>Known limits</h3>
           <ul>
@@ -462,6 +504,9 @@ git rev-parse HEAD</code></pre>
             <li>The Home Depot ML gate is task matched but has only three historical Q2 transitions. Its uncertainty is widened before it enters the fundamental engine, and the all-transition stress view remains visible in the artifact.</li>
             <li>Regex extractors depend on recurring issuer disclosure shapes. Magnitude checks and source excerpts turn format drift into an observable failure, but do not eliminate it.</li>
             <li>Source-overlap labels are declared families, not learned causal dependence. The penalty is conservative and auditable, but still an approximation.</li>
+            <li>The system backtest is unbalanced. ADI supplies 57 of the 75 scored cells, so the headline mean is largely an ADI result; Hays contributes 3 and Deere none. The per-metric table is the honest reading, not the single average.</li>
+            <li>Engine reliabilities are not yet learned from the backtest. Street reliability is derived from measured source error, but the fundamental engine's 0.85 is a chosen constant even though it carries most of the weight. Feeding measured skill back into that number is the clearest next improvement and was out of scope for the day.</li>
+            <li>The replay benchmark is a seasonal baseline, not the Wall Street consensus the accuracy prize scores against. Beating it is necessary evidence, not sufficient.</li>
           </ul>
         </div>
       </div>
