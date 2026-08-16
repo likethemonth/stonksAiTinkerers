@@ -58,7 +58,7 @@ from dataclasses import dataclass
 from datetime import date, timedelta
 from pathlib import Path
 
-from forecast.corpus import load
+from forecast.corpus import TARGET_PERIOD, load
 from forecast.extract import adi, deere, home_depot
 from forecast.schema import Company, Kind, MetricObservation, Period
 
@@ -247,8 +247,12 @@ def _market_strikes() -> dict[tuple[str, str], dict]:
 
 
 def build_packet(blind: Blind, target: Period, earliest: dict,
-                 strikes: dict) -> dict:
-    cutoff = _cutoff(target, earliest)
+                 strikes: dict, *, cutoff: date | None = None,
+                 live: bool = False) -> dict:
+    # Live packets forecast the not-yet-reported challenge quarter: the cutoff
+    # is simply today, and the id is suffixed so a later historical re-emit of
+    # the same quarter (once it reports) cannot collide with it.
+    cutoff = cutoff or _cutoff(target, earliest)
     ticker = TICKER[blind.company]
     tq = _qidx(target)
     keys = {m.key for m in blind.metrics}
@@ -402,7 +406,7 @@ OUTPUT — reply with EXACTLY one JSON object and nothing else (no code fences):
     # the cutoff, so every packet is auditable as a view of the world.
     visible = load(blind.company, as_of=cutoff)
     total = load(blind.company)
-    packet_id = f"{ticker}-{target.key}"
+    packet_id = f"{ticker}-{target.key}" + ("-LIVE" if live else "")
     return {
         "id": packet_id,
         "prompt": prompt,
@@ -411,6 +415,7 @@ OUTPUT — reply with EXACTLY one JSON object and nothing else (no code fences):
             "ticker": ticker,
             "code": blind.code,
             "period": target.key,
+            "live": live,
             "targetQuarterPosition": target.quarter,
             "cutoff": cutoff.isoformat(),
             "scale": blind.scale,
@@ -434,15 +439,19 @@ OUTPUT — reply with EXACTLY one JSON object and nothing else (no code fences):
 # --------------------------------------------------------------------------- #
 
 
-def emit() -> int:
+def emit(live: bool = False) -> int:
     PACKETS.mkdir(parents=True, exist_ok=True)
     RESPONSES.mkdir(parents=True, exist_ok=True)
     strikes = _market_strikes()
     index = []
     for blind in BLINDS:
         earliest = _earliest(_rows(blind.company))
-        for target in _targets(blind, earliest):
-            packet = build_packet(blind, target, earliest, strikes)
+        targets = ([TARGET_PERIOD[blind.company]] if live
+                   else _targets(blind, earliest))
+        for target in targets:
+            packet = build_packet(blind, target, earliest, strikes,
+                                  cutoff=date.today() if live else None,
+                                  live=live)
             (PACKETS / f"{packet['id']}.json").write_text(
                 json.dumps(packet, indent=1) + "\n")
             (PACKETS / f"{packet['id']}.txt").write_text(packet["prompt"])
@@ -454,7 +463,8 @@ def emit() -> int:
             print(f"  {packet['id']:<16} cutoff {packet['private']['cutoff']}  "
                   f"history {packet['private']['historyQuarters']:>2}q  "
                   f"market {'yes' if packet['private']['market'] else 'no'}")
-    (REPLAY_ROOT / "INDEX.json").write_text(json.dumps(index, indent=1) + "\n")
+    (REPLAY_ROOT / ("INDEX-LIVE.json" if live else "INDEX.json")).write_text(
+        json.dumps(index, indent=1) + "\n")
     print(f"{len(index)} packets -> {PACKETS.relative_to(REPO_ROOT)}")
     return 0
 
@@ -583,6 +593,36 @@ def score() -> int:
                     "passed": score_val is not None and score_val <= threshold,
                 },
             }
+        # Live: the not-yet-reported challenge quarter, forecast by the same
+        # blinded machinery. No actual exists, so it carries values only.
+        live_block = None
+        live_target = TARGET_PERIOD[blind.company]
+        live_packet_path = PACKETS / f"{ticker}-{live_target.key}-LIVE.json"
+        live_resp_path = RESPONSES / f"{ticker}-{live_target.key}-LIVE.json"
+        if live_packet_path.exists() and live_resp_path.exists():
+            live_packet = json.loads(live_packet_path.read_text())
+            live_resp = _parse_response(live_resp_path)
+            if live_resp is not None:
+                preds = {}
+                raw = live_resp.get("predictions") or {}
+                for m in blind.metrics:
+                    if not m.predict or (m.alias not in raw and m.key not in raw):
+                        continue
+                    v = float(raw.get(m.alias, raw.get(m.key)))
+                    preds[m.key] = round(v if m.kind == "pct" else v / blind.scale, 4)
+                pb_live = live_resp.get("pBeat")
+                live_block = {
+                    "period": live_target.key,
+                    "cutoff": live_packet["private"]["cutoff"],
+                    "predictions": preds,
+                    "pBeat": (round(float(pb_live), 3)
+                              if isinstance(pb_live, (int, float)) else None),
+                    "strike": (live_packet["private"].get("market") or {}).get("strike"),
+                }
+                if live_resp.get("identityGuess"):
+                    all_guesses.append({"id": live_packet_path.stem,
+                                        "guess": live_resp["identityGuess"]})
+
         scored_p = [r for r in pbeat_rows if r["brierLLM"] is not None]
         post_p = [r for r in scored_p if not r["inTraining"]]
 
@@ -592,6 +632,7 @@ def score() -> int:
 
         artifact_companies[ticker] = {
             "scale": blind.scale,
+            "live": live_block,
             "metrics": metrics_block,
             "pBeat": {
                 "rows": pbeat_rows,
@@ -653,7 +694,7 @@ def score() -> int:
 
 def main(argv: list[str]) -> int:
     if "emit" in argv:
-        return emit()
+        return emit(live="--live" in argv)
     if "score" in argv:
         return score()
     print(__doc__)

@@ -31,8 +31,6 @@ import re
 from datetime import date
 from pathlib import Path
 
-import numpy as np
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUT = REPO_ROOT / "architecture" / "predictions.html"
 DASHBOARD_METHODS_OUT = REPO_ROOT / "dashboard" / "data" / "method-explorer.json"
@@ -155,6 +153,18 @@ def attach_llm_replay(M: dict, llm: dict | None) -> None:
             "errors. The gate bar therefore also reports the error on quarters "
             "reported AFTER the predictor's training window (post-Jan-2026) — "
             "those cannot be memorized and carry the honest signal.")
+        live = block.get("live") or {}
+        for metric in driver["metrics"]:
+            key = LLM_METRIC_BY_LABEL.get((ticker, metric["label"]))
+            if key and key in (live.get("predictions") or {}):
+                metric["llmLive"] = live["predictions"][key]
+        if live.get("predictions"):
+            driver["derivation"].append(
+                f"Live forecast from the same machinery: a blinded packet with "
+                f"cutoff {live['cutoff']} (the not-yet-reported quarter) was "
+                "answered by one more fresh session; its de-scaled numbers are "
+                "shown under each tile. For HD the EPS figure is on a GAAP "
+                "basis, matching the backtest.")
         driver["data"].extend([
             {"name": "Blinded point-in-time packets (prompt + world-view manifest per quarter)",
              "published": "cutoffs = day before each historical print",
@@ -178,16 +188,19 @@ def attach_market_history(M: dict, rel: dict | None, llm: dict | None) -> None:
                 if r.get("outcome") is not None and r.get("pDayBefore") is not None]
         if not done:
             continue
-        series = [{"period": r["period"], "actual": r["outcome"] * 100,
-                   "predicted": round(r["pDayBefore"] * 100, 1),
-                   "err": round(abs(r["pDayBefore"] - r["outcome"]) * 100, 1)}
-                  for r in done]
+        # A binary market's history is a probability against a YES/NO
+        # resolution, so it is drawn as a probability chart (P(YES) with the
+        # outcome marked per event), not as a fake 0/100 "actual" line.
+        priced = [r for r in block["rows"] if r.get("pDayBefore") is not None]
+        series = [{"period": r["period"], "p": round(r["pDayBefore"] * 100, 1),
+                   "outcome": r.get("outcome")} for r in priced]
         if market["metrics"]:
             m = market["metrics"][0]
             m["series"] = series
-            m["seriesLabel"] = ("Resolved beat-markets: day-before price vs outcome "
-                                "(100 = beat happened; error in probability points)")
-            m["predLabel"] = "Market P(beat), day before"
+            m["chartType"] = "prob"
+            m["seriesLabel"] = ("Market-implied P(YES) the day before each print, "
+                                "with how each market resolved")
+            m["predLabel"] = "Market P(YES), day before"
         outcomes = [r["outcome"] for r in done]
         market["derivation"].append(
             f"Historical reliability: Polymarket has listed {len(block['rows'])} "
@@ -211,14 +224,18 @@ def attach_market_history(M: dict, rel: dict | None, llm: dict | None) -> None:
         pb = (llm_block or {}).get("pBeat", {})
         scored = [r for r in pb.get("rows", []) if r.get("brierLLM") is not None]
         if scored:
+            prob_rows = [{"period": r["period"], "p": round(r["pLLM"] * 100, 1),
+                          "outcome": r["outcome"]} for r in scored]
+            live = (llm_block or {}).get("live") or {}
+            if live.get("pBeat") is not None:
+                prob_rows.append({"period": live["period"],
+                                  "p": round(live["pBeat"] * 100, 1),
+                                  "outcome": None})
             market["extraSeries"] = [{
-                "label": "Blinded LLM replay on the same events: P(beat) vs outcome",
-                "unit": "%",
-                "predLabel": "LLM P(beat), day-before packet",
-                "series": [{"period": r["period"], "actual": r["outcome"] * 100,
-                            "predicted": round(r["pLLM"] * 100, 1),
-                            "err": round(abs(r["pLLM"] - r["outcome"]) * 100, 1)}
-                           for r in scored]}]
+                "label": "Blinded LLM replay on the same events: P(YES) vs outcome",
+                "chartType": "prob",
+                "predLabel": "LLM P(YES), day-before packet",
+                "series": prob_rows}]
             market["derivation"].append(
                 f"The blinded LLM replay answered the same beat questions from its "
                 f"anonymized packets: Brier {pb['brierLLM']} vs the market's "
@@ -900,6 +917,8 @@ ul.data .d-meta{display:block;margin-top:5px;color:var(--muted);font:10px/1.6 va
 .d-gate{fill:none;stroke:var(--warn);stroke-width:1.3;stroke-dasharray:3 5}
 .d-node{fill:var(--ink)}
 .d-pred{fill:var(--paper);stroke:#5b8f2e;stroke-width:2.2}
+.d-wrong{fill:var(--paper);stroke:var(--warn);stroke-width:2.2}
+.d-open{fill:var(--paper);stroke:var(--muted);stroke-width:1.6;stroke-dasharray:3 3}
 .d-predline{fill:none;stroke:#5b8f2e;stroke-width:1.6;stroke-dasharray:5 4}
 .d-grid{stroke:var(--rule);stroke-width:1;stroke-dasharray:2 4}
 .d-errbar{fill:var(--paper-deep);stroke:var(--rule)}
@@ -983,6 +1002,48 @@ function chart(series, unit, label, gate, predLabel) {
     </div></div>`;
 }
 
+// Binary markets: P(YES) per event with the resolution marked, instead of a
+// misleading 0/100 "actual" line. Green dot = priced the right side of 50%,
+// orange = wrong side, hollow = not resolved yet.
+function probchart(series, label, predLabel) {
+  const n = series.length;
+  const W = Math.max(560, 140 + n * 118), H = 268;
+  const P = {t: 24, r: 64, b: 92, l: 62};
+  const iw = W - P.l - P.r, ih = H - P.t - P.b;
+  const x = i => P.l + (n === 1 ? iw / 2 : (i * iw) / (n - 1));
+  const y = v => P.t + ih - (v / 100) * ih;
+  const grid = [0, 25, 50, 75, 100].map(v =>
+    `<line class="d-grid" x1="${P.l}" x2="${W - P.r}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/>
+     <text class="d-mono" x="${P.l - 10}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${v}%</text>`).join('');
+  const coin = `<line class="d-gate" x1="${P.l}" x2="${W - P.r}" y1="${y(50).toFixed(1)}" y2="${y(50).toFixed(1)}"/>
+    <text class="d-warn" x="${W - P.r}" y="${(y(50) - 6).toFixed(1)}" text-anchor="end">50% — COIN FLIP</text>`;
+  const items = series.map((d, i) => {
+    const cx = x(i).toFixed(1);
+    const open = d.outcome === null || d.outcome === undefined;
+    const right = !open && ((d.p > 50) === (d.outcome === 1));
+    const dot = open ? 'd-open' : (right ? 'd-pred' : 'd-wrong');
+    const oTxt = open ? 'not yet resolved' : (d.outcome === 1 ? 'resolved YES' : 'resolved NO');
+    const oCls = open ? 'd-mono' : (d.outcome === 1 ? 'd-good' : 'd-warn');
+    return `<rect class="d-errbar" x="${(x(i) - 13).toFixed(1)}" y="${y(d.p).toFixed(1)}" width="26" height="${(y(0) - y(d.p)).toFixed(1)}"/>
+      <circle class="${dot}" cx="${cx}" cy="${y(d.p).toFixed(1)}" r="5"/>
+      <text class="d-mono" x="${cx}" y="${(y(d.p) - 10).toFixed(1)}" text-anchor="middle">${d.p}%</text>
+      <text class="d-eyebrow" x="${cx}" y="${P.t + ih + 20}" text-anchor="middle">${d.period}</text>
+      <text class="${oCls}" x="${cx}" y="${P.t + ih + 38}" text-anchor="middle">${oTxt}</text>
+      ${open ? '' : `<text class="d-mono" x="${cx}" y="${P.t + ih + 56}" text-anchor="middle">off by ${Math.abs(d.p - d.outcome * 100).toFixed(0)}pp</text>`}`;
+  }).join('');
+  const resolved = series.filter(d => d.outcome !== null && d.outcome !== undefined).length;
+  return `<div class="chart-card">
+    <div class="chart-head"><strong>${label}</strong><span>${resolved} resolved · ${series.length} events</span></div>
+    <div class="chart-body">
+      <div class="legend"><span><i style="background:#5b8f2e"></i>${predLabel || 'P(YES)'} — right side of 50%</span>
+        <span><i style="background:#bd5d23"></i>wrong side of 50%</span>
+        <span><i style="background:#f3f0e9;border:1px dashed #68655f"></i>not yet resolved</span></div>
+      <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${label}">
+        ${grid}${items}${coin}
+      </svg>
+    </div></div>`;
+}
+
 function gatebar(g, floor) {
   if (!g || g.score === undefined || g.score === null) return '';
   const u = g.kind === 'mae' ? 'pp' : '%';
@@ -1037,14 +1098,19 @@ function render() {
               : `<span class="m-value none">abstained</span>`}
           ${m.final !== null && m.final !== undefined
              ? `<div class="m-final">Submitted · ${fmt(m.final, m.unit)} ${m.unit}</div>` : ''}
+          ${m.llmLive !== null && m.llmLive !== undefined
+             ? `<div class="m-final">Blinded LLM replay, live · ${fmt(m.llmLive, m.unit)} ${m.unit}</div>` : ''}
           <p class="m-why">${m.why || ''}</p></div>`;
       }).join('')
     : `<div class="empty">This lens produced no numbers for ${S.name}</div>`;
 
+  const renderSeries = (m, label) => m.chartType === 'prob'
+    ? probchart(m.series, label, m.predLabel)
+    : chart(m.series, m.unit, label, m.gate, m.predLabel);
   const charts = (M.metrics || []).filter(m => m.series && m.series.length)
-    .map(m => chart(m.series, m.unit, m.seriesLabel || m.label, m.gate, m.predLabel) + gatebar(m.gate, m.floor)).join('')
+    .map(m => renderSeries(m, m.seriesLabel || m.label) + gatebar(m.gate, m.floor)).join('')
     + (M.extraSeries || []).filter(s => s.series && s.series.length)
-      .map(s => chart(s.series, s.unit, s.label, s.gate, s.predLabel)).join('');
+      .map(s => renderSeries(s, s.label)).join('');
   $('#charts').innerHTML = charts ||
     `<div class="chart-card"><div class="empty">No per-period validation series for this lens —
      it produces a single forward estimate. The derivation below shows how that number was reached.</div></div>`;

@@ -77,3 +77,16 @@ LLM_CMD="your-model-cli --no-tools" scripts/run-llm-replay.sh 5
 ```
 
 Guards: `tests/test_llm_replay.py` (prompt blinding, cutoff isolation, error recomputation).
+
+## Addendum — live forecasts and the probability-chart redesign (same day)
+
+- Binary markets are now drawn as what they are: **P(YES) per event with the resolution marked** (green dot = priced the right side of 50%, orange = wrong side, hollow = unresolved), a 50% coin-flip line, and "off by Xpp" per resolved event. No more fake 0/100 "actual" line.
+- The same blinded machinery emitted **live packets** (`emit --live`, cutoff 2026-08-16) for the three unreported quarters; three more fresh sessions produced:
+
+| | quarter | LLM (blinded, live) | driver lens | P(beat strike) LLM vs market |
+|---|---|---|---|---|
+| HD | FY2026Q2 | net sales 48,003 · GAAP EPS 4.46 · comps +1.8 | 47,770 · adj 4.74 · +1.9 | **0.40** vs 0.785 (strike 4.73) |
+| ADI | FY2026Q3 | revenue 4,009 · adj EPS 3.48 · GM 73.8 | 4,009 · 3.51 · 72.9 | 0.88 vs 0.94 (3.33) |
+| DE | FY2026Q3 | revenue 12,569 · GAAP EPS 4.96 · PPA OP 389 | 12,470 · 5.00 · 513 | 0.68 vs 0.91 (4.72) |
+
+Independent convergence on revenue everywhere; the LLM is a notable contrarian on HD's beat (0.40 vs the market's 0.785 — it was also the only one under 50% on the single historical NO). PPA operating profit diverges, as its backtest says it must.

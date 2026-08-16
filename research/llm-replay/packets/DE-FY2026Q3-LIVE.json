@@ -1,0 +1,145 @@
+{
+ "id": "DE-FY2026Q3-LIVE",
+ "prompt": "You are an expert earnings nowcaster. Forecast one fiscal quarter of one anonymized company using ONLY the data in this message.\n\nANONYMIZATION AND RULES\n- The company's identity, all calendar dates and fiscal-year labels have been removed. Quarters are labelled relative to the target: T is the target quarter, T-1 the one before it. Q1..Q4 mark each quarter's position within the fiscal year (seasonality is real).\n- Every currency value has been multiplied by ONE fixed undisclosed constant. Growth rates, margins, seasonality and all cross-metric relationships are unchanged. Percent metrics are not scaled.\n- The target quarter T (position Q3) has ENDED, but its results are NOT yet published. Everything below was published before the results.\n- Do not use knowledge of any real-world company or period. If you believe you recognize the company or the period anyway, you MUST disclose that in \"identityGuess\" \u2014 and still derive every number only from the data below.\n- Do not use any tools, web access, or external data. Work only from this message.\n\nPREDICT (for quarter T, position Q3)\n- total_revenue: worldwide net sales and revenues \u2014 scaled currency units\n- diluted_eps_gaap: GAAP diluted EPS \u2014 scaled currency units\n- segment_a_operating_profit: largest segment's operating profit \u2014 scaled currency units\n\nCONSENSUS STRIKE\nAnalyst consensus for the target quarter's GAAP EPS (frozen ~2 weeks before results, same scaled units): 3.999.\nAlso output pBeat = your probability that the reported GAAP EPS exceeds this strike.\n\nDATA 1 \u2014 QUARTERLY ACTUALS AS ORIGINALLY REPORTED (oldest first)\nT-28 (Q3): total_revenue=8503.5, diluted_eps_gaap=2.381\nT-27 (Q4): total_revenue=8384.9, diluted_eps_gaap=1.923\nT-26 (Q1): total_revenue=6465.7, diluted_eps_gaap=1.381, segment_a_operating_profit=184.7, segment_a_net_sales=2124.2\nT-25 (Q2): total_revenue=7840.1, diluted_eps_gaap=1.788\nT-24 (Q3): total_revenue=7562.2, diluted_eps_gaap=2.178, segment_a_operating_profit=512.6, segment_a_net_sales=2786.8\nT-23 (Q4): total_revenue=8245.1, diluted_eps_gaap=2.025, segment_a_operating_profit=489.7, segment_a_net_sales=3220.6\nT-22 (Q1): total_revenue=7720.6, diluted_eps_gaap=3.279, segment_a_operating_profit=544.8, segment_a_net_sales=2600.4\nT-21 (Q2): total_revenue=10216.7, diluted_eps_gaap=4.813, segment_a_operating_profit=853.2, segment_a_net_sales=3837.4\nT-20 (Q3): total_revenue=9766.8, diluted_eps_gaap=4.508, segment_a_operating_profit=767.7, segment_a_net_sales=3601.0\nT-19 (Q4): total_revenue=9597.4, diluted_eps_gaap=3.491, segment_a_operating_profit=658.4, segment_a_net_sales=3949.3\nT-18 (Q1): total_revenue=8107.8, diluted_eps_gaap=2.474, segment_a_operating_profit=250.8, segment_a_net_sales=2843.5\nT-17 (Q2): total_revenue=11328.4, diluted_eps_gaap=5.77, segment_a_operating_profit=895.6, segment_a_net_sales=4335.6\nT-16 (Q3): total_revenue=11948.6, diluted_eps_gaap=5.219, segment_a_operating_profit=1095.6, segment_a_net_sales=5165.1\nT-15 (Q4): total_revenue=13163.7, diluted_eps_gaap=6.304, segment_a_operating_profit=1474.3, segment_a_net_sales=6298.8\nT-14 (Q1): total_revenue=10720.0, diluted_eps_gaap=5.55, segment_a_operating_profit=1023.5, segment_a_net_sales=4404.3\nT-13 (Q2): total_revenue=14732.0, diluted_eps_gaap=8.176, segment_a_operating_profit=1838.6, segment_a_net_sales=6627.6\nT-12 (Q3): total_revenue=13388.2, diluted_eps_gaap=8.642, segment_a_operating_profit=1509.9, segment_a_net_sales=5766.7\nT-11 (Q4): total_revenue=13058.6, diluted_eps_gaap=6.999, segment_a_operating_profit=1555.6, segment_a_net_sales=5901.4\nT-10 (Q1): total_revenue=10324.4, diluted_eps_gaap=5.279, segment_a_operating_profit=885.4, segment_a_net_sales=4108.6\nT-9 (Q2): total_revenue=12908.6, diluted_eps_gaap=7.227, segment_a_operating_profit=1398.0, segment_a_net_sales=5576.1\nT-8 (Q3): total_revenue=11143.7, diluted_eps_gaap=5.33, segment_a_operating_profit=984.6, segment_a_net_sales=4320.4\nT-7 (Q4): total_revenue=9441.5, diluted_eps_gaap=3.855, segment_a_operating_profit=556.7, segment_a_net_sales=3647.6\nT-6 (Q1): total_revenue=7208.8, diluted_eps_gaap=2.703, segment_a_operating_profit=286.4, segment_a_net_sales=2598.7\nT-5 (Q2): total_revenue=10814.1, diluted_eps_gaap=5.626, segment_a_operating_profit=972.7, segment_a_net_sales=4431.4\nT-4 (Q3): total_revenue=10182.9, diluted_eps_gaap=4.025, segment_a_operating_profit=491.4, segment_a_net_sales=3620.5\nT-3 (Q4): total_revenue=10501.4, diluted_eps_gaap=3.33, segment_a_operating_profit=511.8, segment_a_net_sales=4016.2\nT-2 (Q1): total_revenue=8143.4, diluted_eps_gaap=2.05, segment_a_operating_profit=117.8, segment_a_net_sales=2680.0\nT-1 (Q2): total_revenue=11327.6, diluted_eps_gaap=5.55, segment_a_operating_profit=598.2, segment_a_net_sales=3815.4\n\nMETHOD\nNo forward guidance is available. Use seasonal structure (same fiscal quarter in prior years), the trailing trend in y/y growth, and the segment's operating leverage visible in the history.\nState your derivation chain briefly. Be a forecaster, not a curve-fitter: prefer the freshest information.\n\nOUTPUT \u2014 reply with EXACTLY one JSON object and nothing else (no code fences):\n{\"predictions\": {\"total_revenue\": <number>, \"diluted_eps_gaap\": <number>, \"segment_a_operating_profit\": <number>}, \"pBeat\": <number between 0 and 1>, \"reasoning\": \"<the chain, max 150 words>\", \"identityGuess\": null}\n",
+ "private": {
+  "company": "deere",
+  "ticker": "DE",
+  "code": "Company T",
+  "period": "FY2026Q3",
+  "live": true,
+  "targetQuarterPosition": 3,
+  "cutoff": "2026-08-16",
+  "scale": 0.8473,
+  "worldview": {
+   "rule": "only rows originally disclosed on or before the cutoff; census months lagged by a +16-day publication model",
+   "corpusDocumentsVisible": 310,
+   "corpusDocumentsExcluded": 0,
+   "newestVisibleDocument": "deere/filings/2026-05-28__de-us-20260528-q2-10q__1055932.md"
+  },
+  "market": {
+   "slug": "de-quarterly-earnings-gaap-eps-08-20-2026-4pt72",
+   "strike": 4.72,
+   "reportDate": "2026-08-20"
+  },
+  "historyQuarters": 28,
+  "censusMonths": 0,
+  "sources": [
+   {
+    "source": "deere/filings/2019-02-15__de-us-20190215-q1-8k__654630.md",
+    "published": "2019-02-15"
+   },
+   {
+    "source": "deere/filings/2019-05-17__de-us-20190517-q2-8k__645299.md",
+    "published": "2019-05-17"
+   },
+   {
+    "source": "deere/filings/2019-11-27__de-us-20191127-q4-8k__469218.md",
+    "published": "2019-11-27"
+   },
+   {
+    "source": "deere/filings/2020-02-21__de-us-20200221-q1-8k__469227.md",
+    "published": "2020-02-21"
+   },
+   {
+    "source": "deere/filings/2020-05-21__de-us-20200521-q2-8k__469475.md",
+    "published": "2020-05-21"
+   },
+   {
+    "source": "deere/filings/2020-08-20__de-us-20200820-q3-8k__105830.md",
+    "published": "2020-08-20"
+   },
+   {
+    "source": "deere/filings/2020-11-25__de-us-20201125-q4-8k__105817.md",
+    "published": "2020-11-25"
+   },
+   {
+    "source": "deere/filings/2021-02-19__de-us-20210219-q1-8k__105842.md",
+    "published": "2021-02-19"
+   },
+   {
+    "source": "deere/filings/2021-08-20__de-us-20210820-q3-8k__105827.md",
+    "published": "2021-08-20"
+   },
+   {
+    "source": "deere/filings/2021-11-24__de-us-20211124-q4-8k__105843.md",
+    "published": "2021-11-24"
+   },
+   {
+    "source": "deere/filings/2022-02-18__de-us-20220218-q1-8k__105812.md",
+    "published": "2022-02-18"
+   },
+   {
+    "source": "deere/filings/2022-05-20__de-us-20220520-q2-8k__105815.md",
+    "published": "2022-05-20"
+   },
+   {
+    "source": "deere/filings/2022-08-19__de-us-20220819-q3-8k__105811.md",
+    "published": "2022-08-19"
+   },
+   {
+    "source": "deere/filings/2022-11-23__de-us-20221123-q4-8k__105825.md",
+    "published": "2022-11-23"
+   },
+   {
+    "source": "deere/filings/2023-02-17__de-us-20230217-q1-8k__105833.md",
+    "published": "2023-02-17"
+   },
+   {
+    "source": "deere/filings/2023-05-19__de-us-20230519-q2-8k__105839.md",
+    "published": "2023-05-19"
+   },
+   {
+    "source": "deere/filings/2023-08-18__de-us-20230818-q3-8k__105829.md",
+    "published": "2023-08-18"
+   },
+   {
+    "source": "deere/filings/2023-11-22__de-us-20231122-q4-8k__105823.md",
+    "published": "2023-11-22"
+   },
+   {
+    "source": "deere/filings/2024-02-15__de-us-20240215-q1-8k__105824.md",
+    "published": "2024-02-15"
+   },
+   {
+    "source": "deere/filings/2024-05-16__de-us-20240516-q2-8k__105819.md",
+    "published": "2024-05-16"
+   },
+   {
+    "source": "deere/filings/2024-08-15__de-us-20240815-q3-8k__105836.md",
+    "published": "2024-08-15"
+   },
+   {
+    "source": "deere/filings/2024-11-21__de-us-20241121-q4-8k__105840.md",
+    "published": "2024-11-21"
+   },
+   {
+    "source": "deere/filings/2025-02-13__de-us-20250213-q1-8k__105841.md",
+    "published": "2025-02-13"
+   },
+   {
+    "source": "deere/filings/2025-05-15__de-us-20250515-q2-8k__105808.md",
+    "published": "2025-05-15"
+   },
+   {
+    "source": "deere/filings/2025-08-15__de-us-20250815-q3-8k__143410.md",
+    "published": "2025-08-15"
+   },
+   {
+    "source": "deere/filings/2025-11-26__de-us-20251126-q4-8k__361233.md",
+    "published": "2025-11-26"
+   },
+   {
+    "source": "deere/filings/2026-02-19__de-us-20260219-q1-8k__603009.md",
+    "published": "2026-02-19"
+   },
+   {
+    "source": "deere/filings/2026-05-21__de-us-20260521-q2-8k-2__1042168.md",
+    "published": "2026-05-21"
+   },
+   {
+    "source": "polymarket strike (scaled), de-quarterly-earnings-gaap-eps-08-20-2026-4pt72",
+    "published": "2026-08-20"
+   }
+  ]
+ }
+}

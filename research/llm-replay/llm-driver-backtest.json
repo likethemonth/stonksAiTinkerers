@@ -43,6 +43,10 @@
         "guess": "Home Depot; target quarter appears to be Q1 FY2026 (ending ~April 2026), with T-20/T-21 matching the +31.0%/+24.5% COVID-era comps"
       },
       {
+        "id": "HD-FY2026Q2-LIVE",
+        "guess": "Home Depot \u2014 target looks like FY2026 Q2 (May\u2013Jul 2026); scale factor ~0.714 matches HD's reported quarters (e.g., T-4 \u2248 $45.3B Q2 FY2025)."
+      },
+      {
         "id": "ADI-FY2025Q1",
         "guess": "Pattern (74% peak adj GM, ~51% peak op margin, downcycle to ~67% GM then recovery, Q1 sequential dip) resembles Analog Devices around FY2022-2026; all numbers derived solely from the provided data."
       },
@@ -63,6 +67,10 @@
         "guess": "Pattern (70-74% gross margin, 40-51% operating margin, 2021-style boom then sharp downcycle then recovery, quarterly EPS/OM/revenue guidance ranges) resembles a cyclical semiconductor company such as KLA or Texas Instruments, but I am not confident; all numbers derived solely from the provided data."
       },
       {
+        "id": "ADI-FY2026Q3-LIVE",
+        "guess": "Analog Devices (ADI), fiscal 2026 Q3 \u2014 recognized from the ~70-74% gross margin, 40-51% operating margin semiconductor cycle pattern and guidance style; all numbers derived only from the provided data."
+      },
+      {
         "id": "DE-FY2025Q1",
         "guess": "Deere & Company \u2014 target looks like fiscal Q1 2025 (quarter ended late January 2025)"
       },
@@ -81,6 +89,10 @@
       {
         "id": "DE-FY2026Q1",
         "guess": "Deere & Co., fiscal Q1 2026 (quarter ending late Jan 2026); scale factor ~0.85 vs USD millions"
+      },
+      {
+        "id": "DE-FY2026Q3-LIVE",
+        "guess": "Deere & Company (John Deere) \u2014 segment A resembles Production & Precision Ag; target looks like fiscal 2026 Q3. All numbers derived solely from the provided data."
       }
     ],
     "suspiciouslyExact": [
@@ -132,6 +144,17 @@
   "companies": {
     "HD": {
       "scale": 0.7137,
+      "live": {
+        "period": "FY2026Q2",
+        "cutoff": "2026-08-16",
+        "predictions": {
+          "net_sales": 48003.3628,
+          "diluted_eps_gaap": 4.4557,
+          "comp_sales_pct": 1.8
+        },
+        "pBeat": 0.4,
+        "strike": 4.73
+      },
       "metrics": {
         "net_sales": {
           "rows": [
@@ -437,6 +460,17 @@
     },
     "ADI": {
       "scale": 1.3159,
+      "live": {
+        "period": "FY2026Q3",
+        "cutoff": "2026-08-16",
+        "predictions": {
+          "revenue": 4008.6633,
+          "adj_eps": 3.4805,
+          "adj_gross_margin_pct": 73.8
+        },
+        "pBeat": 0.88,
+        "strike": 3.33
+      },
       "metrics": {
         "revenue": {
           "rows": [
@@ -688,6 +722,17 @@
     },
     "DE": {
       "scale": 0.8473,
+      "live": {
+        "period": "FY2026Q3",
+        "cutoff": "2026-08-16",
+        "predictions": {
+          "worldwide_net_sales_revenues": 12569.3379,
+          "diluted_eps_gaap": 4.9569,
+          "ppa_operating_profit": 389.4724
+        },
+        "pBeat": 0.68,
+        "strike": 4.72
+      },
       "metrics": {
         "worldwide_net_sales_revenues": {
           "rows": [
