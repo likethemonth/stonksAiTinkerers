@@ -20,7 +20,7 @@ assert.doesNotMatch(js, /playCinematicTrace|manim/i, "fixed cinematic playback m
 assert.match(html, /id="company-tabs"/, "four-company tab bar is missing");
 assert.match(html, /id="universe-list"/, "active-company metric selector is missing");
 assert.match(html, /id="history-chart"/, "five-year history chart is missing");
-assert.doesNotMatch(html, /id="engine-table"|THREE-LENS CONTRIBUTIONS/, "source toggles must not duplicate the methodology controls");
+assert.match(html, /id="engine-table"/, "three-lens contribution controls are missing");
 assert.match(html, /id="method-tabs"/, "Uri method explorer controls are missing");
 assert.doesNotMatch(html, /id="reasoning-tape"|id="coverage-monitor"/, "persistent reasoning and coverage panels must not crowd the graph");
 assert.match(html, /id="cinematic-reason"/, "cinematic reasoning card is missing");
@@ -47,6 +47,8 @@ assert.equal(audit.forecasts.length, 4, "submission audit must cover four compan
 assert.equal((js.match(/^\s+metric\("/gm) || []).length, 12, "terminal must represent twelve current metric forecasts");
 assert.match(js, /fetch\("data\/five-year-backtest\.json"\)/, "audited replay data is not loaded");
 assert.match(js, /function renderMainChart/, "prediction and actual renderer is missing");
+assert.match(js, /function renderSelection\(\)[\s\S]*?renderMainChart\(\);/, "general selection render must not depend on lens-toggle state");
+assert.match(js, /const previousFinal = activeFinal\(item\)[\s\S]*?renderMainChart\(previousFinal\)/, "lens toggles must pass their prior endpoint only within the toggle handler");
 assert.match(js, /class: "prediction-line"/, "dashed historical prediction path is not rendered");
 assert.match(js, /class: `prediction-dot/, "hollow prediction points are not rendered");
 assert.match(js, /validationState = gate \? \(row\.record\.error <= gate\.threshold \? "passed" : "failed"\) : "neutral"/, "period errors are not classified against the selected gate");
@@ -65,8 +67,11 @@ assert.match(js, /Precision weighting scales 1\/σ²/, "meta-forecast calculatio
 assert.match(js, /absolute \/ Math\.max\(Math\.abs\(actual\)/, "missing period errors are not derived from prediction and actual");
 assert.match(js, /function activeFinal/, "interactive meta-forecast recalculation is missing");
 assert.match(js, /function hydrateForecasts/, "Uri forecast explorer is not joined to the themed terminal");
-assert.doesNotMatch(js, /data-engine-toggle|renderEngineTable/, "three-lens contribution buttons must be removed");
-assert.match(js, /const labels = \{ anchor: "ANCHOR", driver: "DRIVER", ml: "ML", market: "MARKET" \}/, "the unified methodology row must contain the four selected methods");
+assert.match(js, /data-engine-toggle|renderEngineTable/, "three-lens contribution buttons must remain interactive");
+assert.match(js, /const methodLabels = \{ ml: "ML", market: "PREDICTION MARKET", expert: "EXPERT", aggregate: "AGGREGATE FINAL" \}/, "the required four-method navigation is missing");
+assert.doesNotMatch(js, /methodLabels[^\n]*anchor|methodLabels[^\n]*driver/, "Anchor and Driver must not remain visible method tabs");
+assert.match(js, /normalizeMethodKey\(key\).*anchor.*driver.*"ml"/, "legacy Anchor and Driver links must resolve to ML");
+assert.match(js, /selectedMethod = "ml"/, "ML must remain the default method");
 assert.match(js, /meta-source-dot/, "three engine forecast nodes are missing");
 assert.match(js, /traceStepIndex/, "click-to-advance reasoning state is missing");
 assert.match(js, /classList\.add\("trace-active"\)/, "trace does not compact the forecast controls while playing");

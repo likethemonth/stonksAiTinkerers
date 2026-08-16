@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=34">
+  <link rel="stylesheet" href="styles.css?v=35">
 </head>
 <body>
   <main class="terminal" id="terminal">
     <header class="function-bar">
-      <a class="terminal-mark" href="#" aria-label="NC · Wall Street Weather home"><b>NC</b><span>Wall Street Weather</span></a>
+      <a class="terminal-mark" href="#" aria-label="Not Consensus home"><b>NC</b><span>Not Consensus</span></a>
       <nav class="function-nav" id="company-tabs" aria-label="Companies"></nav>
       <div class="system-state"><i></i><span id="global-coverage">195 / 240 ACTUALS</span><time>FROZEN · 16 AUG 2026</time></div>
     </header>
@@ -34,6 +34,10 @@
             <section class="quote-panel compact-quote" aria-label="Selected forecast">
               <span>FINAL FORECAST</span><strong id="quote-value">$46.94bn</strong>
               <div class="quote-change"><b id="quote-change">+0.8%</b><span>VS STREET</span></div>
+            </section>
+            <section class="engine-panel compact-engines" aria-label="Forecast source contributions">
+              <header><span>THREE-LENS CONTRIBUTIONS</span><b>CLICK TO TOGGLE</b></header>
+              <div class="engine-table" id="engine-table"></div>
             </section>
           </div>
 
@@ -87,6 +91,6 @@
     </section>
 
   </main>
-  <script src="app.js?v=34"></script>
+  <script src="app.js?v=35"></script>
 </body>
 </html>

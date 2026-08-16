@@ -58,7 +58,7 @@ button { border: 0; cursor: pointer; }
 .trace-trigger:hover, .detail-trigger:hover { border-color: #111; background: #303331; color: #fff; }
 .trace-trigger[hidden] { display: none; }
 
-.forecast-deck { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--line); background: #ece8df; }
+.forecast-deck { display: grid; grid-template-columns: minmax(470px, 1.35fr) 210px minmax(500px, 1fr); gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--line); background: #ece8df; }
 .metric-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
 .metric-tab { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-content: center; align-items: start; gap: 5px 10px; min-width: 0; padding: 10px 13px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.58); text-align: left; transition: .2s ease; }
 .metric-tab:hover { border-color: var(--line-hot); background: #fff; }
@@ -76,6 +76,22 @@ button { border: 0; cursor: pointer; }
 .quote-change { display: flex; align-items: center; gap: 7px; margin-top: 4px; color: #707570; font: 500 10px var(--mono); }
 .quote-change b { color: #242724; font-size: 12px; }
 
+.compact-engines { min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.58); overflow: hidden; }
+.compact-engines > header { display: flex; justify-content: space-between; padding: 7px 11px 5px; color: #656a65; font: 500 9px var(--mono); letter-spacing: .06em; }
+.compact-engines > header b { color: #858a85; font-weight: 500; }
+.compact-engines .engine-table { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.engine-row { display: grid; grid-template-columns: 14px minmax(68px, 1fr) auto; align-items: center; gap: 6px; min-height: 52px; padding: 6px 10px; border-top: 1px solid var(--line); border-right: 1px solid var(--line); background: transparent; text-align: left; }
+.engine-row:last-child { border-right: 0; }
+.engine-row:hover:not(:disabled) { background: rgba(98,184,229,.09); }
+.engine-row.off { opacity: .43; }
+.engine-row.unavailable { cursor: not-allowed; opacity: .34; }
+.engine-switch { color: var(--ice-hot); font-size: 11px; }
+.engine-name { color: #303330; font: 600 12px var(--sans); }
+.engine-value { color: #464a46; font: 500 10px var(--mono); text-align: right; }
+.engine-weight { position: relative; grid-column: 2 / -1; width: 100%; height: 15px; border: 1px solid var(--line); border-radius: 999px; color: #555a55; font: 9px/13px var(--mono); text-align: center; overflow: hidden; }
+.engine-weight i { position: absolute; inset: 0 auto 0 0; width: var(--weight); background: rgba(98,184,229,.2); }
+.engine-weight span { position: relative; }
+
 .terminal.trace-active .forecast-deck { display: none; }
 .terminal.trace-active .market-chart { grid-template-rows: 64px minmax(0, 1fr); }
 
@@ -89,7 +105,7 @@ button { border: 0; cursor: pointer; }
 .legend .actual-key i { height: 1px; background: var(--gold); box-shadow: none; }
 .legend .street-key i { height: 1px; background: transparent; border-top: 1px dashed #646965; box-shadow: none; }
 .method-tabs { display: flex; gap: 5px; }
-.method-tabs button { min-width: 70px; padding: 7px 10px; border: 1px solid transparent; border-radius: 999px; background: transparent; color: #666c67; font: 500 10px var(--mono); }
+.method-tabs button { min-width: 70px; padding: 7px 10px; border: 1px solid transparent; border-radius: 999px; background: transparent; color: #666c67; font: 500 10px var(--mono); white-space: nowrap; }
 .method-tabs button:hover:not(:disabled) { border-color: var(--line); color: #111; }
 .method-tabs button.active { border-color: rgba(47,145,194,.62); background: #e7f5fc; color: #176d99; box-shadow: inset 0 0 0 1px rgba(98,184,229,.18); }
 .method-tabs button.no-series:not(.active) { color: #7f8580; border-style: dashed; }
@@ -197,6 +213,7 @@ button { border: 0; cursor: pointer; }
   .function-bar { grid-template-columns: 220px 1fr; }
   .system-state { display: none; }
   .forecast-deck { grid-template-columns: 1fr 210px; }
+  .compact-engines { grid-column: 1 / -1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
