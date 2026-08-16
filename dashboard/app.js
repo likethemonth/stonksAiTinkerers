@@ -295,6 +295,7 @@ function renderMainChart(previousFinal = null) {
   const probabilityMode = methodMetric?.chartType === "prob";
   const aggregateMode = selectedMethod === "aggregate";
   const noSeries = !aggregateMode && !methodMetric?.series?.length;
+  const showStreetReference = !probabilityMode && !noSeries;
   const history = metricHistory();
   const chartScroll = $("#chart-scroll");
   const chartEmpty = $("#chart-empty");
@@ -320,7 +321,7 @@ function renderMainChart(previousFinal = null) {
   [grid, axes, actualLayer, predictionLayer, streetLayer, lightningLayer, errorLayer, labels].forEach(layer => layer.replaceChildren());
   $("#prediction-key-label").textContent = probabilityMode ? "MARKET P(YES)" : methodMetric?.predLabel || "MODEL / PREDICTION";
   $("#actual-key-label").textContent = probabilityMode ? "RESOLVED OUTCOME" : "ACTUAL";
-  $("#street-key").hidden = !aggregateMode;
+  $("#street-key").hidden = !showStreetReference;
   if (noSeries) {
     const method = company.methods[selectedMethod];
     chartScroll.hidden = true;
@@ -401,7 +402,7 @@ function renderMainChart(previousFinal = null) {
     addSvg(labels, "text", { class: "error-strip-label", x: left, y: errorTop - 10 }, `ABSOLUTE ERROR BY PERIOD · ${errorUnit}`);
   }
   const latestHistoryX = xHistory(history.length - 1);
-  if (aggregateMode) {
+  if (showStreetReference) {
     addSvg(streetLayer, "line", { class: "street-line", x1: left, y1: y(item.street), x2: liveEnd, y2: y(item.street) });
     addSvg(labels, "text", { class: "terminal-label street-label", x: left + 7, y: y(item.street) - 8 }, `STREET ${formatValue(item.street, item.unit, true)}`);
   }

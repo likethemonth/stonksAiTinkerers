@@ -83,7 +83,9 @@ button { border: 0; cursor: pointer; }
 .engine-row { display: grid; grid-template-columns: 12px minmax(68px, 1fr) auto; align-items: center; gap: 4px 6px; min-height: 44px; padding: 4px 8px; border-top: 1px solid var(--line); border-right: 1px solid var(--line); background: transparent; text-align: left; }
 .engine-row:last-child { border-right: 0; }
 .engine-row:hover:not(:disabled) { background: rgba(98,184,229,.09); }
-.engine-row.off { opacity: .43; }
+.engine-row.off { background: rgba(255,255,255,.18); opacity: 1; }
+.engine-row.off .engine-switch, .engine-row.off .engine-name, .engine-row.off .engine-value { color: #747a75; }
+.engine-row.off .engine-weight { opacity: .72; }
 .engine-row.unavailable { cursor: pointer; opacity: .58; }
 .engine-row.unavailable:hover { background: rgba(98,184,229,.09); opacity: .82; }
 .engine-switch { color: var(--ice-hot); font-size: 10px; }

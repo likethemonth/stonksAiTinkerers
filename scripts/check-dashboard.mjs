@@ -70,8 +70,12 @@ assert.match(css, /\.forecast-deck \{[^}]*padding: 6px 10px/s, "forecast strip i
 assert.match(css, /\.engine-row \{[^}]*min-height: 44px/s, "source controls are too tall");
 assert.match(css, /\.cinematic-reason \{[^}]*inset: 0;[^}]*grid-template-rows/s, "Details must cover the complete chart canvas");
 assert.match(css, /\.cinematic-reason\.visible/, "Details reveal state is missing");
-assert.match(css, /\.street-key\[hidden\] \{ display: none; \}/, "Street legend must hide outside Aggregate Final");
+assert.match(css, /\.street-key\[hidden\] \{ display: none; \}/, "Street legend needs a reliable hidden state for incompatible charts");
+assert.match(js, /const showStreetReference = !probabilityMode && !noSeries/, "Street benchmark must remain visible on compatible financial charts");
+assert.match(js, /\$\("#street-key"\)\.hidden = !showStreetReference/, "Street legend must follow benchmark compatibility");
+assert.match(js, /if \(showStreetReference\) \{[\s\S]*class: "street-line"/, "Street benchmark must render outside Aggregate Final");
 assert.match(js, /class: "street-line", x1: left/, "Street benchmark must span the full aggregate chart");
+assert.match(css, /\.engine-row\.off \{[^}]*opacity: 1/s, "disabled source controls must remain visible and reversible");
 assert.match(css, /\.prediction-line \{[^}]*stroke-dasharray: 6 5/s, "prediction series must be dashed");
 assert.match(css, /\.actual-line \{[^}]*stroke: #1c1f1d/s, "actual series must remain near-black");
 assert.match(css, /\.method-tabs button\.active[^}]*background: #e7f5fc/s, "selected method highlight must persist");
