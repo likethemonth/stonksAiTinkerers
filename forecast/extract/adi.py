@@ -68,6 +68,46 @@ _ACTUAL_ROWS: tuple[tuple[str, str, Unit], ...] = (
 #: silently reports revenue of 37.
 _NUMBER_IN_CELL = re.compile(r"\(?-?\d[\d,]*(?:\.\d+)?\)?")
 
+_RESULT_PERIOD_RE = re.compile(
+    r"Results for the (?P<qword>First|Second|Third|Fourth) Quarter of Fiscal Year (?P<fy>\d{4})",
+    re.IGNORECASE,
+)
+_PERIOD_HINT_RE = re.compile(r"Q(?P<quarter>[1-4])\s+(?P<fy>\d{4})", re.IGNORECASE)
+_QUARTER_END_RE = re.compile(
+    r"For the quarterly period ended (?P<month>[A-Z][a-z]+)\s+\d{1,2},\s+(?P<fy>\d{4})",
+    re.IGNORECASE,
+)
+_FISCAL_QUARTER_BY_END_MONTH = {
+    "january": 1,
+    "february": 1,
+    "april": 2,
+    "may": 2,
+    "july": 3,
+    "august": 3,
+    "october": 4,
+    "november": 4,
+}
+_LEGACY_HIGHLIGHTS: tuple[tuple[str, re.Pattern[str], Unit, float], ...] = (
+    (
+        "revenue",
+        re.compile(r"Revenue totaled \$(?P<value>[\d,.]+)\s*(?P<scale>million|billion)", re.IGNORECASE),
+        Unit.USD_M,
+        1.0,
+    ),
+    (
+        "adj_gross_margin_pct",
+        re.compile(r"Non-GAAP gross margin of (?P<value>[\d.]+)%", re.IGNORECASE),
+        Unit.PERCENT,
+        1.0,
+    ),
+    (
+        "adj_eps",
+        re.compile(r"Non-GAAP diluted EPS of \$(?P<value>[\d.]+)", re.IGNORECASE),
+        Unit.USD_PER_SHARE,
+        1.0,
+    ),
+)
+
 #: Plausible magnitude per unit, used to catch a thousands/millions scale slip.
 _MAGNITUDE: dict[Unit, tuple[float, float]] = {
     Unit.USD_M: (500.0, 20_000.0),
@@ -141,6 +181,55 @@ def _rescale(value: float, units: Unit) -> tuple[float | None, str | None]:
     return value, None
 
 
+def _reported_period(doc: Document) -> Period | None:
+    match = _QUARTER_END_RE.search(doc.text[:5_000])
+    if match is not None:
+        quarter = _FISCAL_QUARTER_BY_END_MONTH.get(match.group("month").lower())
+        if quarter is not None:
+            return Period(year=int(match.group("fy")), quarter=quarter)
+    match = _PERIOD_HINT_RE.search(doc.period_hint.strip())
+    if match is not None:
+        return Period(year=int(match.group("fy")), quarter=int(match.group("quarter")))
+    match = _RESULT_PERIOD_RE.search(doc.text)
+    if match is None:
+        return None
+    return Period(
+        year=int(match.group("fy")),
+        quarter=QUARTER_WORDS[match.group("qword").lower()],
+    )
+
+
+def _legacy_highlight_actuals(doc: Document, period: Period | None) -> list[MetricObservation]:
+    """Challenge actuals from the pre-2021 earnings-release highlight prose."""
+    if period is None:
+        return []
+    rows: list[MetricObservation] = []
+    for metric_key, regex, units, multiplier in _LEGACY_HIGHLIGHTS:
+        match = regex.search(doc.text)
+        if match is None:
+            continue
+        value = float(match.group("value").replace(",", "")) * multiplier
+        if metric_key == "revenue" and match.groupdict().get("scale") == "billion":
+            value *= 1000.0
+        rows.append(
+            MetricObservation(
+                company=Company.ADI,
+                metric_key=metric_key,
+                period=period,
+                value=value,
+                units=units,
+                kind=Kind.ACTUAL,
+                as_of=doc.published_at,
+                source_file=doc.rel_path,
+                doc_type=doc.doc_type,
+                excerpt=match.group(0),
+                extractor="adi.legacy_result_highlights",
+                note="legacy earnings-release highlight",
+            )
+        )
+    return rows
+
+
 def _guidance(doc: Document) -> list[MetricObservation]:
     """GUIDE_MID/LOW/HIGH rows from the outlook sentence."""
     match = _OUTLOOK_RE.search(doc.text)
@@ -191,7 +280,7 @@ def _guidance(doc: Document) -> list[MetricObservation]:
 
 
 def _actuals(
-    doc: Document, guided: Period | None, rejected: list[str]
+    doc: Document, period: Period | None, rejected: list[str]
 ) -> list[MetricObservation]:
     """ACTUAL rows from the highlights table.
 
@@ -200,9 +289,8 @@ def _actuals(
     Rows that fail the magnitude check are appended to `rejected` so the run log
     records what was thrown away and why.
     """
-    if guided is None:
+    if period is None:
         return []
-    period = _prev_quarter(guided)
 
     rows: list[MetricObservation] = []
     for key, label, units in _ACTUAL_ROWS:
@@ -251,8 +339,10 @@ def extract(
             continue
         guidance = _guidance(doc)
         guided = guidance[0].period if guidance else None
+        reported = _prev_quarter(guided) if guided is not None else _reported_period(doc)
         rows.extend(guidance)
-        rows.extend(_actuals(doc, guided, sink))
+        rows.extend(_actuals(doc, reported, sink))
+        rows.extend(_legacy_highlight_actuals(doc, reported))
     return rows
 
 

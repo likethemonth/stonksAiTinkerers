@@ -46,11 +46,11 @@ def test_five_year_denominator_and_actual_coverage(replay: dict) -> None:
 def test_full_replay_uses_every_recoverable_filing_period(full_replay: dict) -> None:
     assert full_replay["meta"]["windowMode"] == "full_filing_history"
     assert full_replay["meta"]["quartersPerCompany"] is None
-    assert full_replay["summary"]["requestedCompanyPeriods"] == 139
-    assert full_replay["summary"]["requestedMetricSlots"] == 417
-    assert full_replay["summary"]["actualAvailable"] == 305
-    assert full_replay["summary"]["unavailable"] == 112
-    assert full_replay["summary"]["evaluated"] == 285
+    assert full_replay["summary"]["requestedCompanyPeriods"] == 194
+    assert full_replay["summary"]["requestedMetricSlots"] == 582
+    assert full_replay["summary"]["actualAvailable"] == 416
+    assert full_replay["summary"]["unavailable"] == 166
+    assert full_replay["summary"]["evaluated"] == 396
 
     spans = {
         company["ticker"]: (
@@ -62,16 +62,26 @@ def test_full_replay_uses_every_recoverable_filing_period(full_replay: dict) -> 
     }
     assert spans == {
         "HD": ("FY2013Q1", "FY2026Q1", 53),
-        "ADI": ("FY2020Q4", "FY2026Q2", 23),
-        "LSE:HAS": ("FY2018Q4", "FY2025Q4", 29),
-        "DE": ("FY2018Q1", "FY2026Q2", 34),
+        "ADI": ("FY2015Q1", "FY2026Q2", 46),
+        "LSE:HAS": ("FY2014Q4", "FY2025Q4", 45),
+        "DE": ("FY2014Q1", "FY2026Q2", 50),
     }
+
+    earliest = {
+        company["ticker"]: company["periods"][0]
+        for company in full_replay["companies"]
+    }
+    assert earliest["ADI"]["metrics"][1]["actual"]["sourceFile"].endswith(
+        "2015-02-17__adi-us-20150217-q1-8k__486332.md"
+    )
+    assert earliest["LSE:HAS"]["metrics"][0]["actual"]["value"] == pytest.approx(724.9)
+    assert earliest["DE"]["metrics"][0]["actual"]["value"] == pytest.approx(7654.0)
 
 
 def test_full_replay_evaluated_rows_remain_point_in_time(full_replay: dict) -> None:
     corpus = Path("challenge/offline-data")
     evaluated = [row for row in metric_rows(full_replay) if row["delta"] is not None]
-    assert len(evaluated) == 285
+    assert len(evaluated) == 396
     for row in evaluated:
         cutoff = date.fromisoformat(row["forecast"]["trace"]["cutoff"])
         actual_date = date.fromisoformat(row["actual"]["publishedAt"])

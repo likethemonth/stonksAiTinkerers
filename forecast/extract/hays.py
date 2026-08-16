@@ -53,7 +53,7 @@ _ROWS: tuple[tuple[str, str, Unit], ...] = (
     ("net_fees", r"Net fees", Unit.GBP_M),
     (
         "pre_exc_operating_profit",
-        r"(?:Operating profit \(before exceptional items\)|Pre-exceptional operating profit|Operating profit)",
+        r"(?:Operating profit \(before exceptional items\)|Pre-exceptional operating profit|Operating profit from continuing operations|Operating profit)",
         Unit.GBP_M,
     ),
     (
@@ -148,6 +148,28 @@ _DIVISION_HEADING_RE = re.compile(
 
 def _group_section(text: str) -> str:
     """The part of an annual-results document that describes the group."""
+    summary = re.search(
+        r"^#{1,4}\s+SUMMARY INCOME STATEMENT\s*$",
+        text,
+        re.IGNORECASE | re.MULTILINE,
+    )
+    if summary is not None:
+        tail = text[summary.end() :]
+        next_heading = re.search(r"^#{1,4}\s+", tail, re.MULTILINE)
+        return tail[: next_heading.start()] if next_heading else tail
+    operating_sections = list(
+        re.finditer(
+            r"^#{1,4}\s+Operating performance\s*$",
+            text,
+            re.IGNORECASE | re.MULTILINE,
+        )
+    )
+    for heading in reversed(operating_sections):
+        tail = text[heading.end() :]
+        next_heading = re.search(r"^#{1,4}\s+", tail, re.MULTILINE)
+        section = tail[: next_heading.start()] if next_heading else tail
+        if "Basic earnings per share" in section and "Net fees" in section:
+            return section
     heading = _DIVISION_HEADING_RE.search(text)
     return text[: heading.start()] if heading else text
 
@@ -165,7 +187,10 @@ def _annual_results(doc: Document, rejected: list[str]) -> list[MetricObservatio
 
     rows: list[MetricObservation] = []
     for metric_key, label_pattern, units in _ROWS:
-        pattern = re.compile(rf"^\|\s*{label_pattern}\s*(?:\{{?\(\d\)\}}?)?\s*\|")
+        pattern = re.compile(
+            rf"^\|\s*{label_pattern}\s*(?:\{{?\([^|]*\)\}}?)?\s*\|",
+            re.IGNORECASE,
+        )
         line = next(
             (ln for ln in group_text.splitlines() if pattern.match(ln.strip())), None
         )
