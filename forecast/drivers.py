@@ -87,6 +87,7 @@ def _explain(terms: list[Term], total: float, sigma: float) -> str:
 
 #: Q3 FY2025 bases the chains grow from (corpus 8-K, 2025-08-15).
 DE_Q3_25 = {"ppa_sales": 4273.0, "ppa_op": 580.0, "total_revs": 12018.0}
+DE_Q2_26 = "deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md"
 
 
 def deere_ppa(observations: list[dict]) -> tuple[Estimate, dict[str, float]]:
@@ -143,6 +144,66 @@ def deere_ppa(observations: list[dict]) -> tuple[Estimate, dict[str, float]]:
         citations=[jul_tr["source"], jun_co["source"], apr["source"]],
     )
     return est, {"ppa_sales": sales, "ppa_sales_sigma": sales_sigma}
+
+
+def deere_group_and_eps(
+    observations: list[dict], ppa: Estimate, ppa_detail: dict[str, float]
+) -> tuple[Estimate, Estimate]:
+    """Complete the Deere driver chain from segment sales to group revenue/EPS."""
+    aem = _obs(observations, "aem_us_tractors_jul")
+    ppa_sales = ppa_detail["ppa_sales"]
+    ppa_sales_sigma = ppa_detail["ppa_sales_sigma"]
+    # Q3 FY25 bases moved by the explicit chain documented in Driver Run 1.
+    sat_sales, sat_sigma = 3_175.0, 250.0
+    cf_sales, cf_sigma = 3_622.0, 300.0
+    finance_other, finance_sigma = 1_630.0, 50.0
+    revenue = ppa_sales + sat_sales + cf_sales + finance_other
+    revenue_sigma = (
+        ppa_sales_sigma**2 + sat_sigma**2 + cf_sigma**2 + finance_sigma**2
+    ) ** 0.5
+    citations = [aem["source"], DE_Q2_26]
+    revenue_estimate = Estimate(
+        estimator="deere_segment_driver_chain",
+        value=round(revenue),
+        sigma=round(revenue_sigma, 1),
+        n_observations=5,
+        anchor=DE_Q3_25["total_revs"],
+        correction=round(revenue - DE_Q3_25["total_revs"]),
+        reasoning=(
+            f"Segment driver chain: PPA {ppa_sales:.0f}, Small Ag & Turf "
+            f"{sat_sales:.0f}, Construction & Forestry {cf_sales:.0f}, and "
+            f"Financial Services/other {finance_other:.0f} -> group revenue "
+            f"{revenue:.0f}. PPA uses the AEM unit chain; other segments use "
+            "Q3 FY25 bases, Q2 run-rate residuals, and the May segment outlook."
+        ),
+        citations=citations,
+    )
+
+    sat_op = sat_sales * 0.16
+    cf_op = cf_sales * 0.11
+    segment_op = ppa.value + sat_op + cf_op
+    net_income = (segment_op * 0.755 + 215.0) * 1.05
+    shares = 269.8
+    eps = net_income / shares
+    segment_sigma = (ppa.sigma**2 + 55.0**2 + 50.0**2) ** 0.5
+    net_income_sigma = ((segment_sigma * 0.755) ** 2 + 45.0**2) ** 0.5 * 1.05
+    eps_estimate = Estimate(
+        estimator="deere_driver_eps_bridge",
+        value=round(eps, 3),
+        sigma=round(net_income_sigma / shares, 3),
+        n_observations=5,
+        anchor=segment_op,
+        correction=1.05,
+        reasoning=(
+            f"Driver segment operating profit {segment_op:.0f} (PPA {ppa.value:.0f}, "
+            f"SAT {sat_op:.0f}, C&F {cf_op:.0f}) x 75.5% after-tax, plus "
+            f"Financial Services net income 215, x 1.05 corporate bridge = "
+            f"net income {net_income:.0f}; divided by {shares:.1f}m shares -> "
+            f"GAAP EPS {eps:.2f}."
+        ),
+        citations=citations,
+    )
+    return revenue_estimate, eps_estimate
 
 
 # --------------------------------------------------------------------------- #

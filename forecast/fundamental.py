@@ -36,7 +36,9 @@ def enrich_with_drivers(
     for metric_spec in submitted_specs(company):
         current = by_label[metric_spec.label or ""]
         driver = driver_by_target.get((company, metric_spec.key))
-        if driver is None:
+        if driver is None or any(
+            estimate.estimator == "driver_nowcast" for estimate in current.estimates
+        ):
             result.append(current)
             continue
         core = Estimate(

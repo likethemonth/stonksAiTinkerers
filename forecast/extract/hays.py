@@ -105,6 +105,12 @@ _ACTUAL_BASIS_RE = re.compile(
     re.IGNORECASE,
 )
 
+_DISPOSED_FEES_RE = re.compile(
+    r"contributed\s+c\.\s*£\s*(?P<value>\d+(?:\.\d+)?)\s*m\s+to\s+reported\s+"
+    r"group\s+net\s+fees\s+in\s+FY\s*(?P<fy>\d{2,4})",
+    re.IGNORECASE,
+)
+
 _MAGNITUDE: dict[Unit, tuple[float, float]] = {
     Unit.GBP_M: (1.0, 5_000.0),
     Unit.GBP_PENCE: (-100.0, 100.0),
@@ -201,6 +207,63 @@ def _annual_results(doc: Document, rejected: list[str]) -> list[MetricObservatio
                 )
             )
     return rows
+
+
+def _half_year_net_fees(doc: Document) -> list[MetricObservation]:
+    """H1 reported net fees for the current and comparative fiscal years."""
+    if doc.published_at.month not in {2, 3} or "H1" not in doc.text[:2_000]:
+        return []
+    fy = doc.published_at.year
+    group_text = _group_section(doc.text)
+    pattern = re.compile(r"^\|\s*Net fees\s*(?:\{?\(\d\)\}?)?\s*\|", re.IGNORECASE)
+    line = next((ln for ln in group_text.splitlines() if pattern.match(ln.strip())), None)
+    if line is None:
+        return []
+    figures: list[float] = []
+    for cell in _row_cells(line)[1:3]:
+        token = re.search(rf"\(?{_NUM}\)?", cell.replace(" ", ""))
+        if token is None:
+            return []
+        figures.append(_clean_number(token.group(0)))
+    return [
+        MetricObservation(
+            company=Company.HAS,
+            metric_key="net_fees_h1",
+            period=Period(year=fy - offset, quarter=None),
+            value=value,
+            units=Unit.GBP_M,
+            kind=Kind.ACTUAL,
+            as_of=doc.published_at,
+            source_file=doc.rel_path,
+            doc_type=doc.doc_type,
+            excerpt=line,
+            extractor="hays.half_year_net_fees",
+            note=None if offset == 0 else "prior-year H1 comparative",
+        )
+        for offset, value in enumerate(figures)
+    ]
+
+
+def _disposed_country_fees(doc: Document) -> list[MetricObservation]:
+    match = _DISPOSED_FEES_RE.search(doc.text)
+    if match is None:
+        return []
+    return [
+        MetricObservation(
+            company=Company.HAS,
+            metric_key="disposed_country_net_fees",
+            period=Period(year=_normalise_fy(match.group("fy")), quarter=None),
+            value=float(match.group("value")),
+            units=Unit.GBP_M,
+            kind=Kind.ACTUAL,
+            as_of=doc.published_at,
+            source_file=doc.rel_path,
+            doc_type=doc.doc_type,
+            excerpt=re.sub(r"\s+", " ", match.group(0)),
+            extractor="hays.disposed_country_fees",
+            note="removed to align the challenge target with continuing operations",
+        )
+    ]
 
 
 def _consensus(doc: Document) -> list[MetricObservation]:
@@ -367,6 +430,8 @@ def extract(
         if doc.doc_type is not DocType.FILING:
             continue
         rows.extend(_annual_results(doc, sink))
+        rows.extend(_half_year_net_fees(doc))
+        rows.extend(_disposed_country_fees(doc))
         rows.extend(_consensus(doc))
         rows.extend(_net_fee_growth(doc))
     return _consolidate(rows, sink)

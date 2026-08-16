@@ -260,6 +260,83 @@ def growth_on_prior_actual(
     )
 
 
+def hays_full_year_net_fees(
+    observations: list[MetricObservation], *, period: Period
+) -> Estimate | None:
+    """Reconstruct FY fees from reported H1 and the two H2 trading updates.
+
+    A quarterly growth rate cannot be applied to a full-year base. The prior
+    implementation did exactly that with Q4's -4%, producing GBP933.5m. This
+    reconstruction uses the reported H1 level, derives the prior H2 base from
+    FY25 less H1 FY25, applies the separately disclosed Q3/Q4 actual-basis rates,
+    and removes the six disposed countries from continuing operations.
+    """
+    prior = period.prior_year()
+
+    def actual(key: str, target: Period) -> MetricObservation | None:
+        return next(
+            (
+                row
+                for row in observations
+                if row.metric_key == key
+                and row.period == target
+                and row.kind is Kind.ACTUAL
+            ),
+            None,
+        )
+
+    h1 = actual("net_fees_h1", period)
+    prior_h1 = actual("net_fees_h1", prior)
+    prior_fy = actual("net_fees", prior)
+    disposed = actual("disposed_country_net_fees", period)
+    growth_by_month: dict[int, MetricObservation] = {}
+    for row in sorted(observations, key=lambda item: item.as_of):
+        if (
+            row.metric_key == "net_fees_growth_actual_pct"
+            and row.period == period
+            and row.kind is Kind.GROWTH_PCT
+            and row.as_of.month in {4, 7}
+        ):
+            growth_by_month[row.as_of.month] = row
+    growth = [growth_by_month[month] for month in (4, 7) if month in growth_by_month]
+    if not all((h1, prior_h1, prior_fy, disposed)) or len(growth) < 2:
+        return None
+    assert h1 and prior_h1 and prior_fy and disposed
+    q3, q4 = growth[-2], growth[-1]
+    prior_h2 = prior_fy.value - prior_h1.value
+    h2_growth = (q3.value + q4.value) / 2.0
+    h2 = prior_h2 * (1.0 + h2_growth / 100.0)
+    value = h1.value + h2 - disposed.value
+    growth_dispersion = abs(q3.value - q4.value) / 2.0
+    sigma = max(
+        (prior_h2 * growth_dispersion / 100.0) ** 2 + (disposed.value * 0.15) ** 2,
+        1.0,
+    ) ** 0.5
+    return Estimate(
+        estimator="hays_half_year_reconstruction",
+        value=value,
+        sigma=sigma,
+        n_observations=5,
+        anchor=prior_h2,
+        correction=h2_growth,
+        reasoning=(
+            f"FY26 H1 net fees were {h1.value:.1f}. FY25 H2 was FY25 "
+            f"{prior_fy.value:.1f} less H1 {prior_h1.value:.1f} = {prior_h2:.1f}. "
+            f"Applying Q3 actual-basis growth {q3.value:+.1f}% and Q4 "
+            f"{q4.value:+.1f}% at their midpoint gives H2 {h2:.1f}; subtract "
+            f"{disposed.value:.1f} from disposed countries to align continuing "
+            f"operations, producing {value:.1f}."
+        ),
+        citations=[
+            h1.source_file,
+            prior_fy.source_file,
+            q3.source_file,
+            q4.source_file,
+            disposed.source_file,
+        ],
+    )
+
+
 def ratio_on_prior_actual(
     observations: list[MetricObservation],
     *,

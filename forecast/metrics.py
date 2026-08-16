@@ -85,6 +85,10 @@ _SPECS: tuple[MetricSpec, ...] = (
                description="Like-for-like YoY; the quarterly trading statements' headline."),
     MetricSpec("net_fees_growth_actual_pct", Company.HAS, Unit.PERCENT,
                description="Actual (reported) YoY growth — what converts FY25 to FY26."),
+    MetricSpec("net_fees_h1", Company.HAS, Unit.GBP_M,
+               description="Reported first-half net fees; base for FY reconstruction."),
+    MetricSpec("disposed_country_net_fees", Company.HAS, Unit.GBP_M,
+               description="FY fees from countries removed from continuing operations."),
 
     # ---- Deere & Company · FY2026Q3 ---------------------------------------- #
     MetricSpec(

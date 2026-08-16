@@ -28,13 +28,15 @@ from forecast.estimators import (
     consensus_anchor,
     growth_on_prior_actual,
     guidance_realisation,
+    hays_full_year_net_fees,
     quarter_vs_year_offset,
     ratio_on_prior_actual,
     reconcile,
     seasonal_share,
     regression_bridge,
 )
-from forecast.extract import adi, hays, home_depot
+from forecast.extract import adi, deere, hays, home_depot
+from forecast import drivers
 from forecast.metrics import (
     display_name,
     output_file,
@@ -163,13 +165,15 @@ def _forecast_hays(as_of: date | None, log: Log) -> list[MetricForecast]:
     metrics: list[MetricForecast] = []
 
     # Net fees: prior-year actual moved by the disclosed reported-basis growth.
-    fees = growth_on_prior_actual(
-        observations,
-        company=Company.HAS,
-        metric_key="net_fees",
-        growth_key="net_fees_growth_actual_pct",
-        period=period,
-    )
+    fees = hays_full_year_net_fees(observations, period=period)
+    if fees is None:
+        fees = growth_on_prior_actual(
+            observations,
+            company=Company.HAS,
+            metric_key="net_fees",
+            growth_key="net_fees_growth_actual_pct",
+            period=period,
+        )
     if fees is None:
         raise RuntimeError("Hays: no net fee growth or prior-year base found")
     spec = specs["Net fees"]
@@ -317,12 +321,67 @@ def _forecast_hd(as_of: date | None, log: Log) -> list[MetricForecast]:
     return sorted(metrics, key=lambda m: order[m.label])
 
 
+def _forecast_deere(as_of: date | None, log: Log) -> list[MetricForecast]:
+    """Deere: extracted history plus the post-guidance segment driver chain."""
+    docs = load(Company.DE, as_of=as_of)
+    rejected: list[str] = []
+    observations = deere.extract(docs, rejected)
+    write_observations(Company.DE, observations, as_of=as_of, rejected=rejected)
+    log(f"  {len(docs)} docs -> {len(observations)} observations, {len(rejected)} rejected")
+
+    try:
+        _, driver_observations = drivers.load_observations(as_of)
+    except FileNotFoundError:
+        log("  no dated driver snapshot at cutoff; using cited Deere baselines")
+        return _forecast_baseline(Company.DE, log)
+    ppa_driver, detail = drivers.deere_ppa(driver_observations)
+    revenue_driver, eps_driver = drivers.deere_group_and_eps(
+        driver_observations, ppa_driver, detail
+    )
+
+    ppa_sales = Estimate(
+        estimator="deere_ppa_sales_driver",
+        value=detail["ppa_sales"],
+        sigma=detail["ppa_sales_sigma"],
+        n_observations=ppa_driver.n_observations,
+        reasoning="PPA sales output of the AEM units-to-dollars chain.",
+        citations=ppa_driver.citations,
+    )
+    ppa_history = regression_bridge(
+        observations,
+        company=Company.DE,
+        target_key="ppa_operating_profit",
+        source_key="ppa_net_sales",
+        source_estimate=ppa_sales,
+        lookback=12,
+    )
+    specs = {item.label: item for item in submitted_specs(Company.DE)}
+    return [
+        reconcile(
+            "Worldwide net sales and revenues",
+            specs["Worldwide net sales and revenues"].units,
+            [revenue_driver],
+        ),
+        reconcile(
+            "Diluted EPS (GAAP)",
+            specs["Diluted EPS (GAAP)"].units,
+            [eps_driver],
+        ),
+        reconcile(
+            "Production & Precision Ag operating profit",
+            specs["Production & Precision Ag operating profit"].units,
+            [estimate for estimate in (ppa_driver, ppa_history) if estimate is not None],
+        ),
+    ]
+
+
 #: Companies with a real extractor and estimators. Anything absent falls back to
 #: the cited provisional baselines. Defined after the functions it references.
 FORECASTERS = {
     Company.HD: _forecast_hd,
     Company.ADI: _forecast_adi,
     Company.HAS: _forecast_hays,
+    Company.DE: _forecast_deere,
 }
 
 
