@@ -1,0 +1,362 @@
+{
+ "generatedBy": "ML lens (scikit-learn) - forecast/ml_hd.py",
+ "asOf": "2026-08-16",
+ "trainData": "data/observations/home-depot.json (reported actuals only)",
+ "covid_exclusion": "targets in FY2020Q1..FY2021Q4 excluded from training/CV",
+ "validation": {
+  "net_sales": {
+   "yoy": {
+    "framing": "yoy",
+    "n_rows": 29,
+    "n_train": 24,
+    "cv_mae": {
+     "ridge": 0.0567,
+     "random_forest": 0.0555,
+     "gradient_boosting": 0.0542
+    },
+    "selected_model": "gradient_boosting",
+    "holdout": [
+     {
+      "period": "FY2025Q1",
+      "actual": 39856.0,
+      "predicted": 40334.89,
+      "naive": 38160.38,
+      "ape_pct": 1.2
+     },
+     {
+      "period": "FY2025Q2",
+      "actual": 45277.0,
+      "predicted": 47131.53,
+      "naive": 46502.7,
+      "ape_pct": 4.1
+     },
+     {
+      "period": "FY2025Q3",
+      "actual": 41352.0,
+      "predicted": 42626.17,
+      "naive": 43745.53,
+      "ape_pct": 3.08
+     },
+     {
+      "period": "FY2025Q4",
+      "actual": 38198.0,
+      "predicted": 39249.23,
+      "naive": 42807.76,
+      "ape_pct": 2.75
+     },
+     {
+      "period": "FY2026Q1",
+      "actual": 41765.0,
+      "predicted": 37976.61,
+      "naive": 41185.0,
+      "ape_pct": 9.07
+     }
+    ],
+    "holdout_mape_pct": 4.04,
+    "seasonal_naive_mape_pct": 5.24,
+    "beats_naive": true
+   },
+   "seq": {
+    "framing": "seq",
+    "n_rows": 26,
+    "n_train": 21,
+    "cv_mae": {
+     "ridge": 0.0364,
+     "random_forest": 0.0329,
+     "gradient_boosting": 0.0335
+    },
+    "selected_model": "random_forest",
+    "holdout": [
+     {
+      "period": "FY2025Q1",
+      "actual": 39856.0,
+      "predicted": 39377.64,
+      "naive": 41566.73,
+      "ape_pct": 1.2
+     },
+     {
+      "period": "FY2025Q2",
+      "actual": 45277.0,
+      "predicted": 46758.59,
+      "naive": 46591.08,
+      "ape_pct": 3.27
+     },
+     {
+      "period": "FY2025Q3",
+      "actual": 41352.0,
+      "predicted": 42499.6,
+      "naive": 39788.11,
+      "ape_pct": 2.78
+     },
+     {
+      "period": "FY2025Q4",
+      "actual": 38198.0,
+      "predicted": 39432.48,
+      "naive": 39562.03,
+      "ape_pct": 3.23
+     },
+     {
+      "period": "FY2026Q1",
+      "actual": 41765.0,
+      "predicted": 39388.88,
+      "naive": 39944.91,
+      "ape_pct": 5.69
+     }
+    ],
+    "holdout_mape_pct": 3.23,
+    "seasonal_naive_mape_pct": 3.78,
+    "beats_naive": true
+   },
+   "q2_walk_forward": {
+    "model": "random_forest",
+    "n_walk_forward": 3,
+    "holdout": [
+     {
+      "period": "FY2023Q2",
+      "actual": 42916.0,
+      "predicted": 42989.1,
+      "naive": 43552.88,
+      "ape_pct": 0.17
+     },
+     {
+      "period": "FY2024Q2",
+      "actual": 43175.0,
+      "predicted": 42551.27,
+      "naive": 42462.95,
+      "ape_pct": 1.44
+     },
+     {
+      "period": "FY2025Q2",
+      "actual": 45277.0,
+      "predicted": 46771.8,
+      "naive": 46591.08,
+      "ape_pct": 3.3
+     }
+    ],
+    "mape_pct": 1.64,
+    "naive_mape_pct": 2.01,
+    "beats_naive": true
+   }
+  },
+  "diluted_eps_gaap": {
+   "yoy": {
+    "framing": "yoy",
+    "n_rows": 29,
+    "n_train": 24,
+    "cv_mae": {
+     "ridge": 0.1845,
+     "random_forest": 0.1453,
+     "gradient_boosting": 0.142
+    },
+    "selected_model": "gradient_boosting",
+    "holdout": [
+     {
+      "period": "FY2025Q1",
+      "actual": 3.45,
+      "predicted": 3.77,
+      "naive": 3.61,
+      "ape_pct": 9.38
+     },
+     {
+      "period": "FY2025Q2",
+      "actual": 4.58,
+      "predicted": 4.41,
+      "naive": 4.57,
+      "ape_pct": 3.81
+     },
+     {
+      "period": "FY2025Q3",
+      "actual": 3.62,
+      "predicted": 3.55,
+      "naive": 3.65,
+      "ape_pct": 1.81
+     },
+     {
+      "period": "FY2025Q4",
+      "actual": 2.58,
+      "predicted": 2.88,
+      "naive": 3.02,
+      "ape_pct": 11.56
+     },
+     {
+      "period": "FY2026Q1",
+      "actual": 3.3,
+      "predicted": 3.15,
+      "naive": 3.27,
+      "ape_pct": 4.47
+     }
+    ],
+    "holdout_mape_pct": 6.21,
+    "seasonal_naive_mape_pct": 4.76,
+    "beats_naive": false
+   },
+   "seq": {
+    "framing": "seq",
+    "n_rows": 26,
+    "n_train": 21,
+    "cv_mae": {
+     "ridge": 0.0712,
+     "random_forest": 0.0843,
+     "gradient_boosting": 0.087
+    },
+    "selected_model": "ridge",
+    "holdout": [
+     {
+      "period": "FY2025Q1",
+      "actual": 3.45,
+      "predicted": 3.6,
+      "naive": 3.72,
+      "ape_pct": 4.23
+     },
+     {
+      "period": "FY2025Q2",
+      "actual": 4.58,
+      "predicted": 4.52,
+      "naive": 4.65,
+      "ape_pct": 1.24
+     },
+     {
+      "period": "FY2025Q3",
+      "actual": 3.62,
+      "predicted": 3.73,
+      "naive": 3.72,
+      "ape_pct": 3.16
+     },
+     {
+      "period": "FY2025Q4",
+      "actual": 2.58,
+      "predicted": 3.01,
+      "naive": 3.0,
+      "ape_pct": 16.56
+     },
+     {
+      "period": "FY2026Q1",
+      "actual": 3.3,
+      "predicted": 2.94,
+      "naive": 3.08,
+      "ape_pct": 10.86
+     }
+    ],
+    "holdout_mape_pct": 7.21,
+    "seasonal_naive_mape_pct": 6.98,
+    "beats_naive": false
+   },
+   "q2_walk_forward": {
+    "model": "ridge",
+    "n_walk_forward": 3,
+    "holdout": [
+     {
+      "period": "FY2023Q2",
+      "actual": 4.65,
+      "predicted": 5.07,
+      "naive": 5.23,
+      "ape_pct": 9.05
+     },
+     {
+      "period": "FY2024Q2",
+      "actual": 4.6,
+      "predicted": 4.7,
+      "naive": 4.93,
+      "ape_pct": 2.22
+     },
+     {
+      "period": "FY2025Q2",
+      "actual": 4.58,
+      "predicted": 4.52,
+      "naive": 4.65,
+      "ape_pct": 1.26
+     }
+    ],
+    "mape_pct": 4.17,
+    "naive_mape_pct": 7.0,
+    "beats_naive": true
+   }
+  },
+  "comp_sales_pct": {
+   "n_rows": 11,
+   "holdout": [
+    {
+     "period": "FY2025Q3",
+     "actual": 0.2,
+     "predicted": 0.01
+    },
+    {
+     "period": "FY2025Q4",
+     "actual": 0.4,
+     "predicted": -0.5
+    },
+    {
+     "period": "FY2026Q1",
+     "actual": 0.6,
+     "predicted": -0.13
+    }
+   ],
+   "holdout_mae_pp": 0.61,
+   "prediction_period": "FY2026Q2",
+   "prediction": 0.02,
+   "passes_gate": true
+  }
+ },
+ "prediction": {
+  "net_sales": {
+   "period": "FY2026Q2",
+   "value": 47427.0,
+   "raw_model_output": 1.1356,
+   "framing": "seq",
+   "model": "random_forest",
+   "caveats": [
+    "task-matched walk-forward has only 3 samples",
+    "all-transition holdout MAPE was 3.23% (fails the gate)",
+    "history-only: blind to GMS accretion and 2026 demand data"
+   ]
+  },
+  "diluted_eps_gaap": {
+   "period": "FY2026Q2",
+   "value": 4.4,
+   "raw_model_output": 1.3279,
+   "framing": "seq",
+   "model": "ridge",
+   "caveats": [
+    "task-matched walk-forward has only 3 samples",
+    "all-transition holdout MAPE was 7.21% (fails the gate)",
+    "history-only: blind to GMS accretion and 2026 demand data"
+   ]
+  },
+  "comp_sales_pct": {
+   "period": "FY2026Q2",
+   "value": 0.02,
+   "model": "ridge[lag1,lag4]",
+   "caveat": "n=15 series, history-only; carries no 2026 category data"
+  },
+  "adj_eps_derived": {
+   "period": "FY2026Q2",
+   "value": 4.52,
+   "note": "GAAP ML prediction + 0.12 observed adj-GAAP wedge; NOT a direct ML output"
+  }
+ },
+ "gates": {
+  "net_sales": {
+   "basis": "q2_walk_forward",
+   "model": "random_forest",
+   "mape_pct": 1.64,
+   "gate_mape_pct": 2.0,
+   "beats_naive": true,
+   "all_transition_mape_pct": 3.23,
+   "passed": true
+  },
+  "diluted_eps_gaap": {
+   "basis": "q2_walk_forward",
+   "model": "ridge",
+   "mape_pct": 4.17,
+   "gate_mape_pct": 5.0,
+   "beats_naive": true,
+   "all_transition_mape_pct": 7.21,
+   "passed": true
+  },
+  "comp_sales_pct": {
+   "holdout_mae_pp": 0.61,
+   "gate_mae_pp": 0.8,
+   "passed": true
+  }
+ }
+}
