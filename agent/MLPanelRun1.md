@@ -9,7 +9,9 @@
 | Output | `agent/ml-panel-forecast.json` |
 | Predecessor | `MLValidationRun1.md` (Home Depot), which set the protocol this run reuses unchanged |
 
-**Headline: the pipeline transfers to 1 company of 3, and the system correctly abstains on 6 of 9 metrics.** ADI passes all three gates via a zero-parameter guidance-realisation model. Deere and Hays fail, and the run proves the failures are properties of the *data*, not of the models — which is the difference between "iterate on the model" and "stop, this metric is not learnable here".
+**Headline: 4 of 9 metrics pass; the pipeline transfers to ADI in full and to Hays net fees.** ADI passes all three gates via a zero-parameter guidance-realisation model. Hays net fees passes at 1.52% MAPE once a loader bug was fixed. Deere fails all three, and the run *proves* that failure is a property of the data rather than of the models.
+
+> **Correction (same day).** The first version of this run concluded Hays had no usable data. That was wrong, and it was my bug, not the data's. `load_series` keyed observations by their `period` string, but Hays tags every quarterly trading update with the **fiscal year** rather than the quarter — so four readings per year collapsed into one and a **20-point quarterly series silently became ~6 annual points**. Section 4 is rewritten around the corrected result. ADI and Deere were unaffected (zero conflicting keys), and the loader now raises rather than overwriting when a period holds two different values.
 
 ---
 
@@ -26,7 +28,7 @@ So the hypothesis for this run was not "will RandomForest work on Deere" but: **
 |---|---|---|
 | **ADI** | **Yes** — ADI guides revenue, adjusted EPS and adjusted operating margin one quarter ahead, and the FY2026Q3 guides are already in the table (rev $3,900M, EPS $3.30, aOM 49.0%) | Only the *realisation ratio* is unknown; 20 historical ratios exist |
 | **Deere** | **No** — Deere guides full-year net income, never quarterly segment lines | Pure history only |
-| **Hays** | **No, and it isn't an ML problem** — 7–8 annual observations | Abstain |
+| **Hays** | **Partly** — 20 quarterly net-fee growth readings compose the year; profit/EPS have only 7 annual points | Net fees modelable; profit and EPS abstain |
 
 Gates were fixed before any model ran, set from what would be competitive against a Street benchmark rather than from what the models could hit: ADI/Deere revenue ≤2% MAPE, EPS ≤5%, ADI adj gross margin ≤1.0pp MAE, Deere PPA operating profit ≤10%, Hays net fees ≤2% / profit and EPS ≤10%. Every metric must also **beat its naive baseline**.
 
@@ -109,24 +111,67 @@ This is the run's most useful negative result: **Deere's Q3 is not a machine-lea
 
 ---
 
-## 4. Hays — abstention is the correct output
+## 4. Hays — net fees is modelable; profit and EPS are not
 
-Hays reports semi-annually and the observation table holds **7–8 annual observations** (net fees FY2018–FY2025; operating profit and EPS n=7, with FY2022 missing entirely). There is no honest chronological walk-forward at that sample size, so the pipeline abstains on operating profit and EPS rather than emitting a number.
+**The bug first.** Hays publishes a trading update every quarter, but the extraction tags each one with the *fiscal year* (`FY2026`) rather than the quarter — the quarter is only recoverable from `as_of` (October = Q1, January = Q2, April = Q3, July = Q4). My loader keyed on `period`, so each year's four readings overwrote one another and I saw ~6 annual points where **20 quarterly ones existed**. That produced the original, wrong conclusion that Hays had nothing to model.
 
-For net fees one quantitative check was possible — an **H1→FY ratio model**, since H1 FY2026 net fees (£453.3m) are reported:
+Two fixes: `load_quarterly_growth()` recovers the quarter from `as_of`, and `load_series()` now **raises** when one period holds two different values instead of silently keeping the last. A check across all three companies found 10 conflicting keys in Hays and **zero in ADI and Deere**, so no other result was affected.
 
-| Year | H1/FY ratio |
-|---|---|
-| FY2019 | 0.5028 |
-| FY2020 | 0.5552 |
-| FY2021 | 0.4605 |
-| FY2025 | 0.5101 |
+The recovered series (net fee growth, actual basis, % y/y):
 
-Mean ratio 0.507 → **£893.8m**, walk-forward error 6.86% (gate 2%: FAIL). More usefully, the ratio *spread* (0.46–0.56) maps H1's £453.3m to a range of **£809m–£985m**. That band contains both the continuing-operations figure (£888m) and the stale-basis consensus (£902m), so **the model cannot discriminate between the two — which is the entire question for Hays.** It confirms the order of magnitude and nothing more.
+```
+FY2021  Q2 -16  Q3  -9  Q4 +36        FY2024  Q1  -9  Q2 -12  Q3 -17  Q4 -17
+FY2022  Q1 +36  Q2 +32  Q3 +29  Q4 +24   FY2025  Q1 -15  Q2 -15  Q3 -11
+FY2023  Q1 +19  Q2 +11  Q3 +10           FY2026  Q2  -9  Q3  -7  Q4  -4
+```
 
-The honest framing: Hays FY2026 is already closed. It is a *reconstruction* problem (sum the disclosed halves, subtract the disposed countries), not a prediction problem — which is exactly what the anchor lens did to reach £888m. Machine learning has nothing to add.
+### The model: compose the year from its quarters
 
----
+`FY(Y) = FY(Y−1) × (1 + mean of the four quarterly growth rates)`
+
+Missing quarters are imputed, preferring the like-for-like reading plus that year's observed actual-minus-LFL gap (currency and disposal effects are a within-year constant), falling back to the mean of the observed quarters.
+
+| Year | Quarter rates | Predicted | Actual | Error | Quarters observed |
+|---|---|---|---|---|---|
+| FY2022 | +36, +32, +29, +24 | 1,195.8 | 1,189.4 | **0.54%** | 4/4 |
+| FY2023 | +19, +11, +10, *+13.3* | 1,348.0 | 1,294.6 | 4.12% | 3/4 |
+| FY2024 | −9, −12, −17, −17 | 1,116.6 | 1,113.6 | **0.27%** | 4/4 |
+| FY2025 | −15, −15, −11, *−13.7* | 961.4 | 972.4 | 1.13% | 3/4 |
+
+**MAPE 1.52% (n=4) against a naive baseline of 15.4%, gate ≤2% → PASS.** On the two complete-four-quarter years the error is **0.41%**; the damage is done entirely by imputing a missing quarter from the mean of the others.
+
+FY2026 has three observed quarters plus Q1 recoverable through the LFL bridge. That bridge is unusually well-supported here: the actual-minus-LFL gap is exactly **+1pp in all three observable FY2026 quarters** (Q2 −9 vs −10, Q3 −7 vs −8, Q4 −4 vs −5), so Q1 actual ≈ LFL(−8) + 1 = **−7**.
+
+```
+quarters      -7, -9, -7, -4   ->  mean -6.75%
+FY2026 reported basis = 972.4 x 0.9325 = 906.8
+less disposed-country net fees (in the table, 15.0) = 891.8   <- continuing operations
+```
+
+### Independent cross-check
+
+A structurally tighter variant anchors on the **reported H1 actual** and grows only the prior-year H2 by the observed Q3/Q4 rates — no Q1 imputation, and it uses a hard datum instead of a growth rate:
+
+```
+H2 FY2025 = 972.4 - 496.0 = 476.4
+H2 FY2026 = 476.4 x (1 - 5.5%) = 450.2
+FY2026 = 453.3 + 450.2 = 903.5 reported  ->  888.5 continuing operations
+```
+
+Only one closed year can test it (FY2021: predicted 925.7 vs actual 918.1, **0.83%** error), so it cannot clear the n≥3 requirement and is reported as corroboration rather than deployed. **The two methods land 0.4% apart (891.8 and 888.5), and the anchor lens's independent reconstruction of £888m sits at the bottom of that band.** Three routes, one answer.
+
+### Operating profit and EPS still abstain — and the reason is now measured
+
+Seven annual observations with FY2022 missing; no chronological walk-forward is meaningful. The obvious substitute is a consensus-bias model, since the table holds company-compiled consensus for both years at comparable vintages. It fails, informatively:
+
+| | Consensus (same vintage) | Actual | Gap |
+|---|---|---|---|
+| FY2025 | 56.9 (Apr) / 56.4 (Jun) | 45.6 | **+24.2% overshoot** |
+| FY2026 | 45.2 (Apr) / 43.5 (Jul) | — | — |
+
+Applying FY2025's overshoot to FY2026 gives ≈£35m — which flatly contradicts the company's own 10 July steer of "at the top of the £37.0–46.0m range". The reason is that the *direction* of the steer flipped: in June 2025 Hays published consensus alongside a warning it would land **below** it; in July 2026 it published consensus alongside a signal it would land **above** it. The usable signal is the steer's direction relative to consensus, which is qualitative text and absent from a numeric table. A bias model would have been confidently wrong by roughly 25%.
+
+So the abstention stands, but it is now a measured result rather than an assertion — and it locates precisely what the ML lens cannot see.
 
 ## 5. Results summary
 
@@ -138,24 +183,25 @@ The honest framing: Hays FY2026 is already closed. It is a *reconstruction* prob
 | Deere | Net sales & revenues | 4.03% | 2% | ✗ | abstained |
 | Deere | Diluted EPS | 32.19% | 5% | ✗ | abstained |
 | Deere | PPA operating profit | n/a | 10% | — | abstained |
-| Hays | Net fees | 6.86% | 2% | — | abstained |
+| **Hays** | **Net fees** | **1.52%** | 2% | ✓ (naive 15.4%) | **£891.8m** |
 | Hays | Pre-exc operating profit | n/a | 10% | — | abstained |
 | Hays | Pre-exc basic EPS | n/a | 10% | — | abstained |
 
-**3 usable of 9.** Combined with Home Depot's 3 of 3, the ML lens covers **6 of the 12 challenge metrics**, and every one of those six rests on a model whose main input was already published before the company reports.
+**4 usable of 9.** Combined with Home Depot's 3 of 3, the ML lens covers **7 of the 12 challenge metrics**, and every one rests on a model whose main input was published before the company reports.
 
 ### The generalisable finding
 
 Across four companies, ML lens accuracy tracked one variable almost perfectly — **how much of the answer is published before the company reports**:
 
 ```
-HD    category level published 4 days early   -> 0.4%   PASS
-ADI   guidance published a quarter early      -> 1.45%  PASS
-DE    nothing published                       -> 8.1% floor   FAIL
-HAS   nothing published, n=7                  -> abstain      FAIL
+HD net sales   category level published 4 days early     -> 0.40%  PASS
+ADI revenue    guidance published a quarter early        -> 1.45%  PASS
+HAS net fees   3 of 4 quarters already disclosed         -> 1.52%  PASS
+DE  revenue    nothing published                         -> 8.1% floor    FAIL
+HAS op profit  nothing published, n=7 annual             -> abstain       FAIL
 ```
 
-Model family, feature engineering and ensembling moved results by tenths of a percent. Access to pre-published information moved them by an order of magnitude. **The lesson from the HD run replicated exactly.**
+Model family, feature engineering and ensembling moved results by tenths of a percent. Access to pre-published information moved them by an order of magnitude. **The lesson from the HD run replicated exactly** — and Hays turned out to sit on the passing side of that line once the data was read correctly.
 
 ---
 
@@ -166,7 +212,10 @@ Model family, feature engineering and ensembling moved results by tenths of a pe
 - **ADI adj gross margin is blind to a known one-off** (§2). The numeric table cannot represent "this benefit will not repeat"; only the transcript can.
 - **COVID exclusion (FY2020–21) is a judgement call** applied uniformly. For ADI it removes the semiconductor whipsaw; for Deere it thins an already-thin sample.
 - **Deere's intrinsic floors rest on n=4–5 ratios**, so the floor estimates themselves are imprecise — but they exceed the gates by 4–10×, far beyond what sampling error could close.
-- **The Hays H1→FY ratio has n=4** and FY2026's disposals make even the FY2025 comparison non-like-for-like.
+- **Hays net fees rests on n=4 walk-forward years**, two of which needed an imputed quarter. FY2026's own Q1 is imputed (via a +1pp LFL bridge that is exactly constant across the other three quarters, but is still an imputation).
+- **The Hays quarter recovery assumes the publication calendar is fixed** (Oct/Jan/Apr/Jul). It has held for every update in the corpus, but a rescheduled update would be mis-assigned.
+- **The £15m disposal adjustment is a single disclosed figure** taken at face value; if the reported continuing-operations restatement differs, the error flows straight through.
+- **I found the loader bug only because it was questioned.** The same class of silent key collision could exist in any extraction where `period` is not unique; the strict loader now catches it, but it was caught by challenge, not by a test.
 
 ## 7. Reproduction
 

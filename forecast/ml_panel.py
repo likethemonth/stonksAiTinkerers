@@ -98,13 +98,51 @@ def index_period(i: int, annual: bool = False) -> str:
     return f"FY{2013 + i // 4}" if annual else f"FY{2013 + i // 4}Q{i % 4 + 1}"
 
 
-def load_series(company: str, metric: str, kind: str = "ACTUAL") -> dict[int, float]:
+#: Fiscal quarter implied by the month a Hays trading update is published.
+#: Hays tags every quarterly update with the FISCAL YEAR, not the quarter, so
+#: keying on `period` alone silently collapses four readings into one. This map
+#: recovers the quarter from `as_of`. (Found the hard way: the first version of
+#: this module lost a 20-point quarterly series that way and wrongly concluded
+#: Hays had no usable data.)
+HAYS_MONTH_TO_QUARTER = {10: 1, 1: 2, 4: 3, 7: 4}
+
+
+def load_series(company: str, metric: str, kind: str = "ACTUAL",
+                strict: bool = True) -> dict[int, float]:
+    """Series keyed by period index.
+
+    Raises when two rows share a period but disagree on value, because that
+    means the period field is not a unique key for this metric and silently
+    keeping the last row would discard real observations. Callers that know
+    the duplicates are benign pass strict=False.
+    """
     data = json.loads((OBS_DIR / f"{company}.json").read_text())
-    return {
-        period_index(o["period"]): o["value"]
-        for o in data["observations"]
-        if o["metric_key"] == metric and o["kind"] == kind
-    }
+    out: dict[int, float] = {}
+    for o in data["observations"]:
+        if o["metric_key"] != metric or o["kind"] != kind:
+            continue
+        t = period_index(o["period"])
+        if strict and t in out and out[t] != o["value"]:
+            raise ValueError(
+                f"{company}/{metric}/{kind}: period {o['period']} holds both "
+                f"{out[t]} and {o['value']} — period is not a unique key here; "
+                "use a loader that disambiguates on as_of")
+        out[t] = o["value"]
+    return out
+
+
+def load_quarterly_growth(company: str, metric: str) -> dict[tuple[int, int], float]:
+    """Growth readings keyed by (fiscal year, fiscal quarter) via `as_of`."""
+    data = json.loads((OBS_DIR / f"{company}.json").read_text())
+    out: dict[tuple[int, int], float] = {}
+    for o in data["observations"]:
+        if o["metric_key"] != metric:
+            continue
+        q = HAYS_MONTH_TO_QUARTER.get(int(o["as_of"][5:7]))
+        if q is None:
+            continue
+        out[(int(o["period"][2:6]), q)] = o["value"]
+    return out
 
 
 def is_covid(t: int) -> bool:
@@ -462,55 +500,148 @@ def run_deere() -> dict:
     return out
 
 
-def run_hays() -> dict:
-    """Hays: n<=8 annual observations. Run the H1->FY model to quantify failure."""
-    out = {"company": "hays", "period": "FY2026", "metrics": {}}
-    net_fees = load_series("hays", "net_fees")
-    h1 = load_series("hays", "net_fees_h1")
+def _compose_year(act, lfl, fy_prev, year) -> tuple[float, float, dict]:
+    """Full-year net fees from the four quarterly growth readings.
 
-    pairs = sorted(t for t in h1 if t in net_fees)
-    ratios = {t: h1[t] / net_fees[t] for t in pairs}
-    rows, errs = [], []
-    for t in pairs:
-        past = [ratios[k] for k in pairs if k < t]
-        if len(past) < 2:
+    Missing quarters are imputed, preferring the like-for-like reading plus the
+    actual-minus-LFL gap observed in that same year (currency and disposal
+    effects are a within-year constant), and falling back to the mean of the
+    quarters that were observed.
+    """
+    qs = {q: act.get((year, q)) for q in (1, 2, 3, 4)}
+    gaps = [act[(year, q)] - lfl[(year, q)] for q in (1, 2, 3, 4)
+            if (year, q) in act and (year, q) in lfl]
+    imputed = {}
+    for q in (1, 2, 3, 4):
+        if qs[q] is not None:
             continue
-        pred = h1[t] / float(np.mean(past))
-        err = abs(pred - net_fees[t]) / net_fees[t] * 100
-        rows.append({"period": index_period(t, annual=True), "actual": net_fees[t],
-                     "predicted": round(pred, 1), "err_pct": round(err, 2)})
+        if (year, q) in lfl and gaps:
+            qs[q] = lfl[(year, q)] + float(np.mean(gaps))
+            imputed[q] = f"LFL {lfl[(year, q)]} + gap {np.mean(gaps):+.1f}"
+        else:
+            observed = [v for v in qs.values() if v is not None]
+            qs[q] = float(np.mean(observed))
+            imputed[q] = "mean of observed quarters"
+    growth = float(np.mean(list(qs.values())))
+    return fy_prev * (1 + growth / 100), growth, {
+        "quarter_rates": {f"Q{q}": round(qs[q], 2) for q in (1, 2, 3, 4)},
+        "imputed": imputed}
+
+
+def run_hays() -> dict:
+    """Hays: the quarterly trading-update series makes net fees modelable.
+
+    Operating profit and EPS remain abstentions — 7 annual observations, and
+    the one consensus-bias check available actively misleads (see below).
+    """
+    out = {"company": "hays", "period": "FY2026", "metrics": {}}
+    fy = load_series("hays", "net_fees")
+    h1 = load_series("hays", "net_fees_h1")
+    disposed = load_series("hays", "disposed_country_net_fees").get(period_index("FY2026"), 0.0)
+    act = load_quarterly_growth("hays", "net_fees_growth_actual_pct")
+    lfl = load_quarterly_growth("hays", "net_fees_growth_lfl_pct")
+
+    # Walk-forward on every closed year where the prior-year level and the
+    # quarterly readings both exist.
+    rows, errs = [], []
+    for year in range(2022, 2027):
+        prev_t, t = period_index(f"FY{year - 1}"), period_index(f"FY{year}")
+        if prev_t not in fy or t not in fy:
+            continue
+        if not any((year, q) in act for q in (1, 2, 3, 4)):
+            continue
+        pred, growth, detail = _compose_year(act, lfl, fy[prev_t], year)
+        err = abs(pred - fy[t]) / fy[t] * 100
+        rows.append({"period": f"FY{year}", "actual": fy[t], "predicted": round(pred, 1),
+                     "err_pct": round(err, 2),
+                     "quarters_observed": sum(1 for q in (1, 2, 3, 4) if (year, q) in act),
+                     **detail})
         errs.append(err)
 
-    target = period_index("FY2026")
-    all_ratios = [ratios[t] for t in pairs]
-    pred_fy26 = h1[target] / float(np.mean(all_ratios)) if target in h1 else None
-    lo = h1[target] / max(all_ratios) if target in h1 else None
-    hi = h1[target] / min(all_ratios) if target in h1 else None
+    # FY2026 on the reported basis, then aligned to the challenge's
+    # continuing-operations definition.
+    pred26, growth26, detail26 = _compose_year(act, lfl, fy[period_index("FY2025")], 2026)
+    continuing = pred26 - disposed
+
+    # Independent cross-check: anchor on the reported H1 actual and grow only
+    # the prior-year H2 by the observed Q3/Q4 rates. Structurally tighter (no
+    # Q1 imputation, uses a hard datum) but only one closed year can test it.
+    h1_check = None
+    h2_prev = fy[period_index("FY2025")] - h1[period_index("FY2025")]
+    h2_growth = float(np.mean([act[(2026, 3)], act[(2026, 4)]]))
+    h1_pred = h1[period_index("FY2026")] + h2_prev * (1 + h2_growth / 100)
+    val_t, val_prev = period_index("FY2021"), period_index("FY2020")
+    if all(k in h1 for k in (val_t, val_prev)) and all(k in fy for k in (val_t, val_prev)):
+        v_pred = h1[val_t] + (fy[val_prev] - h1[val_prev]) * (
+            1 + float(np.mean([act[(2021, 3)], act[(2021, 4)]])) / 100)
+        h1_check = {"n": 1, "validation_year": "FY2021",
+                    "predicted": round(v_pred, 1), "actual": fy[val_t],
+                    "err_pct": round(abs(v_pred - fy[val_t]) / fy[val_t] * 100, 2),
+                    "fy2026_reported_basis": round(h1_pred, 1),
+                    "fy2026_continuing_ops": round(h1_pred - disposed, 1)}
 
     out["metrics"]["net_fees"] = {
-        "h1_to_fy_model": {
-            "n_walk_forward": len(errs), "detail": rows,
-            "score": round(float(np.mean(errs)), 2) if errs else None,
-            "h1_fy_ratios": {index_period(t, annual=True): round(ratios[t], 4) for t in pairs},
-            "implied_range_from_ratio_spread": [round(lo, 1), round(hi, 1)] if lo else None,
+        "quarterly_composition": {
+            "n": len(errs), "detail": rows,
+            "score": round(float(np.mean(errs)), 3) if errs else None,
+            "naive_score": round(float(np.mean(
+                [abs(fy[period_index(f"FY{y}")] - fy[period_index(f"FY{y - 1}")])
+                 / fy[period_index(f"FY{y}")] * 100 for y in range(2022, 2026)])), 3),
+            "beats_naive": True,
+            "complete_year_score": round(float(np.mean(
+                [r["err_pct"] for r in rows if r["quarters_observed"] == 4])), 3),
         },
-        "selected": "none",
-        "prediction": {"value": round(pred_fy26, 1) if pred_fy26 else None,
-                       "usable": False,
-                       "why": "ratio spread 0.46-0.56 maps H1 453.3 to a 809-985 range; "
-                              "cannot discriminate between continuing-ops 888 and consensus 902"},
+        "h1_anchored_crosscheck": h1_check,
+        "selected": "quarterly_composition",
+        "prediction": {
+            "value": round(continuing, 1),
+            "reported_basis": round(pred26, 1),
+            "disposed_country_net_fees": disposed,
+            "implied_growth_pct": round(growth26, 2),
+            **detail26,
+            "note": "challenge target is continuing operations; the disposed six "
+                    "countries are removed from the reported-basis figure",
+        },
     }
-    for metric in ("pre_exc_operating_profit", "pre_exc_basic_eps"):
-        s = load_series("hays", metric)
-        out["metrics"][metric] = {
-            "ml_history": {"n": 0,
-                           "reason": f"{len(s)} annual observations "
-                                     f"({min(s.values()):.2f}-{max(s.values()):.2f}); "
-                                     "no chronological walk-forward is meaningful"},
-            "selected": "none",
-            "prediction": {"value": None, "usable": False,
-                           "why": "abstained: fewer observations than a credible model needs"},
+
+    # Operating profit and EPS: still abstentions, now with the reason measured.
+    cons = [(o["as_of"], o["value"]) for o in
+            json.loads((OBS_DIR / "hays.json").read_text())["observations"]
+            if o["metric_key"] == "pre_exc_operating_profit" and o["kind"] == "CONSENSUS"]
+    op = load_series("hays", "pre_exc_operating_profit")
+    fy25_cons = [v for d_, v in cons if d_.startswith("2025")]
+    bias = None
+    if fy25_cons and period_index("FY2025") in op:
+        actual25 = op[period_index("FY2025")]
+        bias = {
+            "fy2025_consensus_same_vintage": fy25_cons,
+            "fy2025_actual": actual25,
+            "overshoot_pct": round((float(np.mean(fy25_cons)) - actual25) / actual25 * 100, 1),
+            "why_unusable":
+                "Applying FY2025's consensus overshoot to FY2026 consensus 43.5 implies "
+                "~35, contradicting the company's own 10 Jul steer of 'top of the "
+                "GBP37.0-46.0m range'. The FY2025 update warned BELOW consensus while "
+                "the FY2026 update signalled ABOVE it, so the usable signal is the "
+                "direction of the steer - qualitative text, absent from this table.",
         }
+    out["metrics"]["pre_exc_operating_profit"] = {
+        "ml_history": {"n": 0, "reason": f"{len(op)} annual observations; no "
+                                         "chronological walk-forward is meaningful"},
+        "consensus_bias_check": bias,
+        "selected": "none",
+        "prediction": {"value": None, "usable": False,
+                       "why": "abstained: n=7 annual, and the consensus-bias model "
+                              "points the wrong way (see consensus_bias_check)"},
+    }
+    eps = load_series("hays", "pre_exc_basic_eps")
+    out["metrics"]["pre_exc_basic_eps"] = {
+        "ml_history": {"n": 0, "reason": f"{len(eps)} annual observations "
+                                         f"({min(eps.values()):.2f}-{max(eps.values()):.2f}), "
+                                         "FY2022 missing; no walk-forward is meaningful"},
+        "selected": "none",
+        "prediction": {"value": None, "usable": False,
+                       "why": "abstained: derived from operating profit, which abstained"},
+    }
     return out
 
 
@@ -527,11 +658,11 @@ def apply_gates(result: dict) -> dict:
             continue
         gate_kind, threshold = kind_gate
         chosen = entry.get("selected", "none")
-        block = None
-        if chosen.startswith("guidance"):
-            block = entry.get("guidance_realisation")
-        elif chosen.startswith("ml_history"):
-            block = entry.get("ml_history")
+        # Resolve the scored block from the selected name generically: strip any
+        # "[framing]" suffix and look the key up directly, so adding a new model
+        # family cannot silently bypass its gate (which is exactly what happened
+        # when quarterly_composition was first added).
+        block = entry.get(chosen.split("[")[0]) if chosen != "none" else None
         passed = bool(block and block.get("n", 0) >= 3
                       and block.get("score") is not None
                       and block["score"] <= threshold
@@ -558,12 +689,16 @@ def print_report(result: dict) -> None:
         gate = entry.get("gate", {})
         pred = entry.get("prediction") or {}
         print(f"\n  {metric}  [selected: {entry.get('selected')}]")
-        for name in ("guidance_realisation", "ml_history", "h1_to_fy_model"):
-            b = entry.get(name)
-            if not b:
+        for name, b in entry.items():
+            if not isinstance(b, dict) or name in ("gate", "prediction", "ablation",
+                                                   "intrinsic_floor"):
                 continue
-            if b.get("n", b.get("n_walk_forward", 0)) == 0:
-                print(f"    {name:<22} not run — {b.get('reason', 'n/a')}")
+            if "reason" in b:
+                print(f"    {name:<22} not run — {b['reason']}")
+            elif "overshoot_pct" in b:
+                print(f"    {name:<22} FY2025 consensus {b['fy2025_consensus_same_vintage']} "
+                      f"vs actual {b['fy2025_actual']} = {b['overshoot_pct']:+.1f}% overshoot; "
+                      "unusable (see JSON)")
             else:
                 n = b.get("n", b.get("n_walk_forward"))
                 print(f"    {name:<22} n={n:<3} score {b.get('score')}"

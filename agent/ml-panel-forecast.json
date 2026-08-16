@@ -620,59 +620,130 @@
    "period": "FY2026",
    "metrics": {
     "net_fees": {
-     "h1_to_fy_model": {
-      "n_walk_forward": 2,
+     "quarterly_composition": {
+      "n": 4,
       "detail": [
        {
-        "period": "FY2021",
-        "actual": 918.1,
-        "predicted": 799.2,
-        "err_pct": 12.95
+        "period": "FY2022",
+        "actual": 1189.4,
+        "predicted": 1195.8,
+        "err_pct": 0.54,
+        "quarters_observed": 4,
+        "quarter_rates": {
+         "Q1": 36.0,
+         "Q2": 32.0,
+         "Q3": 29.0,
+         "Q4": 24.0
+        },
+        "imputed": {}
+       },
+       {
+        "period": "FY2023",
+        "actual": 1294.6,
+        "predicted": 1348.0,
+        "err_pct": 4.12,
+        "quarters_observed": 3,
+        "quarter_rates": {
+         "Q1": 19.0,
+         "Q2": 11.0,
+         "Q3": 10.0,
+         "Q4": 13.33
+        },
+        "imputed": {
+         "4": "mean of observed quarters"
+        }
+       },
+       {
+        "period": "FY2024",
+        "actual": 1113.6,
+        "predicted": 1116.6,
+        "err_pct": 0.27,
+        "quarters_observed": 4,
+        "quarter_rates": {
+         "Q1": -9.0,
+         "Q2": -12.0,
+         "Q3": -17.0,
+         "Q4": -17.0
+        },
+        "imputed": {}
        },
        {
         "period": "FY2025",
         "actual": 972.4,
-        "predicted": 979.9,
-        "err_pct": 0.77
+        "predicted": 961.4,
+        "err_pct": 1.13,
+        "quarters_observed": 3,
+        "quarter_rates": {
+         "Q1": -15.0,
+         "Q2": -15.0,
+         "Q3": -11.0,
+         "Q4": -13.67
+        },
+        "imputed": {
+         "4": "mean of observed quarters"
+        }
        }
       ],
-      "score": 6.86,
-      "h1_fy_ratios": {
-       "FY2019": 0.5028,
-       "FY2020": 0.5552,
-       "FY2021": 0.4605,
-       "FY2025": 0.5101
-      },
-      "implied_range_from_ratio_spread": [
-       816.4,
-       984.3
-      ]
+      "score": 1.516,
+      "naive_score": 15.428,
+      "beats_naive": true,
+      "complete_year_score": 0.405
      },
-     "selected": "none",
+     "h1_anchored_crosscheck": {
+      "n": 1,
+      "validation_year": "FY2021",
+      "predicted": 925.7,
+      "actual": 918.1,
+      "err_pct": 0.83,
+      "fy2026_reported_basis": 903.5,
+      "fy2026_continuing_ops": 888.5
+     },
+     "selected": "quarterly_composition",
      "prediction": {
-      "value": 893.8,
-      "usable": false,
-      "why": "ratio spread 0.46-0.56 maps H1 453.3 to a 809-985 range; cannot discriminate between continuing-ops 888 and consensus 902"
+      "value": 891.8,
+      "reported_basis": 906.8,
+      "disposed_country_net_fees": 15.0,
+      "implied_growth_pct": -6.75,
+      "quarter_rates": {
+       "Q1": -7.0,
+       "Q2": -9.0,
+       "Q3": -7.0,
+       "Q4": -4.0
+      },
+      "imputed": {
+       "1": "LFL -8.0 + gap +1.0"
+      },
+      "note": "challenge target is continuing operations; the disposed six countries are removed from the reported-basis figure",
+      "usable": true
      },
      "gate": {
       "kind": "mape",
       "threshold": 2.0,
-      "score": null,
-      "beats_naive": null,
-      "n": 0,
-      "passed": false
+      "score": 1.516,
+      "beats_naive": true,
+      "n": 4,
+      "passed": true
      }
     },
     "pre_exc_operating_profit": {
      "ml_history": {
       "n": 0,
-      "reason": "7 annual observations (45.60-248.80); no chronological walk-forward is meaningful"
+      "reason": "7 annual observations; no chronological walk-forward is meaningful"
+     },
+     "consensus_bias_check": {
+      "fy2025_consensus_same_vintage": [
+       56.4,
+       56.9
+      ],
+      "fy2025_actual": 45.6,
+      "overshoot_pct": 24.2,
+      "why_unusable": "Applying FY2025's consensus overshoot to FY2026 consensus 43.5 implies ~35, contradicting the company's own 10 Jul steer of 'top of the GBP37.0-46.0m range'. The FY2025 update warned BELOW consensus while the FY2026 update signalled ABOVE it, so the usable signal is the direction of the steer - qualitative text, absent from this table."
      },
      "selected": "none",
      "prediction": {
       "value": null,
       "usable": false,
-      "why": "abstained: fewer observations than a credible model needs"
+      "why": "abstained: n=7 annual, and the consensus-bias model points the wrong way (see consensus_bias_check)"
      },
      "gate": {
       "kind": "mape",
@@ -686,13 +757,13 @@
     "pre_exc_basic_eps": {
      "ml_history": {
       "n": 0,
-      "reason": "7 annual observations (1.31-11.92); no chronological walk-forward is meaningful"
+      "reason": "7 annual observations (1.31-11.92), FY2022 missing; no walk-forward is meaningful"
      },
      "selected": "none",
      "prediction": {
       "value": null,
       "usable": false,
-      "why": "abstained: fewer observations than a credible model needs"
+      "why": "abstained: derived from operating profit, which abstained"
      },
      "gate": {
       "kind": "mape",
@@ -721,6 +792,11 @@
    "company": "analog-devices",
    "metric": "adj_gross_margin_pct",
    "value": 73.19
+  },
+  {
+   "company": "hays",
+   "metric": "net_fees",
+   "value": 891.8
   }
  ]
 }
