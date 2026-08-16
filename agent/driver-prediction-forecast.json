@@ -1,0 +1,127 @@
+{
+  "generatedBy": "Driver Prediction Run 1 (Claude Fable 5) - standalone driver/nowcast lens; justification in agent/DriverPredictionRun1.md",
+  "asOf": "2026-08-16",
+  "method": "Macro -> units sold -> dollars. High-signal external metrics published AFTER the companies last guided (19-21 May 2026) are mapped through explicit elasticity chains into each target metric. Every chain is calibrated on the latest closed quarter where drivers and outcome are both known; the unexplained residual carries forward at HALF weight. No management guidance or steers are used as the primary input except where flagged as fallback. Compare against agent/fable-research-forecast.json (anchor lens) after actuals print.",
+  "forecasts": {
+    "ADI-FY2026Q3.xlsx": {
+      "company": "Analog Devices",
+      "period": "FY2026Q3",
+      "metrics": [
+        {
+          "label": "Revenue",
+          "units": "USDm",
+          "final": 4009,
+          "anchor_lens": 4010,
+          "signal": "direct",
+          "chain": "Guide-independent peer read-through: TXN June-qtr analog +26% y/y (2 of ADI's 3 fiscal months overlap) and TXN Sept-qtr guide +8.1% q/q vs ADI implied +7.6% - the cycle ran at/above the slope ADI assumed. Beat of +2.8% on 3,900 base, sigma 1.2pp."
+        },
+        {
+          "label": "Adjusted diluted EPS",
+          "units": "USD / share",
+          "final": 3.51,
+          "anchor_lens": 3.48,
+          "signal": "derived",
+          "chain": "P&L flow-through of driver revenue: dRev q/q = 4,009-3,623 = +386; incremental adj op margin 65% (recent 2 qtrs ran ~80%, structural ~50%; half-shrunk to 65%) -> adj OI 1,774+251 = 2,025; nonop 57; tax 12.5% -> NI 1,722; / 490M shares = 3.51."
+        },
+        {
+          "label": "Adjusted gross margin",
+          "units": "%",
+          "final": 72.9,
+          "anchor_lens": 72.9,
+          "signal": "weak - fallback",
+          "chain": "Driver lens adds little: utilization already maxed (physical constraint), mix tailwind from data center (above corp-avg GM) growing fastest. Direction +, magnitude unresolvable from external data; carries the anchor-lens 72.9."
+        }
+      ]
+    },
+    "HAS-FY2026.xlsx": {
+      "company": "Hays plc",
+      "period": "FY2026",
+      "metrics": [
+        {
+          "label": "Net fees",
+          "units": "GBPm",
+          "final": 888,
+          "anchor_lens": 888,
+          "signal": "driver-pure (reconstruction)",
+          "chain": "Fiscal year ended 30 Jun - nothing to nowcast. The value is built entirely from disclosed actuals (H1 453.3 + Q3 at -7% + Q4 at -4%, minus c.15 from the six disposed countries), which is the most driver-pure number in either file: zero management opinion in it."
+        },
+        {
+          "label": "Pre-exceptional basic EPS",
+          "units": "GBp",
+          "final": 1.14,
+          "anchor_lens": 1.14,
+          "signal": "no driver signal - fallback",
+          "chain": "Mechanical from op profit via guided finance charge (13) and ETR (45%): no external driver can improve on closed-year arithmetic. Carried."
+        },
+        {
+          "label": "Pre-exceptional operating profit",
+          "units": "GBPm",
+          "final": 46.1,
+          "anchor_lens": 46.1,
+          "signal": "no driver signal - fallback",
+          "chain": "Company steer ('top of 37.0-46.0 range') given after the year closed. External drivers (UK/DE vacancy indices) are strictly older information than the steer; carried."
+        }
+      ]
+    },
+    "DE-FY2026Q3.xlsx": {
+      "company": "Deere & Company",
+      "period": "FY2026Q3",
+      "metrics": [
+        {
+          "label": "Worldwide net sales and revenues",
+          "units": "USDm",
+          "final": 12470,
+          "anchor_lens": 12400,
+          "signal": "direct",
+          "chain": "Segment unit chains on Q3-25 bases: PPA 4,273 x (0.55x(-11) units + 0.45x(-1) RoW + 1.75 price + 2.5 FX - 2.55 Q2-residual/2) = 4,047. SAT 3,025 x (0.7x(-10) units + 0.3x(+1) + 1.75 + 2.0 + 7.9 Q2-residual/2 [production normalization]) = 3,175. C&F 3,059 x (+4 industry units + 1.75 + 2.0 + 10.6 Q2-residual/2) = 3,622. Equipment 10,844 + financial services & other 1,630 (6-qtr range 1,590-1,660) = 12,474."
+        },
+        {
+          "label": "Diluted EPS (GAAP)",
+          "units": "USD / share",
+          "final": 5.0,
+          "anchor_lens": 4.95,
+          "signal": "derived",
+          "chain": "Segment op profits from driver sales x margins (PPA 12.6%, SAT 16.0% [Q3-25 level], C&F 11.0%) = 513+508+398 = 1,419; NI = (1,419 x 0.755 tax + 215 FinSvcs) x 1.05 corporate/pension multiplier (calibrated 1.03-1.085 over 4 qtrs) = 1,350; / 269.8M shares = 5.00."
+        },
+        {
+          "label": "Production & Precision Ag operating profit",
+          "units": "USDm",
+          "final": 513,
+          "anchor_lens": 510,
+          "signal": "direct",
+          "chain": "AEM units chain (Jul tractors -10.9, combines -5.3, Jun combines ~+1, Apr R3M -14/-24) -> PPA sales 4,047 x 12.6% margin (H1 11.0%, best cost comps reserved for Q4) = 513. Produced by forecast/drivers.py."
+        }
+      ]
+    },
+    "HD-FY2026Q2.xlsx": {
+      "company": "Home Depot",
+      "period": "FY2026Q2",
+      "metrics": [
+        {
+          "label": "Net sales",
+          "units": "USDm",
+          "final": 47770,
+          "anchor_lens": 47500,
+          "signal": "direct",
+          "chain": "Q2-25 base 45,283 x (1 + 1.9 driver comps + 3.3 GMS inorganic [Q1-observed total-vs-comp gap] + 0.3 new stores) = 47,774."
+        },
+        {
+          "label": "Adjusted diluted EPS",
+          "units": "USD / share",
+          "final": 4.74,
+          "anchor_lens": 4.8,
+          "signal": "derived",
+          "chain": "Sales-to-EPS wedge calibrated on Q1 FY26 (sales +4.8% vs adj EPS -3.7% = -8.5pp wedge from GMS dilution/interest/mix), carried at half weight: EPS growth = +5.5 - 4.25 = +1.25% -> 4.68 x 1.0125 = 4.74."
+        },
+        {
+          "label": "Comparable sales, total company",
+          "units": "%",
+          "final": 1.9,
+          "anchor_lens": 1.3,
+          "signal": "direct",
+          "chain": "Census NAICS 444 nowcast: quarter-window category +5.2% y/y (Jul +5.9 accelerating vs +4.6 YTD) minus 3.3pp category-to-comp wedge calibrated on Q1 (category +3.9 vs HD comps +0.6). Produced by forecast/drivers.py."
+        }
+      ]
+    }
+  }
+}

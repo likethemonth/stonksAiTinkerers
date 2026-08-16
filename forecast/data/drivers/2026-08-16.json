@@ -1,0 +1,105 @@
+{
+  "fetched_at": "2026-08-16",
+  "note": "Point-in-time driver observations published AFTER the companies last guided (ADI 2026-05-20, DE 2026-05-21, HD 2026-05-19). These are the post-guidance facts the anchors cannot contain.",
+  "observations": [
+    {
+      "id": "aem_us_tractors_jul",
+      "company": "deere",
+      "name": "AEM US ag tractor retail units, July y/y",
+      "value": -10.9,
+      "units": "% y/y",
+      "window": "2026-07",
+      "published": "2026-08-11",
+      "source": "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+      "note": "Covers the final month of DE fiscal Q3 (May-Jul). Total tractors incl. small units (SAT-weighted)."
+    },
+    {
+      "id": "aem_us_combines_jul",
+      "company": "deere",
+      "name": "AEM US combine retail units, July y/y",
+      "value": -5.3,
+      "units": "% y/y",
+      "window": "2026-07",
+      "published": "2026-08-11",
+      "source": "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
+      "note": "Combines = pure large ag (PPA)."
+    },
+    {
+      "id": "aem_us_combines_jun",
+      "company": "deere",
+      "name": "AEM US/Canada combine retail units, June y/y",
+      "value": 1.0,
+      "units": "% y/y (approx, 'slight increase')",
+      "window": "2026-06",
+      "published": "2026-07-23",
+      "source": "https://drgnews.com/2026/07/23/u-s-and-canadian-sales-of-combines-see-slight-increase-in-june-2026/",
+      "note": "June combines slightly positive - the intra-quarter trend is choppy, not collapsing."
+    },
+    {
+      "id": "deere_retail_apr_r3m",
+      "company": "deere",
+      "name": "US/Canada large-ag industry retail, April rolling-3M y/y (Deere Q2 slide)",
+      "value": -14.0,
+      "units": "% y/y (100+hp 2WD; 4WD -24%, combines -5%)",
+      "window": "2026-02..2026-04",
+      "published": "2026-05-21",
+      "source": "challenge/offline-data/deere/slides/2026-05-21__de-us-20260521-slide__1042212.md",
+      "note": "The in-corpus baseline the quarter started from; dealer inventories 100+hp at 30% of trailing sales."
+    },
+    {
+      "id": "aem_ca_4wd_ytd",
+      "company": "deere",
+      "name": "AEM Canada 4WD tractor retail units, YTD through July y/y",
+      "value": -22.6,
+      "units": "% y/y",
+      "window": "2026-01..2026-07",
+      "published": "2026-08-11",
+      "source": "https://www.aem.org/news/tractor-sales-growth-softens-in-us-canada",
+      "note": "Large-ag capex in Canada still deeply negative."
+    },
+    {
+      "id": "census_naics444_jul",
+      "company": "home-depot",
+      "name": "US Census advance retail: building materials & garden (NAICS 444), July y/y",
+      "value": 5.9,
+      "units": "% y/y unadjusted ($45.701B vs $43.162B)",
+      "window": "2026-07",
+      "published": "2026-08-14",
+      "source": "https://fred.stlouisfed.org/series/RSBMGESD",
+      "note": "Covers the final month of HD fiscal Q2. Category includes HD itself (~20%) and commodity price inflation."
+    },
+    {
+      "id": "census_naics444_ytd",
+      "company": "home-depot",
+      "name": "US Census NAICS 444 retail sales, Jan-Jul 2026 cumulative y/y",
+      "value": 4.6,
+      "units": "% y/y",
+      "window": "2026-01..2026-07",
+      "published": "2026-08-14",
+      "source": "https://www.census.gov/retail/sales.html",
+      "note": "July (+5.9%) is running ABOVE the YTD pace (+4.6%): the category accelerated into HD's quarter-end."
+    },
+    {
+      "id": "txn_q2_analog",
+      "company": "analog-devices",
+      "name": "Texas Instruments June-quarter analog revenue y/y (reported 2026-07-22)",
+      "value": 26.0,
+      "units": "% y/y (total revenue +23%, industrial/data center/auto led)",
+      "window": "2026-04..2026-06",
+      "published": "2026-07-22",
+      "source": "https://www.stocktitan.net/sec-filings/TXN/8-k-texas-instruments-inc-reports-material-event-e3f3c5710542.html",
+      "note": "Closest peer; quarter overlaps 2 of ADI's 3 fiscal-Q3 months."
+    },
+    {
+      "id": "txn_q3_guide",
+      "company": "analog-devices",
+      "name": "Texas Instruments Sept-quarter revenue guide, q/q at midpoint",
+      "value": 8.1,
+      "units": "% q/q ($5.65-6.15B, mid $5.90B vs $5.46B)",
+      "window": "2026-07..2026-09",
+      "published": "2026-07-22",
+      "source": "https://www.stocktitan.net/sec-filings/TXN/8-k-texas-instruments-inc-reports-material-event-e3f3c5710542.html",
+      "note": "Peer guides sequential acceleration ABOVE ADI's guided +7.6% q/q - the cycle steepened after ADI last spoke."
+    }
+  ]
+}
