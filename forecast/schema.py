@@ -102,6 +102,19 @@ class Company(str, Enum):
     DE = "deere"
 
 
+class Engine(str, Enum):
+    """The three independent top-level forecasting engines."""
+
+    STREET = "street"
+    FUNDAMENTAL = "fundamental"
+    PREDICTION_MARKET = "prediction_market"
+
+
+class ContributionStatus(str, Enum):
+    AVAILABLE = "available"
+    ABSTAINED = "abstained"
+
+
 # --------------------------------------------------------------------------- #
 # Fiscal periods
 # --------------------------------------------------------------------------- #
@@ -269,6 +282,43 @@ class Estimate(BaseModel):
     )
 
 
+class EngineContribution(BaseModel):
+    """One top-level engine's estimate or an explicit abstention.
+
+    `source_families` identifies shared information such as management guidance
+    or a Street-consensus strike. The meta-forecaster uses it to reduce the
+    weight of apparently independent estimates that actually reuse evidence.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    engine: Engine
+    status: ContributionStatus
+    estimate: Estimate | None = None
+    reliability: float = Field(1.0, gt=0.0, le=1.0)
+    source_families: list[str] = Field(default_factory=list)
+    note: str = Field(..., min_length=1)
+
+    @model_validator(mode="after")
+    def _estimate_xor_abstention(self) -> "EngineContribution":
+        if self.status is ContributionStatus.AVAILABLE and self.estimate is None:
+            raise ValueError(f"{self.engine.value}: available contribution needs an estimate")
+        if self.status is ContributionStatus.ABSTAINED and self.estimate is not None:
+            raise ValueError(f"{self.engine.value}: abstention cannot carry an estimate")
+        return self
+
+
+class EngineWeight(BaseModel):
+    """Auditable meta-forecast weight after reliability and overlap penalties."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    engine: Engine
+    raw_weight: float = Field(..., ge=0.0)
+    overlap_penalty: float = Field(..., gt=0.0, le=1.0)
+    normalized_weight: float = Field(..., ge=0.0, le=1.0)
+
+
 # --------------------------------------------------------------------------- #
 # Layer 3 — the submitted forecast
 # --------------------------------------------------------------------------- #
@@ -292,6 +342,14 @@ class MetricForecast(BaseModel):
     )
     estimates: list[Estimate] = Field(
         default_factory=list, description="Every estimator that ran for this metric."
+    )
+    engine_contributions: list[EngineContribution] = Field(
+        default_factory=list,
+        description="The three top-level engine estimates, including abstentions.",
+    )
+    meta_weights: list[EngineWeight] = Field(
+        default_factory=list,
+        description="Weights used when this forecast was produced by the meta-forecaster.",
     )
     citations: list[str] = Field(
         default_factory=list, description="Deduplicated source files behind the value."
