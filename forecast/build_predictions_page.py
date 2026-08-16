@@ -883,17 +883,6 @@ ul.data li{padding:14px 0;border-bottom:1px solid var(--rule);font-size:14px}
 ul.data li:last-child{border-bottom:0}
 ul.data .d-name{font-weight:650}
 ul.data .d-meta{display:block;margin-top:5px;color:var(--muted);font:10px/1.6 var(--mono);letter-spacing:.05em;word-break:break-all}
-.mxt{min-width:820px}
-.mxt th:first-child,.mxr{text-align:left;font-weight:700}
-.mxr{background:var(--paper-deep)}
-td.mx{cursor:pointer;vertical-align:top;text-align:center;transition:background .12s}
-td.mx:hover{background:rgba(184,255,69,.22)}
-td.mx strong{display:block;font-size:26px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-td.mx span{display:block;margin-top:5px;color:var(--muted);font:9.5px var(--mono);letter-spacing:.07em}
-td.mx.good strong{color:#3d7a1f}
-td.mx.bad strong{color:var(--warn)}
-td.mx.none{color:var(--muted);font:10px var(--mono);letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;text-align:center}
-.mxnote{padding:16px 18px;margin:0;border-top:1px solid var(--rule);background:var(--paper-deep);font-size:13px;line-height:1.6;color:var(--muted);max-width:none}
 .empty{padding:40px 22px;color:var(--muted);font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase;text-align:center}
 /* SVG vocabulary reused verbatim from the architecture diagram in index.html */
 .d-box{fill:rgba(255,255,255,.55);stroke:var(--rule)}
@@ -1009,35 +998,6 @@ function gatebar(g, floor) {
   </div>`;
 }
 
-function matrix() {
-  const methods = [['anchor','Anchor'],['driver','Driver'],['ml','ML'],['market','Market']];
-  const cell = (st, mk) => {
-    const m = DATA[st].methods[mk];
-    if (!m) return '<td class="mx none">—</td>';
-    const s = m.stats || {};
-    if (s.mean_gate_relative === null || s.mean_gate_relative === undefined) {
-      if (m.brier) return `<td class="mx" data-go="${st}/${mk}">
-        <strong>${m.brier.market}</strong><span>Brier, day before</span>
-        <span>${m.brier.n} resolved markets</span></td>`;
-      return `<td class="mx none" data-go="${st}/${mk}">not backtested</td>`;
-    }
-    const cls = s.all_within_gate ? 'mx good' : 'mx bad';
-    const raw = [s.mean_mape !== null ? s.mean_mape + '%' : null,
-                 s.mean_mae !== null ? s.mean_mae + 'pp' : null].filter(Boolean).join(' · ');
-    return `<td class="${cls}" data-go="${st}/${mk}">
-      <strong>${s.mean_gate_relative}×</strong><span>${raw}</span>
-      <span>${s.validated} of ${s.total} validated</span></td>`;
-  };
-  return `<div class="table-wrap"><table class="mxt">
-    <thead><tr><th>Average error by category</th>${methods.map(m=>`<th>${m[1]}</th>`).join('')}</tr></thead>
-    <tbody>${Object.keys(DATA).map(st => `<tr><td class="mxr">${DATA[st].name}</td>
-      ${methods.map(m => cell(st, m[0])).join('')}</tr>`).join('')}</tbody></table>
-    <p class="mxnote">Each cell is the mean of that category's metrics, expressed as
-    <strong>error ÷ its own pre-declared gate</strong> — metrics mix percent and percentage-point
-    errors, so the ratio is the only unit-free way to average them. Under 1.0× is inside the bar.
-    Raw means are shown beneath. Click a cell to open it.</p></div>`;
-}
-
 function render() {
   const S = DATA[stock], M = S.methods[method];
   document.querySelectorAll('[data-stock]').forEach(b => b.setAttribute('aria-pressed', b.dataset.stock === stock));
@@ -1099,17 +1059,6 @@ function render() {
 }
 
 document.addEventListener('click', e => {
-  const go = e.target.closest('[data-go]');
-  if (go) {
-    const [st, mk] = go.dataset.go.split('/');
-    if (DATA[st] && DATA[st].methods[mk]) {
-      stock = st; method = mk;
-      history.replaceState(null, '', `#${stock}/${method}`);
-      render();
-      document.getElementById('explorer').scrollIntoView({behavior: 'smooth'});
-      return;
-    }
-  }
   const b = e.target.closest('[data-stock],[data-method]');
   if (!b || b.disabled) return;
   if (b.dataset.stock) stock = b.dataset.stock;
@@ -1119,7 +1068,6 @@ document.addEventListener('click', e => {
   render();
 });
 readHash();
-$('#matrix').innerHTML = matrix();
 render();
 """
 
@@ -1174,8 +1122,7 @@ def build_html() -> str:
 
   <section>
     <div class="shell">
-      <div id="matrix"></div>
-      <h2 id="title" style="margin-top:52px"></h2>
+      <h2 id="title"></h2>
       <p class="summary muted" id="summary"></p>
       <div id="headline"></div>
       <div class="metric-grid" id="metrics"></div>
