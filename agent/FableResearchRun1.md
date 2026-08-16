@@ -189,3 +189,13 @@ Lens comparison (inverse-variance reconciliation):
 | HD comps | +1.3 | +1.9 (category +5.2% − 3.3pp Q1-calibrated comp wedge) | +1.44 | **raise final to +1.4** |
 
 The convergence is the finding: two independent methods (management-anchor calibration vs external units/category data) land within 1% of each other on Deere and ADI, which is precisely the cross-validation the three-lens design was meant to produce. The single divergence — HD comps — comes from genuinely new information (July category acceleration published 14 Aug), so the final moves toward it.
+
+## Run 1.2 addendum — ML lens (see `MLValidationRun1.md`)
+
+A fourth lens was added for Home Depot: classical scikit-learn models trained on the pipeline's own observation table (`forecast/ml_hd.py`, `forecast/ml_hd_v2.py`), validated by Q2-only expanding-window walk-forward. Full method, adversarial checks and honest caveats are in **`MLValidationRun1.md`**; the short version:
+
+- Pure-history ML reaches 1.4–1.6% MAPE on the Q1→Q2 task. New model families (SVR, KNN) and ensembles moved it only from 1.64% to 1.43% — the estimator was never the bottleneck.
+- Reframing to a **share-of-category nowcast** (the Census NAICS 444 level for the quarter is published before HD reports, so only HD's share is unknown) reaches **0.40% MAPE** over six ex-COVID Q2s with zero fitted parameters. Adversarial checks put the fair out-of-sample expectation at **0.4–1.2%**, and this quarter's plausible-variant spread at 2.5%.
+- Deployed ML number: **HD net sales $47,793M** (blend), i.e. ~$47.8B ± $0.6B with upside skew.
+
+Caution for reconciliation: the ML lens shares its NAICS 444 input with the driver lens, so their agreement (47,793 vs 47,770) is partly common-input rather than independent confirmation.
