@@ -1,14 +1,17 @@
 {
  "as_of": "2026-08-16",
+ "role": "signal_only",
+ "eligible_for_meta_weight": false,
+ "promotion_gate": "held-out pre-resolution market-price ablation must show incremental point-forecast value",
  "estimates": {
   "ADI:adj_eps": {
    "estimator": "polymarket_proxy",
-   "value": 3.47,
-   "sigma": 0.114,
-   "n_observations": 1,
+   "value": 3.421,
+   "sigma": 0.0675,
+   "n_observations": 8,
    "anchor": 3.33,
-   "correction": 0.14,
-   "reasoning": "Market prices P(actual > 3.33) = 0.94 ($958 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 3.47 under the MID surprise-sigma 0.09; scenario range 3.408-3.548 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+   "correction": 0.091,
+   "reasoning": "Market prices P(actual > 3.33) = 0.94 ($958 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 3.421 under surprise-sigma 0.058, estimated from 8 resolved point-in-time consensus errors; scenario range 3.398-3.466 is folded into this estimate's sigma. This is a one-quantile diagnostic, not a validated point estimator, and receives zero final weight.",
    "observation_ids": [],
    "citations": [
     "https://polymarket.com/event/adi-quarterly-earnings-nongaap-eps-08-19-2026-3pt33"
@@ -16,12 +19,12 @@
   },
   "DE:gaap_eps": {
    "estimator": "polymarket_proxy",
-   "value": 5.189,
-   "sigma": 0.4214,
-   "n_observations": 1,
+   "value": 5.246,
+   "sigma": 0.4388,
+   "n_observations": 7,
    "anchor": 4.72,
-   "correction": 0.469,
-   "reasoning": "Market prices P(actual > 4.72) = 0.91 ($1,086 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 5.189 under the MID surprise-sigma 0.35; scenario range 4.988-5.457 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+   "correction": 0.526,
+   "reasoning": "Market prices P(actual > 4.72) = 0.91 ($1,086 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 5.246 under surprise-sigma 0.392, estimated from 7 resolved point-in-time consensus errors; scenario range 5.114-5.509 is folded into this estimate's sigma. This is a one-quantile diagnostic, not a validated point estimator, and receives zero final weight.",
    "observation_ids": [],
    "citations": [
     "https://polymarket.com/event/de-quarterly-earnings-gaap-eps-08-20-2026-4pt72"
@@ -29,12 +32,12 @@
   },
   "HD:adj_eps": {
    "estimator": "polymarket_proxy",
-   "value": 4.769,
-   "sigma": 0.0553,
-   "n_observations": 1,
+   "value": 4.823,
+   "sigma": 0.1232,
+   "n_observations": 6,
    "anchor": 4.73,
-   "correction": 0.039,
-   "reasoning": "Market prices P(actual > 4.73) = 0.79 ($4,360 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 4.769 under the MID surprise-sigma 0.05; scenario range 4.754-4.801 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.",
+   "correction": 0.093,
+   "reasoning": "Market prices P(actual > 4.73) = 0.79 ($4,360 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 4.823 under surprise-sigma 0.118, estimated from 6 resolved point-in-time consensus errors; scenario range 4.8-4.87 is folded into this estimate's sigma. This is a one-quantile diagnostic, not a validated point estimator, and receives zero final weight.",
    "observation_ids": [],
    "citations": [
     "https://polymarket.com/event/hd-quarterly-earnings-nongaap-eps-08-18-2026-4pt73"

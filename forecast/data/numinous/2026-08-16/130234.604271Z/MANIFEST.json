@@ -1,0 +1,9 @@
+{
+  "fetched_at": "2026-08-16T13:02:35Z",
+  "signals": [
+    "hd-fy2026q2-adjusted-eps-above-4pt73",
+    "adi-fy2026q3-adjusted-eps-above-3pt33",
+    "de-fy2026q3-gaap-eps-above-4pt72"
+  ],
+  "note": "Live API-key test. Responses are sanitized and contain no credential."
+}

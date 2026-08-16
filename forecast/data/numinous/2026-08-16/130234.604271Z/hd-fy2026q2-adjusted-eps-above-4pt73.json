@@ -1,0 +1,28 @@
+{
+  "query": "Will Home Depot report non-GAAP adjusted diluted earnings per share strictly above $4.73 for fiscal Q2 2026 in its official earnings release scheduled for August 18, 2026? Resolve YES only from the company reported non-GAAP adjusted diluted EPS.",
+  "retrieved_at": "2026-08-16T13:01:04.064744Z",
+  "api_response": {
+    "prediction_id": "6ae4aa1d-621c-49ac-8b4e-3656742d6608",
+    "status": "COMPLETED",
+    "created_at": "2026-08-16T13:00:30.671187Z",
+    "error": null,
+    "result": {
+      "prediction": 0.2931,
+      "forecaster_name": "pool_based_miner_forecaster",
+      "forecasted_at": "2026-08-16T13:01:04.064744Z",
+      "parsed_fields": {
+        "title": "Will Home Depot report non-GAAP adjusted diluted EPS strictly above $4.73 for fiscal Q2 2026 in its official earnings release scheduled for August 18, 2026?",
+        "description": "Resolve YES only if Home Depot reports non-GAAP adjusted diluted EPS strictly greater than $4.73 for fiscal Q2 2026 in its official earnings release.",
+        "cutoff": "2026-08-18T23:59:59Z",
+        "topics": ["economics", "business", "finance", "stocks"]
+      },
+      "metadata": {
+        "agent_name": "meridian",
+        "pool": "difficulty_adjusted",
+        "version_id": "e7a0793f-c5e1-4682-b1f1-ce937ef2aa23",
+        "version_number": 5,
+        "total_cost_usd": "0"
+      }
+    }
+  }
+}

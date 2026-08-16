@@ -60,7 +60,7 @@
     h3 { margin: 38px 0 12px; font-size: 22px; letter-spacing: -.025em; }
     p, li { max-width: 74ch; font-size: 17px; line-height: 1.7; }
     .muted { color: var(--muted); }
-    .engine-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--rule); }
+    .engine-grid { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid var(--rule); }
     .engine { min-height: 330px; padding: 28px; border-right: 1px solid var(--rule); }
     .engine:last-child { border-right: 0; }
     .engine-index { font: 10px var(--mono); color: var(--muted); letter-spacing: .14em; text-transform: uppercase; }
@@ -133,6 +133,7 @@
         <a href="#architecture">Architecture</a>
         <a href="#controls">Controls</a>
         <a href="#results">Forecasts</a>
+        <a href="predictions.html">Explorer</a>
         <a href="#reproduce">Reproduce</a>
       </div>
       <div class="status"><span class="dot" aria-hidden="true"></span><span>Audited · 2026-08-16</span></div>
@@ -191,15 +192,21 @@
             <article class="engine">
               <span class="engine-index">Engine C</span>
               <h3>Prediction markets</h3>
-              <p>Dated beat markets contribute one quantile, never a fabricated distribution. No equivalent market means abstention. A low precision factor stops a thin binary proxy from overruling the operating model.</p>
-              <p><strong>Inputs:</strong> snapshotted prices, strike, volume and parser self-tests.</p>
+              <p>Dated beat markets contribute one auditable probability constraint—P(actual &gt; strike)—and an adversarial question, never a fabricated EPS point or distribution. They receive zero final weight until a held-out pre-resolution price backtest proves incremental value. No equivalent market means abstention.</p>
+              <p><strong>Inputs:</strong> append-only price snapshots, validated resolution rules and strike, volume, historical consensus-error dispersion, and parser self-tests.</p>
+            </article>
+            <article class="engine">
+              <span class="engine-index">Engine D</span>
+              <h3>Numinous external critic</h3>
+              <p>The Numinous agent pool answers the identical binary earnings question independently. Its probability is not a traded price and is never merged with Polymarket. It remains at zero final weight until a held-out earnings calibration demonstrates skill.</p>
+              <p><strong>Inputs:</strong> append-only API responses, exact accounting basis, threshold, report cutoff, forecaster version and parsed resolution rule.</p>
             </article>
           </div>
 
           <div class="flow" aria-label="Forecast data flow">
             <div class="flow-node"><span class="flow-label">Evidence</span><strong>Point-in-time observations</strong></div>
             <div class="flow-arrow" aria-hidden="true">→</div>
-            <div class="flow-node"><span class="flow-label">Three lenses</span><strong>Estimate + sigma + provenance</strong></div>
+            <div class="flow-node"><span class="flow-label">Four lenses</span><strong>2 estimates + 2 probability critics</strong></div>
             <div class="flow-arrow" aria-hidden="true">→</div>
             <div class="flow-node final"><span class="flow-label">Meta-forecast</span><strong>Workbook value + audit trail</strong></div>
           </div>
@@ -212,13 +219,13 @@
         <div class="section-number">02 / Controls</div>
         <div>
           <h2>The system knows what it does not know.</h2>
-          <p>The base weight is inverse predictive variance. Reliability scales that precision. If two engines reuse the same evidence family—such as a prediction-market strike copied from consensus—both receive an overlap penalty. The complete formula and every realized weight are written to <code>submission/forecast-audit.json</code>.</p>
+          <p>For validated numeric engines, the base weight is inverse predictive variance and reliability scales that precision. Shared evidence families receive an overlap penalty. Signal-only Polymarket and Numinous records bypass this formula and remain at 0% weight. The complete calculation is written to <code>submission/forecast-audit.json</code>.</p>
           <div class="formula">raw_weight = reliability × overlap_penalty ÷ sigma²<br>final = Σ(raw_weight × estimate) ÷ Σ(raw_weight)</div>
 
           <div class="audit-strip">
             <div class="audit-cell"><strong>0</strong><span>silent missing engines</span></div>
-            <div class="audit-cell"><strong>3</strong><span>direct EPS markets</span></div>
-            <div class="audit-cell"><strong>9</strong><span>market abstentions</span></div>
+            <div class="audit-cell"><strong>3 + 3</strong><span>market + Numinous signals (0% weight)</span></div>
+            <div class="audit-cell"><strong>9 + 9</strong><span>explicit critic abstentions</span></div>
             <div class="audit-cell"><strong>0</strong><span>run failures</span></div>
           </div>
 
@@ -307,7 +314,8 @@ git rev-parse HEAD</code></pre>
           <h3>Known limits</h3>
           <ul>
             <li>The public exact-metric analyst panel is sparse for several operating metrics. Those Street reconstructions use a wider-sigma research fallback and lower reliability.</li>
-            <li>Direct prediction markets exist only for three EPS targets. A binary beat price supplies one quantile, so its precision is deliberately discounted; all other targets abstain.</li>
+            <li>Direct prediction markets exist only for three EPS targets. A binary beat price supplies one quantile, not a complete predictive distribution; these scenarios are signal-only at 0% final weight until a genuine market-price ablation passes. All other targets abstain.</li>
+            <li>Numinous covers the same three EPS questions in this run, but its agent-pool output is not a traded price and currently conflicts sharply with Polymarket. It remains a separate 0%-weight critic until resolved earnings establish calibration.</li>
             <li>The Home Depot ML gate is task matched but has only three historical Q2 transitions. Its uncertainty is widened before it enters the fundamental engine, and the all-transition stress view remains visible in the artifact.</li>
             <li>Regex extractors depend on recurring issuer disclosure shapes. Magnitude checks and source excerpts turn format drift into an observable failure, but do not eliminate it.</li>
             <li>Source-overlap labels are declared families, not learned causal dependence. The penalty is conservative and auditable, but still an approximation.</li>

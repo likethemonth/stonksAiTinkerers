@@ -1,13 +1,15 @@
-"""Build and reconcile the three top-level engines for all submitted metrics."""
+"""Build and reconcile numeric engines plus zero-weight research critics."""
 
 from __future__ import annotations
 
 from datetime import date
 
 from forecast.fundamental import enrich_with_drivers, source_families
+from forecast.market_backtest import promotion_note
 from forecast.meta import meta_forecast
 from forecast.metrics import submitted_specs
-from forecast.polymarket import market_estimate
+from forecast.numinous import numinous_constraint
+from forecast.polymarket import market_constraint
 from forecast.schema import (
     Company,
     ContributionStatus,
@@ -43,8 +45,8 @@ def _fundamental_contribution(
 def _prediction_contribution(
     company: Company, metric_key: str, *, as_of: date | None
 ) -> EngineContribution:
-    estimate = market_estimate(company, metric_key, as_of)
-    if estimate is None:
+    signal = market_constraint(company, metric_key, as_of)
+    if signal is None:
         return EngineContribution(
             engine=Engine.PREDICTION_MARKET,
             status=ContributionStatus.ABSTAINED,
@@ -52,15 +54,39 @@ def _prediction_contribution(
         )
     return EngineContribution(
         engine=Engine.PREDICTION_MARKET,
-        status=ContributionStatus.AVAILABLE,
-        estimate=estimate,
-        # One binary quantile is useful but not as well calibrated as a complete
-        # earnings distribution. The consensus strike is also shared with Street.
+        status=ContributionStatus.SIGNAL_ONLY,
+        signal=signal,
+        # SIGNAL_ONLY entries receive zero numeric weight. Promotion to AVAILABLE
+        # requires a passing pre-resolution walk-forward ablation.
         reliability=0.03,
         source_families=["prediction_market", "public_consensus"],
         note=(
-            "direct beat market interpreted as one quantile, not a point observation; "
-            "low top-level reliability prevents false precision from dominating"
+            "binary beat price retained as a one-quantile research signal and "
+            f"adversarial critic; {promotion_note(as_of=as_of or date.today())}"
+        ),
+    )
+
+
+def _numinous_contribution(
+    company: Company, metric_key: str, *, as_of: date | None
+) -> EngineContribution:
+    signal = numinous_constraint(company, metric_key, as_of)
+    if signal is None:
+        return EngineContribution(
+            engine=Engine.NUMINOUS,
+            status=ContributionStatus.ABSTAINED,
+            note="no point-in-time Numinous forecast for this exact metric and basis",
+        )
+    return EngineContribution(
+        engine=Engine.NUMINOUS,
+        status=ContributionStatus.SIGNAL_ONLY,
+        signal=signal,
+        reliability=0.01,
+        source_families=["external_ai_forecaster", "public_information"],
+        note=(
+            "Numinous agent-pool probability retained as an independent critic; "
+            "it is not a traded price and has no held-out earnings calibration, "
+            "so it receives zero numeric weight"
         ),
     )
 
@@ -71,7 +97,7 @@ def orchestrate(
     *,
     as_of: date | None = None,
 ) -> list[MetricForecast]:
-    """Return final metrics after all three engines and the meta-forecaster."""
+    """Return final metrics after numeric engines and all explicit critics."""
     enriched = enrich_with_drivers(company, fundamental_metrics, as_of=as_of)
     by_label = {metric.label: metric for metric in enriched}
     final: list[MetricForecast] = []
@@ -81,6 +107,7 @@ def orchestrate(
             street_contribution(company, metric_spec, as_of=as_of),
             _fundamental_contribution(company, metric),
             _prediction_contribution(company, metric_spec.key, as_of=as_of),
+            _numinous_contribution(company, metric_spec.key, as_of=as_of),
         ]
         combined = meta_forecast(
             metric_spec.label or "", metric_spec.units, contributions

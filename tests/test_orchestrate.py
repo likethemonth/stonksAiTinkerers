@@ -18,7 +18,7 @@ def baseline_metrics(company: Company):
     ]
 
 
-def test_orchestrator_records_all_three_engines_for_every_metric() -> None:
+def test_orchestrator_records_every_engine_for_every_metric() -> None:
     for company in (Company.HD, Company.HAS, Company.DE):
         metrics = orchestrate(
             company,
@@ -44,7 +44,7 @@ def test_driver_nowcast_is_nested_in_fundamental_not_a_fourth_engine() -> None:
         item for item in comps.engine_contributions if item.engine is Engine.FUNDAMENTAL
     )
     assert "external_drivers" in fundamental.source_families
-    assert len(comps.engine_contributions) == 3
+    assert len(comps.engine_contributions) == 4
 
 
 def test_missing_prediction_market_is_explicit_abstention() -> None:
@@ -74,17 +74,59 @@ def test_deere_registry_key_maps_to_direct_eps_market() -> None:
         for item in eps.engine_contributions
         if item.engine is Engine.PREDICTION_MARKET
     )
-    assert market.status is ContributionStatus.AVAILABLE
+    assert market.status is ContributionStatus.SIGNAL_ONLY
+    assert market.estimate is None
+    assert market.signal is not None
+    assert market.signal.threshold == pytest.approx(4.72)
+    numinous = next(
+        item for item in eps.engine_contributions if item.engine is Engine.NUMINOUS
+    )
+    assert numinous.status is ContributionStatus.SIGNAL_ONLY
+    assert numinous.signal is not None
+    assert numinous.signal.probability == pytest.approx(0.2912)
 
 
-def test_binary_market_proxy_cannot_dominate_hd_eps() -> None:
+def test_unvalidated_binary_market_proxy_has_zero_final_weight() -> None:
     metrics = orchestrate(
         Company.HD,
         baseline_metrics(Company.HD),
         as_of=date(2026, 8, 16),
     )
     eps = next(metric for metric in metrics if metric.label == "Adjusted diluted EPS")
-    weight = next(
-        item for item in eps.meta_weights if item.engine is Engine.PREDICTION_MARKET
+    market = next(
+        item
+        for item in eps.engine_contributions
+        if item.engine is Engine.PREDICTION_MARKET
     )
-    assert weight.normalized_weight < 0.25
+    assert market.status is ContributionStatus.SIGNAL_ONLY
+    assert market.estimate is None
+    assert market.signal is not None
+    assert market.signal.probability == pytest.approx(0.785)
+    assert all(
+        item.engine is not Engine.PREDICTION_MARKET for item in eps.meta_weights
+    )
+    assert any("signal only (0% weight)" in warning for warning in eps.warnings)
+
+
+def test_numinous_is_a_separate_zero_weight_critic() -> None:
+    metrics = orchestrate(
+        Company.HD,
+        baseline_metrics(Company.HD),
+        as_of=date(2026, 8, 16),
+    )
+    eps = next(metric for metric in metrics if metric.label == "Adjusted diluted EPS")
+    numinous = next(
+        item for item in eps.engine_contributions if item.engine is Engine.NUMINOUS
+    )
+    assert numinous.status is ContributionStatus.SIGNAL_ONLY
+    assert numinous.estimate is None
+    assert numinous.signal is not None
+    assert numinous.signal.provider == "numinous"
+    assert numinous.signal.threshold == pytest.approx(4.73)
+    assert numinous.signal.probability == pytest.approx(0.2931)
+    assert all(item.engine is not Engine.NUMINOUS for item in eps.meta_weights)
+    assert eps.needs_review
+    assert any(
+        "prediction_market and numinous probabilities disagree" in warning
+        for warning in eps.warnings
+    )

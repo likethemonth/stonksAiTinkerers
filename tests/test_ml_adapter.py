@@ -37,7 +37,7 @@ def test_ml_is_nested_inside_fundamental_engine() -> None:
         _hd_baselines(),
         as_of=date(2026, 8, 16),
     )
-    assert all(len(metric.engine_contributions) == 3 for metric in metrics)
+    assert all(len(metric.engine_contributions) == 4 for metric in metrics)
     for metric in metrics:
         fundamental = next(
             item

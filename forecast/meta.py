@@ -1,9 +1,9 @@
-"""Overlap-aware reconciliation for the three independent forecast engines.
+"""Overlap-aware reconciliation for numeric engines and research critics.
 
 The top-level contract is deliberately stricter than the estimator reconciler:
-all three engines must be represented, even when an engine abstains. This keeps
-missing market coverage visible and prevents a copied consensus value from being
-mistaken for independent evidence.
+every configured engine must be represented, even when it abstains. This keeps
+missing market/forecaster coverage visible and prevents a copied consensus value
+from being mistaken for independent evidence.
 """
 
 from __future__ import annotations
@@ -19,6 +19,8 @@ from forecast.schema import (
     MetricForecast,
     Unit,
 )
+
+PROBABILITY_DISAGREEMENT = 0.25
 
 
 def _overlap(a: EngineContribution, b: EngineContribution) -> float:
@@ -45,11 +47,11 @@ def meta_forecast(
     units: Unit,
     contributions: list[EngineContribution],
 ) -> MetricForecast:
-    """Combine Street, fundamental and market contributions into one forecast.
+    """Combine numeric contributions while preserving unweighted critics.
 
     Base precision is ``1 / sigma^2``. Engine reliability and a source-overlap
-    penalty scale that precision. Abstentions receive no numeric weight but stay
-    in the audit record.
+    penalty scale that precision. Abstentions and unvalidated research signals
+    receive no numeric weight but stay in the audit record.
     """
     engines = [c.engine for c in contributions]
     if len(engines) != len(set(engines)):
@@ -109,7 +111,36 @@ def meta_forecast(
         for c in contributions
         if c.status is ContributionStatus.ABSTAINED
     ]
+    warnings.extend(
+        f"{c.engine.value} signal only (0% weight): {c.note}"
+        for c in contributions
+        if c.status is ContributionStatus.SIGNAL_ONLY
+    )
     needs_review = False
+    signals = [
+        contribution
+        for contribution in contributions
+        if contribution.status is ContributionStatus.SIGNAL_ONLY
+        and contribution.signal is not None
+    ]
+    for index, left in enumerate(signals):
+        assert left.signal is not None
+        for right in signals[index + 1 :]:
+            assert right.signal is not None
+            comparable = (
+                left.signal.relation == right.signal.relation
+                and math.isclose(
+                    left.signal.threshold, right.signal.threshold, abs_tol=0.005
+                )
+            )
+            gap = abs(left.signal.probability - right.signal.probability)
+            if comparable and gap > PROBABILITY_DISAGREEMENT:
+                needs_review = True
+                warnings.append(
+                    f"{left.engine.value} and {right.engine.value} probabilities "
+                    f"disagree by {gap:.1%} at threshold {left.signal.threshold:g}"
+                )
+
     for index, left in enumerate(available):
         assert left.estimate is not None
         for right in available[index + 1 :]:

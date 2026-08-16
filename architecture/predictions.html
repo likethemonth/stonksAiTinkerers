@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111112'/%3E%3Ctext x='6' y='21' fill='%23f3f0e9' font-family='monospace' font-size='12' font-weight='700'%3E3L%3C/text%3E%3C/svg%3E">
+<title>Forecast explorer — Three-Lens Meta-Forecaster</title>
+<style>
+:root{--paper:#f3f0e9;--paper-deep:#e8e3d9;--ink:#111112;--muted:#68655f;--rule:#c8c2b7;
+--signal:#b8ff45;--verified:#43bc82;--warn:#bd5d23;
+--sans:Inter,"Helvetica Neue",Arial,sans-serif;--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;--content:1280px}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:var(--paper);font-family:var(--sans)}
+a{color:inherit}
+.shell{width:min(var(--content),calc(100% - 48px));margin-inline:auto}
+.site-header{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--rule);background:rgba(243,240,233,.97)}
+.nav{min-height:64px;display:flex;align-items:center;gap:28px}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto;text-decoration:none;font-weight:700}
+.brand-mark{display:grid;place-items:center;width:34px;height:34px;color:var(--paper);background:var(--ink);font:700 11px var(--mono)}
+.nav-links{display:flex;gap:24px}
+.nav-links a{text-decoration:none;font:10px var(--mono);letter-spacing:.13em;text-transform:uppercase}
+.status{display:flex;align-items:center;gap:9px;white-space:nowrap;font:10px var(--mono);letter-spacing:.09em;text-transform:uppercase}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--verified);box-shadow:0 0 0 5px rgba(67,188,130,.13)}
+.eyebrow{margin:0 0 22px;color:var(--muted);font:10px/1.5 var(--mono);letter-spacing:.16em;text-transform:uppercase}
+.hero{padding:76px 0 48px}
+h1{max-width:900px;margin:0;font-size:clamp(46px,6.5vw,88px);line-height:.88;letter-spacing:-.07em}
+.lede{max-width:720px;margin:28px 0 0;color:var(--muted);font-size:clamp(18px,1.8vw,23px);line-height:1.45}
+.controls{position:sticky;top:64px;z-index:15;padding:20px 0;border-block:1px solid var(--rule);background:var(--paper-deep)}
+.ctrl-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 28px;align-items:center}
+.ctrl-group{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ctrl-group:first-child{grid-column:1;grid-row:1}
+.ctrl-group:nth-child(2){grid-column:1/-1;grid-row:2;display:grid;grid-template-columns:auto minmax(0,1fr)}
+.ctrl-group:nth-child(2) .seg{width:max-content;max-width:100%;flex-wrap:nowrap}
+#ctx{grid-column:2;grid-row:1}
+.ctrl-label{color:var(--muted);font:9px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+.seg{display:flex;border:1px solid var(--ink);background:var(--paper)}
+.seg button{padding:9px 15px;border:0;border-right:1px solid var(--rule);background:transparent;color:var(--ink);
+font:11px var(--mono);letter-spacing:.07em;text-transform:uppercase;cursor:pointer}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);font-weight:700}
+.seg button:disabled{color:#a8a49c;cursor:not-allowed}
+.seg button:focus-visible{outline:3px solid var(--warn);outline-offset:-3px}
+section{padding:56px 0;border-bottom:1px solid var(--rule)}
+h2{margin:0 0 10px;font-size:clamp(28px,3.4vw,46px);line-height:.98;letter-spacing:-.05em}
+h3{margin:0 0 14px;font-size:19px;letter-spacing:-.02em}
+p,li{font-size:16px;line-height:1.65}
+.muted{color:var(--muted)}
+.summary{max-width:78ch;font-size:18px;line-height:1.6}
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;border:1px solid var(--rule);margin-top:30px}
+.metric{padding:24px;border-right:1px solid var(--rule)}
+.metric:last-child{border-right:0}
+.metric .m-label{color:var(--muted);font:9px var(--mono);letter-spacing:.12em;text-transform:uppercase;min-height:26px;display:block}
+.metric .m-value{display:block;margin-top:12px;font-size:40px;font-variant-numeric:tabular-nums;letter-spacing:-.045em;font-weight:750}
+.metric .m-value.none{font-size:22px;color:var(--muted);font-weight:400;font-family:var(--mono)}
+.metric .m-unit{color:var(--muted);font:10px var(--mono);letter-spacing:.1em}
+.metric .m-final{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule);color:var(--muted);font:10px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.metric .m-why{margin:14px 0 0;font-size:13px;line-height:1.55;color:var(--muted)}
+.chart-card{margin-top:26px;border:1px solid var(--rule);background:rgba(255,255,255,.28)}
+.chart-head{display:flex;flex-wrap:wrap;gap:14px;justify-content:space-between;align-items:baseline;padding:18px 22px;border-bottom:1px solid var(--rule)}
+.chart-head strong{font-size:16px}
+.chart-head span{color:var(--muted);font:10px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.chart-body{padding:18px 22px 22px;overflow-x:auto}
+.legend{display:flex;gap:20px;margin-bottom:8px;font:10px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;margin-right:7px;vertical-align:middle}
+.gatebar{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--rule);margin-top:26px}
+.gatecell{flex:1 1 150px;padding:18px 22px;border-right:1px solid var(--rule)}
+.gatecell:last-child{border-right:0}
+.gatecell strong{display:block;font-size:26px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.gatecell span{display:block;margin-top:6px;color:var(--muted);font:9px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.pill{display:inline-block;padding:4px 8px;background:var(--signal);font:9px var(--mono);letter-spacing:.08em;text-transform:uppercase;font-weight:700}
+.pill.fail{background:var(--ink);color:var(--paper)}
+.pill.abstain{background:var(--paper-deep);color:var(--muted)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);margin-top:30px}
+.split>div{padding:26px;border-right:1px solid var(--rule)}
+.split>div:last-child{border-right:0}
+ol.steps{margin:0;padding-left:20px}
+ol.steps li{margin-bottom:14px;font-size:15px;line-height:1.6}
+ol.steps li::marker{font-family:var(--mono);font-size:12px;color:var(--muted)}
+ul.data{margin:0;padding:0;list-style:none}
+ul.data li{padding:14px 0;border-bottom:1px solid var(--rule);font-size:14px}
+ul.data li:last-child{border-bottom:0}
+ul.data .d-name{font-weight:650}
+ul.data .d-meta{display:block;margin-top:5px;color:var(--muted);font:10px/1.6 var(--mono);letter-spacing:.05em;word-break:break-all}
+.empty{padding:40px 22px;color:var(--muted);font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase;text-align:center}
+/* SVG vocabulary reused verbatim from the architecture diagram in index.html */
+.d-box{fill:rgba(255,255,255,.55);stroke:var(--rule)}
+.d-chip{fill:var(--paper-deep);stroke:var(--rule)}
+.d-eyebrow{fill:var(--muted);font:9.5px var(--mono);letter-spacing:.13em}
+.d-title{fill:var(--ink);font:700 15px var(--sans);letter-spacing:-.02em}
+.d-body{fill:var(--muted);font:11.5px var(--sans)}
+.d-mono{fill:var(--muted);font:10.5px var(--mono)}
+.d-warn{fill:var(--warn);font:10.5px var(--mono);letter-spacing:.1em}
+.d-good{fill:var(--verified);font:10.5px var(--mono);letter-spacing:.1em}
+.d-line{fill:none;stroke:var(--ink);stroke-width:1.3}
+.d-line-dash{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:5 4}
+.d-gate{fill:none;stroke:var(--warn);stroke-width:1.3;stroke-dasharray:3 5}
+.d-node{fill:var(--ink)}
+.d-pred{fill:var(--paper);stroke:#5b8f2e;stroke-width:2.2}
+.d-predline{fill:none;stroke:#5b8f2e;stroke-width:1.6;stroke-dasharray:5 4}
+.d-grid{stroke:var(--rule);stroke-width:1;stroke-dasharray:2 4}
+.d-errbar{fill:var(--paper-deep);stroke:var(--rule)}
+.d-forward-track{stroke:var(--rule);stroke-width:5;stroke-linecap:round}
+.d-forward-link{stroke:#5b8f2e;stroke-width:2}
+.d-forward-reference{fill:var(--ink)}
+.d-forward-value{fill:var(--ink);font:700 12px var(--mono)}
+.d-lens-anchor{fill:#6f6a61;stroke:var(--paper);stroke-width:2}
+.d-lens-driver{fill:var(--warn);stroke:var(--paper);stroke-width:2}
+.d-lens-ml{fill:#5b8f2e;stroke:var(--paper);stroke-width:2}
+.d-lens-market{fill:#367493;stroke:var(--paper);stroke-width:2}
+.aggregate-note{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--rule)}
+.aggregate-note>div{padding:18px 22px;border-right:1px solid var(--rule)}
+.aggregate-note>div:last-child{border-right:0}
+.aggregate-note b,.aggregate-note span{display:block}
+.aggregate-note b{font-size:20px}
+.aggregate-note span{margin-top:5px;color:var(--muted);font:9px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.expert-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--rule)}
+.expert-card{min-width:0;padding:18px;border-right:1px solid var(--rule)}
+.expert-card:last-child{border-right:0}
+.expert-card .rank{color:var(--verified);font:700 10px var(--mono);letter-spacing:.08em}
+.expert-card b,.expert-card small{display:block}
+.expert-card b{margin-top:8px;overflow:hidden;font-size:14px;text-overflow:ellipsis;white-space:nowrap}
+.expert-card small{margin-top:7px;color:var(--muted);font:9px/1.5 var(--mono);text-transform:uppercase}
+.footer{padding:34px 0 64px;color:var(--muted);font:10px/1.7 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+@media (max-width:900px){.nav-links{display:none}.split{grid-template-columns:1fr}.split>div{border-right:0;border-bottom:1px solid var(--rule)}
+.metric{border-right:0;border-bottom:1px solid var(--rule)}.controls{position:static}.ctrl-row{display:flex;flex-direction:column;align-items:stretch}.ctrl-group,.ctrl-group:nth-child(2){display:flex;flex-direction:column;align-items:stretch}.ctrl-group .seg,.ctrl-group:nth-child(2) .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;max-width:100%}.seg button{min-width:0;white-space:normal}.seg button:nth-child(2n){border-right:0}.seg button:nth-last-child(n+3){border-bottom:1px solid var(--rule)}#ctx{align-self:flex-start}.expert-grid{grid-template-columns:1fr 1fr}.expert-card{border-bottom:1px solid var(--rule)}.aggregate-note{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <nav class="shell nav" aria-label="Sections">
+    <a class="brand" href="#top"><span class="brand-mark">3L</span><span>Three-Lens Forecaster</span></a>
+    <div class="nav-links"><a href="index.html">Architecture</a><a href="#explorer">Explorer</a></div>
+    <div class="status"><span class="dot" aria-hidden="true"></span><span>Generated · 2026-08-16</span></div>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="hero shell">
+    <p class="eyebrow">Agents vs Wall Street · Forecast explorer</p>
+    <h1>Pick a stock.<br>Pick a method.<br>See how well it worked.</h1>
+    <p class="lede">Every lens, its accuracy in each period it was tested on, the reasoning that
+    produced the number, and the exact data it consumed — with publication dates, so you can check
+    that nothing was used before it existed.</p>
+  </div>
+
+  <div class="controls" id="explorer">
+    <div class="shell ctrl-row">
+      <div class="ctrl-group"><span class="ctrl-label">Stock</span><div class="seg"><button type="button" data-stock="ADI" aria-pressed="false">Analog Devices</button><button type="button" data-stock="HD" aria-pressed="false">Home Depot</button><button type="button" data-stock="Hays" aria-pressed="false">Hays plc</button><button type="button" data-stock="DE" aria-pressed="false">Deere & Company</button></div></div>
+      <div class="ctrl-group"><span class="ctrl-label">Methodology</span><div class="seg"><button type="button" data-method="ml" aria-pressed="false">Ensemble</button><button type="button" data-method="market" aria-pressed="false">Prediction market</button><button type="button" data-method="expert" aria-pressed="false">Expert</button><button type="button" data-method="aggregate" aria-pressed="false">Aggregate final</button></div></div>
+      <span class="ctrl-label" id="ctx" style="margin-left:auto"></span>
+    </div>
+  </div>
+
+  <section>
+    <div class="shell">
+      <h2 id="title"></h2>
+      <p class="summary muted" id="summary"></p>
+      <div class="metric-grid" id="metrics"></div>
+      <div id="charts"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="shell">
+      <div class="split">
+        <div>
+          <h3>How the number was reached</h3>
+          <ol class="steps" id="steps"></ol>
+        </div>
+        <div>
+          <h3>Data used</h3>
+          <ul class="data" id="data"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer shell">
+    Generated by forecast/build_predictions_page.py · 2026-08-16 · Self-contained, no network requests ·
+    Companion to architecture/index.html
+  </footer>
+</main>
+<script>const DATA = {"ADI":{"name":"Analog Devices","period":"FY2026Q3","reports":"19 Aug 2026","methods":{"anchor":{"label":"Anchor \u2014 calibrated guidance","summary":"ADI guides revenue, adjusted EPS and adjusted operating margin one quarter ahead. The anchor lens takes the guidance midpoint and applies the beat that ADI has historically delivered against its own guide, then sanity-checks it with a full bottom-up P&L walk.","metrics":[{"label":"Revenue","unit":"USDm","value":4010,"why":"Guide $3.9B\u00b10.1B; six straight beats of the midpoint averaging +3.55% (last four +3.15%); record bookings, AI data-center ramp; +2.8% beat applied.","series":[{"period":"FY2021Q1","actual":1558.0,"predicted":1500.0,"err":3.72},{"period":"FY2021Q2","actual":1661.0,"predicted":1600.0,"err":3.67},{"period":"FY2021Q3","actual":1759.0,"predicted":1700.0,"err":3.35},{"period":"FY2021Q4","actual":2340.0,"predicted":1780.0,"err":23.93},{"period":"FY2022Q1","actual":2684.0,"predicted":2600.0,"err":3.13},{"period":"FY2022Q2","actual":2972.0,"predicted":2800.0,"err":5.79},{"period":"FY2022Q3","actual":3110.0,"predicted":3050.0,"err":1.93},{"period":"FY2022Q4","actual":3248.0,"predicted":3150.0,"err":3.02},{"period":"FY2023Q1","actual":3250.0,"predicted":3150.0,"err":3.08},{"period":"FY2023Q2","actual":3263.0,"predicted":3200.0,"err":1.93},{"period":"FY2023Q3","actual":3076.0,"predicted":3100.0,"err":0.78},{"period":"FY2023Q4","actual":2716.0,"predicted":2700.0,"err":0.59},{"period":"FY2024Q1","actual":2513.0,"predicted":2500.0,"err":0.52},{"period":"FY2024Q2","actual":2159.0,"predicted":2100.0,"err":2.73},{"period":"FY2024Q3","actual":2312.0,"predicted":2270.0,"err":1.82},{"period":"FY2024Q4","actual":2443.0,"predicted":2400.0,"err":1.76},{"period":"FY2025Q1","actual":2423.0,"predicted":2350.0,"err":3.01},{"period":"FY2025Q2","actual":2640.0,"predicted":2500.0,"err":5.3},{"period":"FY2025Q3","actual":2880.0,"predicted":2750.0,"err":4.51},{"period":"FY2025Q4","actual":3076.0,"predicted":3000.0,"err":2.47},{"period":"FY2026Q1","actual":3160.0,"predicted":3100.0,"err":1.9},{"period":"FY2026Q2","actual":3623.0,"predicted":3500.0,"err":3.39}],"seriesLabel":"Guidance midpoint vs reported actual (the calibration this lens rests on)","predLabel":"ADI guidance midpoint","final":3996.71},{"label":"Adjusted diluted EPS","unit":"USD / share","value":3.48,"why":"Guide $3.30\u00b10.15; last two beats +0.17/+0.21; bottom-up at $4,010M revenue, 72.9% GM, ~$908M opex, $57M nonop, 12.4% tax, 490M shares gives $3.50. Polymarket P(>3.33)=94%.","series":[{"period":"FY2021Q1","actual":1.44,"predicted":1.3,"err":9.72},{"period":"FY2021Q2","actual":1.54,"predicted":1.44,"err":6.49},{"period":"FY2021Q3","actual":1.72,"predicted":1.61,"err":6.4},{"period":"FY2021Q4","actual":1.73,"predicted":1.72,"err":0.58},{"period":"FY2022Q1","actual":1.94,"predicted":1.78,"err":8.25},{"period":"FY2022Q2","actual":2.4,"predicted":2.07,"err":13.75},{"period":"FY2022Q3","actual":2.52,"predicted":2.42,"err":3.97},{"period":"FY2022Q4","actual":2.73,"predicted":2.57,"err":5.86},{"period":"FY2023Q1","actual":2.75,"predicted":2.6,"err":5.45},{"period":"FY2023Q2","actual":2.83,"predicted":2.75,"err":2.83},{"period":"FY2023Q3","actual":2.49,"predicted":2.52,"err":1.2},{"period":"FY2023Q4","actual":2.01,"predicted":2.0,"err":0.5},{"period":"FY2024Q1","actual":1.73,"predicted":1.7,"err":1.73},{"period":"FY2024Q2","actual":1.4,"predicted":1.26,"err":10.0},{"period":"FY2024Q3","actual":1.58,"predicted":1.5,"err":5.06},{"period":"FY2024Q4","actual":1.67,"predicted":1.63,"err":2.4},{"period":"FY2025Q1","actual":1.63,"predicted":1.53,"err":6.13},{"period":"FY2025Q2","actual":1.85,"predicted":1.68,"err":9.19},{"period":"FY2025Q3","actual":2.05,"predicted":1.92,"err":6.34},{"period":"FY2025Q4","actual":2.26,"predicted":2.22,"err":1.77},{"period":"FY2026Q1","actual":2.46,"predicted":2.29,"err":6.91},{"period":"FY2026Q2","actual":3.09,"predicted":2.88,"err":6.8}],"seriesLabel":"Guidance midpoint vs reported actual","predLabel":"ADI guidance midpoint","final":3.43},{"label":"Adjusted gross margin","unit":"%","value":72.9,"why":"CFO guided ~50bp decline from 73.0% (one-time channel-repricing lapse) = 72.5% implied; mix slight tailwind, utilization maxed; ADI's GM plans have been conservative by 30-50bp.","series":[],"seriesLabel":"No direct guide \u2014 derived from the CFO's stated ~50bp decline","final":73.15}],"derivation":["Guidance (Q2 FY26 8-K, 20 May 2026): revenue $3.9B \u00b1$100M, adjusted EPS $3.30 \u00b1$0.15, adjusted operating margin 49.0%, tax 12\u201314%.","Calibration: six consecutive beats of the revenue midpoint (+3.1, +5.6, +4.7, +2.5, +1.9, +3.5%). Mean +3.55%, last four +3.15%.","Applied +2.8% \u2014 mid-range of recent beats, haircut because the CFO said fabs are effectively maxed, so upside needs outsourced supply. 3,900 \u00d7 1.028 = 4,010.","Gross margin: CFO guided ~50bp below Q2's 73.0% (a one-time channel-repricing benefit does not repeat) \u2192 72.5% implied; +40bp for habitual conservatism \u2192 72.9%.","EPS bottom-up: 4,010 revenue \u00d7 72.9% = 2,923 gross profit; opex ~908; adj operating income 2,015 (50.2%); nonop 57; tax 12.4%; 490M shares \u2192 $3.50. Guide + beat cadence gives 3.30 + 0.17 = $3.47. Point: $3.48."],"data":[{"name":"ADI Q2 FY26 earnings release (guidance + results)","published":"2026-05-20","source":"challenge/offline-data/analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md"},{"name":"Q2 FY26 earnings call \u2014 CFO on Q3 gross margin and utilization","published":"2026-05-20","source":"challenge/offline-data/analog-devices/call-transcripts/2026-05-20__adi-us-20260520-call-qna__1041159.md"},{"name":"Six prior quarters of guidance vs actuals (calibration)","published":"2024-11-26 \u2192 2026-05-20","source":"challenge/offline-data/analog-devices/filings/*-8k*.md"}]},"driver":{"label":"Driver \u2014 peer read-through","summary":"Deliberately ignores ADI's own guidance and asks what the semiconductor cycle did after ADI last spoke, using Texas Instruments' overlapping quarter as the read-through.","metrics":[{"label":"Revenue","unit":"USDm","value":4009,"why":"Guide-independent peer read-through: TXN June-qtr analog +26% y/y (2 of ADI's 3 fiscal months overlap) and TXN Sept-qtr guide +8.1% q/q vs ADI implied +7.6% - the cycle ran at/above the slope ADI assumed. Beat of +2.8% on 3,900 base, sigma 1.2pp.","series":[],"seriesLabel":"","final":3996.71},{"label":"Adjusted diluted EPS","unit":"USD / share","value":3.51,"why":"P&L flow-through of driver revenue: dRev q/q = 4,009-3,623 = +386; incremental adj op margin 65% (recent 2 qtrs ran ~80%, structural ~50%; half-shrunk to 65%) -> adj OI 1,774+251 = 2,025; nonop 57; tax 12.5% -> NI 1,722; / 490M shares = 3.51.","series":[],"seriesLabel":"","final":3.43},{"label":"Adjusted gross margin","unit":"%","value":72.9,"why":"Driver lens adds little: utilization already maxed (physical constraint), mix tailwind from data center (above corp-avg GM) growing fastest. Direction +, magnitude unresolvable from external data; carries the anchor-lens 72.9.","series":[],"seriesLabel":"","final":73.15}],"derivation":["TXN reported its June quarter on 22 Jul 2026 \u2014 after ADI guided on 20 May, and overlapping two of ADI's three fiscal-Q3 months.","TXN analog revenue +26% y/y; TXN guided the next quarter +8.1% q/q, above the +7.6% ADI's own outlook implies. The cycle ran at or above the slope ADI assumed.","Beat term +2.8 \u00b11.2pp applied to the $3,900M guide base \u2192 $4,009M.","EPS flow-through: \u0394Revenue +386 q/q \u00d7 65% incremental adjusted operating margin (recent two quarters ran ~80%, structural ~50%, half-shrunk) \u2192 adj operating income 2,025; less 57 nonop; 12.5% tax; 490M shares \u2192 $3.51."],"data":[{"name":"Texas Instruments June-quarter analog revenue y/y (reported 2026-07-22)","value":"26.0 % y/y (total revenue +23%, industrial/data center/auto led)","published":"2026-07-22","source":"https://www.stocktitan.net/sec-filings/TXN/8-k-texas-instruments-inc-reports-material-event-e3f3c5710542.html"},{"name":"Texas Instruments Sept-quarter revenue guide, q/q at midpoint","value":"8.1 % q/q ($5.65-6.15B, mid $5.90B vs $5.46B)","published":"2026-07-22","source":"https://www.stocktitan.net/sec-filings/TXN/8-k-texas-instruments-inc-reports-material-event-e3f3c5710542.html"}]},"ml":{"label":"Ensemble \u2014 guidance realisation","summary":"A zero-parameter model: multiply the published guide by the expanding mean of every past realisation ratio (actual \u00f7 guide). Nothing is fitted, so nothing can be overfit, and the walk-forward is exact.","metrics":[{"label":"Revenue","unit":"USDm","value":4003.571,"why":"guide 3,900 \u00d7 mean realisation ratio 1.0266","series":[{"period":"FY2023Q1","actual":3250.0,"predicted":3263.809,"err":0.425},{"period":"FY2023Q2","actual":3263.0,"predicted":3312.81,"err":1.527},{"period":"FY2023Q3","actual":3076.0,"predicted":3201.242,"err":4.072},{"period":"FY2023Q4","actual":2716.0,"predicted":2772.596,"err":2.084},{"period":"FY2024Q1","actual":2513.0,"predicted":2560.668,"err":1.897},{"period":"FY2024Q2","actual":2159.0,"predicted":2146.512,"err":0.578},{"period":"FY2024Q3","actual":2312.0,"predicted":2321.627,"err":0.416},{"period":"FY2024Q4","actual":2443.0,"predicted":2453.658,"err":0.436},{"period":"FY2025Q1","actual":2423.0,"predicted":2401.671,"err":0.88},{"period":"FY2025Q2","actual":2640.0,"predicted":2556.714,"err":3.155},{"period":"FY2025Q3","actual":2880.0,"predicted":2818.93,"err":2.12},{"period":"FY2025Q4","actual":3076.0,"predicted":3079.638,"err":0.118},{"period":"FY2026Q1","actual":3160.0,"predicted":3182.057,"err":0.698},{"period":"FY2026Q2","actual":3623.0,"predicted":3591.18,"err":0.878}],"seriesLabel":"Walk-forward: model prediction vs reported actual","gate":{"kind":"mape","threshold":2.0,"score":1.377,"beats_naive":true,"n":14,"passed":true},"final":3996.71},{"label":"Adjusted diluted EPS","unit":"USD / share","value":3.49,"why":"guide 3.30 \u00d7 mean realisation ratio 1.0576","series":[{"period":"FY2023Q1","actual":2.75,"predicted":2.829,"err":2.886},{"period":"FY2023Q2","actual":2.83,"predicted":2.976,"err":5.153},{"period":"FY2023Q3","actual":2.49,"predicted":2.705,"err":8.621},{"period":"FY2023Q4","actual":2.01,"predicted":2.122,"err":5.583},{"period":"FY2024Q1","actual":1.73,"predicted":1.792,"err":3.582},{"period":"FY2024Q2","actual":1.4,"predicted":1.323,"err":5.496},{"period":"FY2024Q3","actual":1.58,"predicted":1.584,"err":0.268},{"period":"FY2024Q4","actual":1.67,"predicted":1.721,"err":3.061},{"period":"FY2025Q1","actual":1.63,"predicted":1.612,"err":1.134},{"period":"FY2025Q2","actual":1.85,"predicted":1.771,"err":4.266},{"period":"FY2025Q3","actual":2.05,"predicted":2.031,"err":0.95},{"period":"FY2025Q4","actual":2.26,"predicted":2.349,"err":3.951},{"period":"FY2026Q1","actual":2.46,"predicted":2.418,"err":1.723},{"period":"FY2026Q2","actual":3.09,"predicted":3.044,"err":1.5}],"seriesLabel":"Walk-forward: model prediction vs reported actual","gate":{"kind":"mape","threshold":5.0,"score":3.441,"beats_naive":true,"n":14,"passed":true},"final":3.43},{"label":"Adjusted gross margin","unit":"%","value":73.29,"why":"guided operating margin \u00d7 realisation + forecast opex spread","series":[{"period":"FY2023Q1","actual":73.6,"predicted":74.44,"err":0.84},{"period":"FY2023Q2","actual":73.7,"predicted":75.23,"err":1.53},{"period":"FY2023Q3","actual":72.2,"predicted":72.56,"err":0.36},{"period":"FY2023Q4","actual":70.2,"predicted":70.47,"err":0.27},{"period":"FY2024Q1","actual":69.0,"predicted":68.56,"err":0.44},{"period":"FY2024Q2","actual":66.7,"predicted":65.6,"err":1.1},{"period":"FY2024Q3","actual":67.9,"predicted":69.09,"err":1.19},{"period":"FY2024Q4","actual":67.9,"predicted":68.28,"err":0.38},{"period":"FY2025Q1","actual":68.8,"predicted":67.83,"err":0.97},{"period":"FY2025Q2","actual":69.4,"predicted":70.5,"err":1.1},{"period":"FY2025Q3","actual":69.2,"predicted":70.61,"err":1.41},{"period":"FY2025Q4","actual":69.8,"predicted":70.89,"err":1.09},{"period":"FY2026Q1","actual":71.2,"predicted":70.37,"err":0.83},{"period":"FY2026Q2","actual":73.0,"predicted":73.98,"err":0.98}],"seriesLabel":"Walk-forward: model prediction vs reported actual","gate":{"kind":"mae","threshold":1.0,"score":0.893,"beats_naive":true,"n":14,"passed":true},"final":73.15}],"derivation":["Realisation ratio = actual \u00f7 guidance midpoint, computed for every past quarter. Mean 1.026, sd 0.018; 19 of 20 quarters above 1.0.","Prediction = guide for the target quarter \u00d7 expanding mean of all prior ratios. No parameters are estimated.","Gross margin has no direct guide, so it is decomposed: adj gross margin = adj operating margin + opex-as-%-of-revenue. The operating-margin half IS guided; only the opex spread needs a model (it has compressed 28.3 \u2192 24.0 over six quarters as revenue scaled).","Naive baseline is deliberately strong \u2014 trust the guidance verbatim. The model beat it on all three metrics.","Robustness: five different ratio estimators span only 0.21pp (revenue) and 0.60pp (EPS), and every one passes its gate. The deployed estimator was fixed before this ablation and not switched to the post-hoc winner."],"data":[{"name":"20 quarters of ADI guidance midpoints and reported actuals","published":"2020-11-24 \u2192 2026-05-20","source":"data/observations/analog-devices.json (375 observations)"}]},"market":{"label":"Market \u2014 Polymarket","summary":"A live binary market on whether ADI beats the Street EPS consensus. The strike leaks the consensus frozen at market creation; the price pins one quantile of the outcome distribution.","metrics":[{"label":"Adjusted diluted EPS","unit":"USD / share","value":3.47,"why":"Market prices P(actual > 3.33) = 0.94 ($958 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 3.47 under the MID surprise-sigma 0.09; scenario range 3.408-3.548 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.","series":[],"seriesLabel":"","final":3.43}],"derivation":["Market: 'Will Analog Devices beat quarterly earnings?', strike $3.33 (the Street consensus at creation).","Price implies P(actual > 3.33) = 94% on $958 of volume.","Implied mean = strike + \u03c3\u00b7\u03a6\u207b\u00b9(p) = 3.33 + 0.09 \u00d7 1.555 = $3.47 under the mid surprise-sigma scenario.","Used as an external critic, not averaged in blind: our model's implied beat probability was 93% against the market's 94%, so the lenses agreed and no research flag was raised."],"data":[{"name":"Polymarket ADI Q3 non-GAAP EPS market","published":"2026-08-16","source":"forecast/data/polymarket/2026-08-16/adi-quarterly-earnings-nongaap-eps-08-19-2026-3pt33.json"}]}}},"HD":{"name":"Home Depot","period":"FY2026Q2","reports":"18 Aug 2026","methods":{"anchor":{"label":"Anchor \u2014 growth decomposition","summary":"Home Depot gives no quarterly guidance, so the anchor is the year-ago quarter, decomposed into comparable sales, the acquisition contribution and new stores.","metrics":[{"label":"Net sales","unit":"USDm","value":47500,"why":"Q2 25 $45,283M x (1 + 1.3% comp + ~3.3% GMS inorganic + ~0.3% new stores); Q1 26 ran +4.8% with the same structure.","series":[],"seriesLabel":"","final":47105.31},{"label":"Adjusted diluted EPS","unit":"USD / share","value":4.8,"why":"Consensus $4.73; HD averages small beats; FY guide needs H2 recovery; Polymarket P(>4.73)=78.5%.","series":[],"seriesLabel":"","final":4.64},{"label":"Comparable sales, total company","unit":"%","value":1.4,"why":"Anchor: US demand 'similar to fiscal 2025' (Q2 25 US comp +1.4%) plus ~+50bp FX tailwind -> +1.3. Driver nowcast: Census NAICS 444 accelerated to +5.9% y/y in July (post-guidance, covers quarter-end) minus the Q1-calibrated -3.3pp category-to-comp wedge -> +1.9. Inverse-variance reconciliation -> +1.4.","series":[],"seriesLabel":"","final":1.13}],"derivation":["Base: Q2 FY25 net sales $45,283M, comps +1.0% (US +1.4%), adjusted EPS $4.68.","Inorganic term read off Q1 FY26, not assumed: total growth +4.8% minus comps +0.6% minus new stores \u21d2 ~3.3pp from GMS (closed Sep 2025, annualises in Q3).","Comps: management said demand is 'relatively similar to fiscal 2025', plus FX flipping from a \u221240bp drag to a ~+50bp tailwind \u2192 +1.3%, later reconciled to +1.4% against the driver lens.","Net sales: 45,283 \u00d7 (1 + 1.3% comps + 3.3% GMS + 0.3% stores) \u2248 $47,500M.","EPS: consensus $4.73, HD's habitual ~$0.05 beat, FY guide shape requiring an H2 recovery \u2192 $4.80."],"data":[{"name":"HD Q1 FY26 earnings release (results + reaffirmed FY guidance)","published":"2026-05-19","source":"challenge/offline-data/home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"},{"name":"HD Q2 FY25 earnings release (the year-ago base)","published":"2025-08-19","source":"challenge/offline-data/home-depot/filings/2025-08-19__hd-us-20250819-q2-8k__143666.md"}]},"driver":{"label":"Driver \u2014 category nowcast","summary":"The US Census building-materials category level for Home Depot's exact fiscal quarter is published four days before HD reports. The lens maps that category growth onto HD comps through a calibrated wedge.","metrics":[{"label":"Net sales","unit":"USDm","value":47770,"why":"Q2-25 base 45,283 x (1 + 1.9 driver comps + 3.3 GMS inorganic [Q1-observed total-vs-comp gap] + 0.3 new stores) = 47,774.","series":[],"seriesLabel":"","final":47105.31},{"label":"Adjusted diluted EPS","unit":"USD / share","value":4.74,"why":"Sales-to-EPS wedge calibrated on Q1 FY26 (sales +4.8% vs adj EPS -3.7% = -8.5pp wedge from GMS dilution/interest/mix), carried at half weight: EPS growth = +5.5 - 4.25 = +1.25% -> 4.68 x 1.0125 = 4.74.","series":[],"seriesLabel":"","final":4.64},{"label":"Comparable sales, total company","unit":"%","value":1.9,"why":"Census NAICS 444 nowcast: quarter-window category +5.2% y/y (Jul +5.9 accelerating vs +4.6 YTD) minus 3.3pp category-to-comp wedge calibrated on Q1 (category +3.9 vs HD comps +0.6). Produced by forecast/drivers.py.","series":[],"seriesLabel":"","final":1.13}],"derivation":["Census NAICS 444 (building materials and garden equipment) for May\u2013Jul 2026 ran ~+5.2% y/y; July alone +5.9%, accelerating against the +4.6% year-to-date pace.","Category-to-comp wedge calibrated on Q1 FY26: category +3.9% against HD's printed comps +0.6% \u21d2 \u22123.3pp. The wedge is structural (category scope plus pro-distributor inflation), so it is carried at full weight.","Comps = 5.2 \u2212 3.3 = +1.9%.","Net sales = 45,283 \u00d7 (1 + 1.9% comps + 3.3% GMS + 0.3% stores) = $47,770M.","EPS: sales-to-EPS wedge calibrated on Q1 (sales +4.8% vs adjusted EPS \u22123.7% = \u22128.5pp from GMS dilution, acquisition interest and mix), carried at half weight \u2192 +1.25% growth \u2192 $4.74."],"data":[{"name":"US Census advance retail: building materials & garden (NAICS 444), July y/y","value":"5.9 % y/y unadjusted ($45.701B vs $43.162B)","published":"2026-08-14","source":"https://fred.stlouisfed.org/series/RSBMGESD"},{"name":"US Census NAICS 444 retail sales, Jan-Jul 2026 cumulative y/y","value":"4.6 % y/y","published":"2026-08-14","source":"https://www.census.gov/retail/sales.html"}]},"ml":{"label":"Ensemble \u2014 share of category","summary":"The category level for the quarter is already published, so the only unknown is Home Depot's share of it. Organic share (stripping the SRS and GMS wholesale revenue that sits outside the category) is highly stable for the same quarter each year.","metrics":[{"label":"Net sales","unit":"USDm","value":47793.5,"why":"share 0.3111 \u00d7 category 141,088 + inorganic 3,880, blended with the Ensemble","series":[{"period":"FY2018Q2","actual":30463.0,"predicted":30579.5,"err":0.38},{"period":"FY2019Q2","actual":30839.0,"predicted":30698.7,"err":0.46},{"period":"FY2022Q2","actual":43792.0,"predicted":43527.0,"err":0.61},{"period":"FY2023Q2","actual":42916.0,"predicted":42840.3,"err":0.18},{"period":"FY2024Q2","actual":43175.0,"predicted":42900.9,"err":0.63},{"period":"FY2025Q2","actual":45277.0,"predicted":45225.8,"err":0.11}],"seriesLabel":"Walk-forward: share-nowcast prediction vs reported actual (Q2s only, ex-COVID)","gate":{"kind":"mape","score":0.4,"threshold":2.0,"n":6,"beats_naive":true,"passed":true},"final":47105.31},{"label":"Adjusted diluted EPS","unit":"USD / share","value":4.52,"why":"GAAP sequential-ratio model + the observed 0.12 adjusted-to-GAAP wedge","series":[{"period":"FY2023Q2","actual":4.65,"predicted":5.07,"err":9.05},{"period":"FY2024Q2","actual":4.6,"predicted":4.7,"err":2.22},{"period":"FY2025Q2","actual":4.58,"predicted":4.52,"err":1.26}],"seriesLabel":"Walk-forward on GAAP EPS: prediction vs reported actual","gate":{"kind":"mape","score":4.17,"threshold":5.0,"n":3,"beats_naive":true,"passed":true},"final":4.64},{"label":"Comparable sales, total company","unit":"%","value":0.17,"why":"ridge on [lag1, lag4] over the 15-quarter comps series \u2014 history only","series":[{"period":"FY2025Q3","actual":0.2,"predicted":0.24,"err":0.04},{"period":"FY2025Q4","actual":0.4,"predicted":-0.14,"err":0.54},{"period":"FY2026Q1","actual":0.6,"predicted":-0.02,"err":0.62}],"seriesLabel":"Leave-last-3-out: prediction vs reported actual (error in points)","gate":{"kind":"mae","score":0.4,"threshold":0.8,"n":3,"beats_naive":true,"passed":true},"final":1.13}],"derivation":["First attempt failed honestly: a year-over-year growth framing scored 5.40% MAPE against a naive baseline of 5.24% \u2014 worse than doing nothing, because COVID outliers and the SRS/GMS acquisition steps break y/y stationarity.","Reframed to sequential ratios (acquisition-neutral once a deal sits in both quarters) and matched the validation to the deployment task (one Q1\u2192Q2 transition). That passed: 1.64% MAPE against 2.01% naive.","The real gain came from reframing again: share_t = share_{t\u22124} \u00d7 (share_{t\u22121} \u00f7 share_{t\u22125}); sales_t = share_t \u00d7 category_t + inorganic_t. Zero fitted parameters.","FY2026Q2: share 0.3197 \u00d7 drift 0.9732 = 0.3111; \u00d7 category 141,088 + 3,880 inorganic = $47,775M. Blended with the Ensemble at inverse-MAPE weights \u2192 $47,793M.","Honest caveat: four plausible share variants span 0.39%\u20131.23% on Q2, so the fair out-of-sample expectation is 0.4\u20131.2%, not 0.4%. On this specific quarter the variants spread 2.5%."],"data":[{"name":"Census NAICS 444 monthly retail (FRED RSBMGESDN), 1992\u21922026-07","published":"2026-08-14","source":"forecast/data/drivers/fred-rsbmgesdn.csv"},{"name":"49 quarters of HD reported actuals","published":"FY2013Q1 \u2192 FY2026Q1","source":"data/observations/home-depot.json (133 observations)"},{"name":"SRS / GMS close dates and run-rates (acquisition-step schedule)","published":"2024-06-18, 2025-09","source":"forecast/ml_hd_v2.py ACQ_STEP_USDM"}]},"market":{"label":"Market \u2014 Polymarket","summary":"Binary market on whether HD beats the Street non-GAAP EPS consensus.","metrics":[{"label":"Adjusted diluted EPS","unit":"USD / share","value":4.769,"why":"Market prices P(actual > 4.73) = 0.79 ($4,360 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 4.769 under the MID surprise-sigma 0.05; scenario range 4.754-4.801 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.","series":[],"seriesLabel":"","final":4.64}],"derivation":["Market: 'Will Home Depot beat quarterly earnings?', strike $4.73 (Street consensus at creation).","Price implies P(actual > 4.73) = 78.5% on $4,360 of volume \u2014 the most liquid of the three markets.","Implied mean = 4.73 + 0.05 \u00d7 \u03a6\u207b\u00b9(0.785) = $4.77."],"data":[{"name":"Polymarket HD Q2 non-GAAP EPS market","published":"2026-08-16","source":"forecast/data/polymarket/2026-08-16/hd-quarterly-earnings-nongaap-eps-08-18-2026-4pt73.json"}]}}},"Hays":{"name":"Hays plc","period":"FY2026","reports":"20 Aug 2026","methods":{"anchor":{"label":"Anchor \u2014 reconstruction","summary":"Hays' financial year ended 30 June 2026, so this is not really forecasting. Every input has been disclosed; the work is assembling it on the right reporting basis.","metrics":[{"label":"Net fees","unit":"GBPm","value":888,"why":"Continuing-ops headline: H1 453.3 + Q3 (-7% actual) + Q4 (-4% actual) = ~903 on old basis, minus c.GBP15m from six countries Hays states are 'no longer considered continuing operations'. Company-compiled consensus (11 Aug, GBP902.4m, min 894) is still on the stale basis - the core edge of this entry.","series":[],"seriesLabel":"","final":903.49},{"label":"Pre-exceptional operating profit","unit":"GBPm","value":46.1,"why":"Company steer 10 Jul with the year closed: 'at the top of the GBP37.0-46.0m consensus range'; such steers print at/slightly above the top; consensus converged to 45.3 (range top 46.1).","series":[],"seriesLabel":"","final":45.39},{"label":"Pre-exceptional basic EPS","unit":"GBp","value":1.14,"why":"(46.1 op profit - c.13 guided net finance charge) x (1 - c.45% guided ETR) / ~1,595m weighted shares = 1.14p. H1 actual 0.46p + H2 model 0.68p cross-check.","series":[],"seriesLabel":"","final":1.19}],"derivation":["H1 FY26 net fees are reported: \u00a3453.3m. Q3 came in at \u22127% actual, Q4 at \u22124% actual.","Composing those onto the prior-year bases gives ~\u00a3903m \u2014 which matches the company-compiled consensus of \u00a3902.4m almost exactly. That match is the tell: the sell side is summing the same updates.","But Hays states the six countries sold on 16 June are 'no longer considered continuing operations' and contributed c.\u00a315m. The reported headline will therefore be continuing-ops: 903 \u2212 15 \u2248 \u00a3888m. Every one of the nine consensus analysts (minimum \u00a3894m) is still on the stale basis.","Operating profit: the company steered on 10 July, with the year already closed, to 'the top of the \u00a337.0\u201346.0m consensus range'. Firms say 'above the range' when materially higher, so the distribution centres at \u00a346.1m.","EPS is then forced arithmetic using Hays' own guided inputs: (46.1 \u2212 13.0 net finance charge) \u00d7 (1 \u2212 45% effective tax rate) \u00f7 ~1,595m weighted shares = 1.14p."],"data":[{"name":"Q4 FY26 trading update (Q4 \u22124% actual, disposals, profit steer)","published":"2026-07-10","source":"challenge/offline-data/hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md"},{"name":"H1 FY26 half-year report (H1 \u00a3453.3m, finance charge and tax guidance)","published":"2026-02-27","source":"challenge/offline-data/hays/filings/2026-02-27__has-ln-20260227-h1-8k__642921.md"},{"name":"Q3 FY26 trading update (Q3 \u22127% actual)","published":"2026-04-16","source":"challenge/offline-data/hays/filings/2026-04-16__has-ln-20260416-q3-8k-2__955907.md"},{"name":"Total voting rights (share count for EPS)","published":"2026-08-03","source":"challenge/offline-data/hays/filings/2026-08-03__has-ln-20260803-filing__1600192.md"},{"name":"Company-compiled analyst consensus (9 analysts)","published":"2026-08-11","source":"haysplc.com/investors/analysts-consensus"}]},"driver":{"label":"Driver \u2014 not applicable","summary":"The financial year is closed. There is nothing left to nowcast, so the driver lens carries the reconstruction rather than inventing an independent estimate. This is recorded as a deliberate abstention.","metrics":[{"label":"Net fees","unit":"GBPm","value":888,"why":"Fiscal year ended 30 Jun - nothing to nowcast. The value is built entirely from disclosed actuals (H1 453.3 + Q3 at -7% + Q4 at -4%, minus c.15 from the six disposed countries), which is the most driver-pure number in either file: zero management opinion in it.","series":[],"seriesLabel":"","final":903.49},{"label":"Pre-exceptional operating profit","unit":"GBPm","value":46.1,"why":"Company steer ('top of 37.0-46.0 range') given after the year closed. External drivers (UK/DE vacancy indices) are strictly older information than the steer; carried.","series":[],"seriesLabel":"","final":45.39},{"label":"Pre-exceptional basic EPS","unit":"GBp","value":1.14,"why":"Mechanical from op profit via guided finance charge (13) and ETR (45%): no external driver can improve on closed-year arithmetic. Carried.","series":[],"seriesLabel":"","final":1.19}],"derivation":["External drivers for a recruiter would be vacancy indices and employment data \u2014 but all of them are strictly older information than Hays' own disclosed quarterly net-fee growth.","When the company has already told you the answer for three of four quarters, a macro proxy can only add noise.","The lens therefore carries the anchor reconstruction and flags itself as contributing no independent signal."],"data":[]},"ml":{"label":"Ensemble \u2014 quarterly composition","summary":"Hays publishes a trading update every quarter. Composing the year from those four disclosed growth rates is a real, validatable model \u2014 for net fees. Operating profit and EPS have only seven annual observations and the lens abstains.","metrics":[{"label":"Net fees","unit":"GBPm","value":891.8,"why":"FY2025 972.4 \u00d7 (1 \u2212 6.75% mean quarterly growth) = 906.8 reported, less 15.0 disposals","series":[{"period":"FY2022","actual":1189.4,"predicted":1195.8,"err":0.54},{"period":"FY2023","actual":1294.6,"predicted":1348.0,"err":4.12},{"period":"FY2024","actual":1113.6,"predicted":1116.6,"err":0.27},{"period":"FY2025","actual":972.4,"predicted":961.4,"err":1.13}],"seriesLabel":"Walk-forward: composed full-year net fees vs reported actual","gate":{"kind":"mape","threshold":2.0,"score":1.516,"beats_naive":true,"n":4,"passed":true},"final":903.49},{"label":"Pre-exceptional operating profit","unit":"GBPm","value":null,"why":"abstained \u2014 7 annual observations, and the consensus-bias substitute points the wrong way","series":[],"seriesLabel":"","final":45.39},{"label":"Pre-exceptional basic EPS","unit":"GBp","value":null,"why":"abstained \u2014 derived from operating profit, which abstained","series":[],"seriesLabel":"","final":1.19}],"derivation":["A bug first: Hays tags every quarterly update with the fiscal YEAR, not the quarter. Keying on period collapsed four readings per year into one, hiding a 20-point quarterly series and producing an initial wrong conclusion that Hays had no usable data. The quarter is recoverable from the publication month (Oct=Q1, Jan=Q2, Apr=Q3, Jul=Q4).","Model: FY(Y) = FY(Y\u22121) \u00d7 (1 + mean of the four quarterly growth rates). Missing quarters are imputed from the like-for-like reading plus that year's observed actual-minus-LFL gap.","Validation: FY2022 0.54%, FY2023 4.12%, FY2024 0.27%, FY2025 1.13% \u2192 1.52% MAPE against a naive baseline of 15.4%. On the two complete-four-quarter years the error is 0.41%.","FY2026: Q1 is imputed at \u22127 (LFL \u22128 plus the +1pp gap that holds exactly across all three observable quarters); with Q2 \u22129, Q3 \u22127, Q4 \u22124 the mean is \u22126.75% \u2192 \u00a3906.8m reported, less \u00a315m disposals = \u00a3891.8m.","Cross-check anchoring on the actual H1 instead: 453.3 + 476.4 \u00d7 (1 \u2212 5.5%) = \u00a3903.5m reported \u2192 \u00a3888.5m continuing. Validated at 0.83% on FY2021, but n=1 so it corroborates rather than deploys."],"data":[{"name":"20 quarterly net-fee growth readings (trading updates)","published":"2021-01-14 \u2192 2026-07-10","source":"data/observations/hays.json"},{"name":"Disposed-country net fees (\u00a315.0m), for the continuing-ops adjustment","published":"2026-07-10","source":"data/observations/hays.json"}]},"market":{"label":"Market \u2014 no coverage","summary":"Polymarket has no Hays market. It is a smaller UK listing without the retail prediction-market following the US names have. Recorded explicitly so the gap is visible rather than silently absent.","metrics":[],"derivation":["Searched Polymarket for Hays net fees, profit and EPS markets: none exist, open or closed.","For Hays the company-compiled analyst consensus plays the role the market plays elsewhere \u2014 it is a published, dated snapshot of the Street view, and it is what the anchor lens measures itself against."],"data":[]}}},"DE":{"name":"Deere & Company","period":"FY2026Q3","reports":"20 Aug 2026","methods":{"anchor":{"label":"Anchor \u2014 segment guidance","summary":"Deere guides full-year net income and each segment's sales and margin, and told the market how the second half would phase. The anchor lens walks those guides down to a single quarter.","metrics":[{"label":"Worldwide net sales and revenues","unit":"USDm","value":12400,"why":"Segment guides (PPA -5-10%, SAT +15%, C&F +20%) give H2 equipment ~$21.65B, Q3 ~49% share (company: Q4>Q3) ~= $10.77B + financial-services/other ~$1.63B. Street equipment consensus ~$10.8B.","series":[],"seriesLabel":"","final":12486.77},{"label":"Diluted EPS (GAAP)","unit":"USD / share","value":4.95,"why":"FY street $18.27 implies NI ~$4.93B (upper half of maintained $4.5-5.0B guide, Deere's usual landing); Q3 ~54% of H2 -> ~$1.33B / 269.8M sh. Bottom-up $4.97. Polymarket P(>4.72)=91%. Accepted IEEPA refund claims are an upside skew.","series":[],"seriesLabel":"","final":5.03},{"label":"Production & Precision Ag operating profit","unit":"USDm","value":510,"why":"Q3 sales ~$3,960M (-7% y/y, H1 rate) x ~12.8% margin (H1 11.0%, FY guide 11-13%, best cost comps reserved for Q4); H2-implied profit share ~48%.","series":[],"seriesLabel":"","final":519.09}],"derivation":["FY2026 guidance (Q2 8-K and slides, 21 May 2026): net income $4.5\u20135.0B, tax 24\u201326%; Production & Precision Ag sales down 5\u201310% with an 11\u201313% margin; Small Ag & Turf up ~15%; Construction & Forestry up ~20%; financial services net income ~$860M.","Phasing from the call: 'slightly higher revenue in the back half, with the fourth quarter higher than the third', and the most favourable cost comparisons reserved for Q4.","Segment-guide midpoints give H2 equipment sales \u2248 $21.65B; a ~49% Q3 share (because Q4 > Q3) puts Q3 equipment at ~$10.77B. Financial services and other revenue has run $1,590\u20131,660M for six quarters \u2192 ~$1,630M. Total \u2248 $12,400M.","PPA: Q3 sales \u2248 $3,960M (\u22127% y/y, the H1 rate) \u00d7 ~12.8% margin (H1 ran 11.0%, FY guide 11\u201313%, best cost comps held back for Q4) \u2248 $510M.","EPS: the Street's FY $18.27 implies net income ~$4.93B \u2014 the upper half of the maintained guide, which is Deere's usual landing spot. Q3 at ~54% of H2 gives ~$1.33B \u00f7 269.8M shares = $4.93; a bottom-up segment build gives $4.97. Point: $4.95."],"data":[{"name":"Deere Q2 FY26 earnings release (results + FY guidance)","published":"2026-05-21","source":"challenge/offline-data/deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md"},{"name":"Q2 FY26 slide deck (segment sales and margin guidance)","published":"2026-05-21","source":"challenge/offline-data/deere/slides/2026-05-21__de-us-20260521-slide__1042212.md"},{"name":"Q2 FY26 earnings call (H2 phasing, tariff exposure)","published":"2026-05-21","source":"challenge/offline-data/deere/call-transcripts/2026-05-21__de-us-20260521-call-pres__1042774.md"}]},"driver":{"label":"Driver \u2014 units to dollars","summary":"The strongest lens for Deere. Tractors and combines are physical units that an industry body counts monthly, and July's count was published on 11 August \u2014 long after Deere last guided.","metrics":[{"label":"Worldwide net sales and revenues","unit":"USDm","value":12470,"why":"Segment unit chains on Q3-25 bases: PPA 4,273 x (0.55x(-11) units + 0.45x(-1) RoW + 1.75 price + 2.5 FX - 2.55 Q2-residual/2) = 4,047. SAT 3,025 x (0.7x(-10) units + 0.3x(+1) + 1.75 + 2.0 + 7.9 Q2-residual/2 [production normalization]) = 3,175. C&F 3,059 x (+4 industry units + 1.75 + 2.0 + 10.6 Q2-residual/2) = 3,622. Equipment 10,844 + financial services & other 1,630 (6-qtr range 1,590-1,660) = 12,474.","series":[],"seriesLabel":"","final":12486.77},{"label":"Diluted EPS (GAAP)","unit":"USD / share","value":5.0,"why":"Segment op profits from driver sales x margins (PPA 12.6%, SAT 16.0% [Q3-25 level], C&F 11.0%) = 513+508+398 = 1,419; NI = (1,419 x 0.755 tax + 215 FinSvcs) x 1.05 corporate/pension multiplier (calibrated 1.03-1.085 over 4 qtrs) = 1,350; / 269.8M shares = 5.00.","series":[],"seriesLabel":"","final":5.03},{"label":"Production & Precision Ag operating profit","unit":"USDm","value":513,"why":"AEM units chain (Jul tractors -10.9, combines -5.3, Jun combines ~+1, Apr R3M -14/-24) -> PPA sales 4,047 x 12.6% margin (H1 11.0%, best cost comps reserved for Q4) = 513. Produced by forecast/drivers.py.","series":[],"seriesLabel":"","final":519.09}],"derivation":["AEM counted US ag tractor retail units at \u221210.9% y/y in July and combines at \u22125.3%; June combines were ~+1%; the April rolling-three-month window Deere itself showed was 100+hp \u221214% and 4WD \u221224%.","Quarter-window large-ag units centred at \u221211 \u00b14pp.","PPA sales chain: 0.55 \u00d7 (\u221211) North America units + 0.45 \u00d7 (\u22121) rest of world + 1.75 price + 2.5 FX \u2212 2.55 shipment residual = \u22125.3% \u2192 4,273 \u00d7 0.947 \u2248 $4,047M.","The residual is calibrated, not assumed: running the same chain on Q2 gave \u22129.3% against a reported \u221214.4%, a \u22125.1pp gap (Deere ships below retail while dealers destock). It is carried forward at half weight.","PPA operating profit = 4,047 \u00d7 12.6% margin \u2248 $513M. Repeating the construction for Small Ag & Turf and Construction & Forestry, then adding ~$1,630M of financial services and other revenue, gives group revenue $12,470M and EPS $5.00."],"data":[{"name":"AEM US ag tractor retail units, July y/y","value":"-10.9 % y/y","published":"2026-08-11","source":"https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html"},{"name":"AEM US combine retail units, July y/y","value":"-5.3 % y/y","published":"2026-08-11","source":"https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html"},{"name":"AEM US/Canada combine retail units, June y/y","value":"1.0 % y/y (approx, 'slight increase')","published":"2026-07-23","source":"https://drgnews.com/2026/07/23/u-s-and-canadian-sales-of-combines-see-slight-increase-in-june-2026/"},{"name":"US/Canada large-ag industry retail, April rolling-3M y/y (Deere Q2 slide)","value":"-14.0 % y/y (100+hp 2WD; 4WD -24%, combines -5%)","published":"2026-05-21","source":"challenge/offline-data/deere/slides/2026-05-21__de-us-20260521-slide__1042212.md"},{"name":"AEM Canada 4WD tractor retail units, YTD through July y/y","value":"-22.6 % y/y","published":"2026-08-11","source":"https://www.aem.org/news/tractor-sales-growth-softens-in-us-canada"}]},"ml":{"label":"Ensemble \u2014 abstained","summary":"All three metrics failed their gates, and the pipeline proves the failure is a property of the data rather than the models. Nothing about Deere's Q3 is published in advance, so only history is available \u2014 and history cannot answer.","metrics":[{"label":"Worldwide net sales and revenues","unit":"USDm","value":null,"why":"walk-forward 7.263% against a 2% gate","series":[{"period":"FY2024Q2","actual":15235.0,"predicted":16603.881,"err":8.985},{"period":"FY2024Q3","actual":13152.0,"predicted":13632.371,"err":3.652},{"period":"FY2024Q4","actual":11143.0,"predicted":12070.639,"err":8.325},{"period":"FY2025Q1","actual":8508.0,"predicted":8842.724,"err":3.934},{"period":"FY2025Q2","actual":12763.0,"predicted":10319.808,"err":19.143},{"period":"FY2025Q3","actual":12018.0,"predicted":10956.775,"err":8.83},{"period":"FY2025Q4","actual":12394.0,"predicted":11192.256,"err":9.696},{"period":"FY2026Q1","actual":9611.0,"predicted":9722.787,"err":1.163},{"period":"FY2026Q2","actual":13369.0,"predicted":13588.486,"err":1.642}],"seriesLabel":"Walk-forward: model prediction vs reported actual (failed the gate)","gate":{"kind":"mape","threshold":2.0,"score":7.263,"beats_naive":true,"n":9,"passed":false},"floor":8.1,"final":12486.77},{"label":"Diluted EPS (GAAP)","unit":"USD / share","value":null,"why":"walk-forward 24.254% against a 5% gate","series":[{"period":"FY2024Q2","actual":8.53,"predicted":8.759,"err":2.68},{"period":"FY2024Q3","actual":6.29,"predicted":8.601,"err":36.748},{"period":"FY2024Q4","actual":4.55,"predicted":5.636,"err":23.874},{"period":"FY2025Q1","actual":3.19,"predicted":3.626,"err":13.664},{"period":"FY2025Q2","actual":6.64,"predicted":4.593,"err":30.824},{"period":"FY2025Q3","actual":4.75,"predicted":6.26,"err":31.781},{"period":"FY2025Q4","actual":3.93,"predicted":3.578,"err":8.958},{"period":"FY2026Q1","actual":2.42,"predicted":3.083,"err":27.41},{"period":"FY2026Q2","actual":6.55,"predicted":3.776,"err":42.345}],"seriesLabel":"Walk-forward: model prediction vs reported actual (failed the gate)","gate":{"kind":"mape","threshold":5.0,"score":24.254,"beats_naive":false,"n":9,"passed":false},"floor":16.7,"final":5.03},{"label":"Production & Precision Ag operating profit","unit":"USDm","value":null,"why":"walk-forward 24.185% against a 10% gate","series":[{"period":"FY2025Q3","actual":580.0,"predicted":681.129,"err":17.436},{"period":"FY2025Q4","actual":604.0,"predicted":275.767,"err":54.343},{"period":"FY2026Q1","actual":139.0,"predicted":172.34,"err":23.986},{"period":"FY2026Q2","actual":706.0,"predicted":699.119,"err":0.975}],"seriesLabel":"Walk-forward: model prediction vs reported actual (failed the gate)","gate":{"kind":"mape","threshold":10.0,"score":24.185,"beats_naive":true,"n":4,"passed":false},"floor":37.2,"final":519.09}],"derivation":["Deere guides full-year net income, never quarterly segment lines, so no pre-published quantity exists for a single quarter.","The intrinsic floor \u2014 the dispersion of the Q2\u2192Q3 ratio's own history \u2014 is 8.1% on revenue, 16.7% on EPS and 37.2% on PPA operating profit, against gates of 2%, 5% and 10%. Every gate is unreachable by construction.","Confirmation: with roughly four times the walk-forward samples after the data was regenerated, revenue scored 7.26% \u2014 landing exactly on its predicted 8.1% floor. That is what an information limit looks like, as distinct from a tuning failure.","The PPA ratio history shows why: 1.223 \u2192 0.821 \u2192 0.704 \u2192 0.505, a monotone collapse as agricultural operating leverage runs in reverse. History cannot forecast that.","Recovering Deere's full-year guidance does not rescue it either: the only vintage a Q3 forecaster could legally use (issued at Q2, in May) has n=1, and the start-of-year vintage has an 8.5% standard deviation \u2014 about \u00b1$1.50 of EPS."],"data":[{"name":"33 quarters of Deere reported actuals","published":"FY2018Q1 \u2192 FY2026Q2","source":"data/observations/deere.json (116 observations)"}]},"market":{"label":"Market \u2014 Polymarket","summary":"Binary market on whether Deere beats the Street GAAP EPS consensus. The most bullish of the three markets relative to consensus.","metrics":[{"label":"Diluted EPS (GAAP)","unit":"USD / share","value":5.189,"why":"Market prices P(actual > 4.72) = 0.91 ($1,086 traded). Strike is the Street consensus frozen at market creation. Implied mean = strike + sigma*z(p) = 5.189 under the MID surprise-sigma 0.35; scenario range 4.988-5.457 is folded into this estimate's sigma. A one-quantile constraint, not a point observation.","series":[],"seriesLabel":"","final":5.03}],"derivation":["Market: 'Will Deere & Co beat quarterly earnings?', strike $4.72 (Street consensus at creation).","Price implies P(actual > 4.72) = 91% on $1,086 of volume.","Implied mean = 4.72 + 0.35 \u00d7 \u03a6\u207b\u00b9(0.91) = $5.19 under the mid surprise-sigma scenario \u2014 notably above both our anchor ($4.95) and driver ($5.00) lenses.","Treated as an upside flag rather than folded in: further IEEPA tariff-refund recognitions after Q2's $272M would push GAAP EPS up, and the market may be pricing that."],"data":[{"name":"Polymarket Deere Q3 GAAP EPS market","published":"2026-08-16","source":"forecast/data/polymarket/2026-08-16/de-quarterly-earnings-gaap-eps-08-20-2026-4pt72.json"}]}}}};
+const EXPERTS = {
+  ADI: [
+    {rank:'T1',name:'Madison Investors team',hits:'2 / 2 supported',loss:'0% mean loss'},
+    {rank:'#5',name:'Brian Colello',hits:'2 / 4 supported',loss:'37.5% mean loss'},
+    {rank:'N<2',name:'Mark Landecker, CFA',hits:'1 / 1 supported',loss:'case study'},
+    {rank:'N<2',name:'Citrini Research',hits:'0 / 1 supported',loss:'case study'},
+    {rank:'N<2',name:'Jay Goldberg',hits:'0 / 1 supported',loss:'case study'}
+  ],
+  HD: [
+    {rank:'T1',name:'Neil Saunders',hits:'2 / 2 supported',loss:'0% mean loss'},
+    {rank:'#6',name:'Alex Morris',hits:'1 / 2 supported',loss:'25% mean loss'},
+    {rank:'N<2',name:'Brian W. Nagel',hits:'1 / 1 supported',loss:'case study'},
+    {rank:'N<2',name:'Christopher Horvers',hits:'1 / 1 supported',loss:'case study'},
+    {rank:'N<2',name:'Jaime M. Katz',hits:'0 resolved calls',loss:'case study'}
+  ],
+  Hays: [
+    {rank:'T1',name:'Mark Simpson',hits:'2 / 2 supported',loss:'0% mean loss'},
+    {rank:'#9',name:'Tom Callan',hits:'0 / 4 supported',loss:'100% mean loss'},
+    {rank:'N<2',name:'Jemma Slingo',hits:'1 / 1 supported',loss:'case study'},
+    {rank:'N<2',name:'Paul Scott',hits:'1 / 1 supported',loss:'case study'},
+    {rank:'N<2',name:'Graham Neary',hits:'0 resolved calls',loss:'case study'}
+  ],
+  DE: [
+    {rank:'T1',name:'Leandro (Best Anchor Stocks)',hits:'2 / 2 supported',loss:'0% mean loss'},
+    {rank:'#7',name:'Temple 8 Research',hits:'1 / 2 supported',loss:'50% mean loss'},
+    {rank:'#8',name:'George Maglares',hits:'0 / 2 supported',loss:'50% mean loss'},
+    {rank:'N<2',name:'Kristen Owen, CFA',hits:'1 / 1 supported',loss:'case study'},
+    {rank:'N<2',name:"Shawn O'Malley",hits:'0 resolved calls',loss:'case study'}
+  ]
+};
+const METHOD_NAMES = {anchor:'Reconstruction',driver:'Fundamental research',ml:'Ensemble',market:'Prediction market'};
+const SELECTABLE_METHODS = new Set(['ml','market','expert','aggregate']);
+const $ = s => document.querySelector(s);
+let stock = 'ADI', method = 'ml';
+
+function expertMethod(S) {
+  return {
+    label:'Expert — fixed-roster evidence',
+    summary:`A pre-existing expert roster is scored only on resolved, point-in-time calls for ${S.name}. The evidence is shown as an audit and challenge lane; it does not become a numeric estimate unless an expert published a compatible number before the cutoff.`,
+    metrics:[],
+    derivation:[
+      'Hold the 20-person roster fixed before ranking; fame and process scores are not ranking inputs.',
+      'Score only calls with a clean, resolved outcome. Open, postmortem and non-testable records remain visible but do not enter the rank.',
+      'Require at least two resolved calls. Rank by the conservative lower edge of the 95% Wilson interval, then categorical outcome loss.',
+      'For the current aggregate, expert evidence has zero numeric weight unless its metric, period, units and publication cutoff match exactly.'
+    ],
+    data:(EXPERTS[stock] || []).map(e => ({name:e.name,value:`${e.rank} · ${e.hits} · ${e.loss}`,published:'fixed-roster backtest',source:'analyst_knowledge/dataset/thought_leader_scorecards.json'}))
+  };
+}
+
+function aggregateMethod(S) {
+  const base = (S.methods.anchor && S.methods.anchor.metrics) || [];
+  return {
+    label:'Aggregate final — combined forecast',
+    summary:'The submitted figure reconciles every compatible numeric lens, while prediction-market and expert evidence remain visible as critics when they cannot be added in like-for-like units.',
+    metrics:base.map(metric => {
+      const contributors = Object.entries(S.methods).flatMap(([key,lens]) => {
+        const match = (lens.metrics || []).find(item => item.label === metric.label && Number.isFinite(item.value));
+        return match ? [`${METHOD_NAMES[key]} ${fmt(match.value, match.unit)}`] : [];
+      });
+      return {label:metric.label,unit:metric.unit,value:metric.final,final:metric.final,series:[],seriesLabel:'',why:`Final submitted figure. Compatible evidence: ${contributors.join(' · ') || 'no numeric lane'}; missing lanes remain explicit abstentions.`};
+    }),
+    derivation:[
+      'Align candidate estimates by company, reporting period, metric definition and units.',
+      'Admit only point-in-time numeric estimates. Prediction probabilities and qualitative expert calls stay outside incompatible arithmetic.',
+      'Weight compatible lenses by demonstrated reliability, source overlap and forecast uncertainty; an abstention contributes zero rather than being imputed.',
+      'Publish the reconciled point estimate as the aggregate final and preserve every underlying lane for audit.'
+    ],
+    data:Object.entries(S.methods).map(([key,lens]) => ({name:METHOD_NAMES[key],value:(lens.metrics || []).some(metric => Number.isFinite(metric.value)) ? 'numeric or signal evidence available' : 'explicit abstention',published:'frozen 2026-08-16',source:`${lens.data && lens.data[0] ? lens.data[0].source : 'no external source'}`}))
+  };
+}
+
+function getMethod(S, key) {
+  if (key === 'expert') return expertMethod(S);
+  if (key === 'aggregate') return aggregateMethod(S);
+  return S.methods[key];
+}
+
+function methodAvailable(S, key) {
+  if (!SELECTABLE_METHODS.has(key)) return false;
+  return key === 'expert' || key === 'aggregate' || Boolean(S.methods[key]);
+}
+
+// Views are deep-linkable: #ADI/market, #DE/ml and so on, so a specific
+// stock-and-method view can be shared or screenshotted directly.
+function readHash() {
+  const m = /^#([A-Za-z]+)\/([a-z]+)$/.exec(location.hash || '');
+  if (!m) return;
+  if (!DATA[m[1]]) return;
+  stock = m[1];
+  method = methodAvailable(DATA[stock], m[2]) ? m[2] : 'ml';
+  if (method !== m[2]) history.replaceState(null, '', `#${stock}/${method}`);
+}
+window.addEventListener('hashchange', () => { readHash(); render(); });
+
+const fmt = (v, unit) => {
+  if (v === null || v === undefined) return null;
+  const dp = (unit === 'USD / share' || unit === 'GBp' || unit === '%') ? 2 : (Math.abs(v) >= 1000 ? 0 : 1);
+  return v.toLocaleString('en-US', {minimumFractionDigits: dp, maximumFractionDigits: dp});
+};
+
+function chart(series, unit, label, gate, predLabel) {
+  if (!series || series.length === 0) return '';
+  // Same visual vocabulary as the architecture diagram: d-* classes, flat ink
+  // strokes, mono labels. Actual is solid ink, prediction is dashed green, and
+  // the lower strip shows the per-period error against the gate line.
+  const n = series.length;
+  const W = Math.max(600, 74 + n * 92), H = 268;
+  const P = {t: 16, r: 38, b: 96, l: 62};  // r leaves room for the last x label
+  const iw = W - P.l - P.r, ih = H - P.t - P.b;
+  const vals = series.flatMap(d => [d.actual, d.predicted]);
+  let lo = Math.min(...vals), hi = Math.max(...vals);
+  const pad = (hi - lo) * 0.2 || Math.abs(hi * 0.1) || 1;
+  lo -= pad; hi += pad;
+  const x = i => P.l + (n === 1 ? iw / 2 : (i * iw) / (n - 1));
+  const y = v => P.t + ih - ((v - lo) / (hi - lo)) * ih;
+  const path = k => series.map((d, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(d[k]).toFixed(1)}`).join(' ');
+
+  const grid = [lo, (lo + hi) / 2, hi].map(v =>
+    `<line class="d-grid" x1="${P.l}" x2="${W - P.r}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}"/>
+     <text class="d-mono" x="${P.l - 10}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end">${fmt(v, unit)}</text>`).join('');
+
+  // Error strip
+  const eTop = P.t + ih + 30, eH = 34;
+  const errs = series.map(d => d.err);
+  const eMax = Math.max(...errs, gate && gate.threshold ? gate.threshold : 0) * 1.25 || 1;
+  const eb = series.map((d, i) => {
+    const h = Math.max(1.5, (d.err / eMax) * eH), bw = 24;
+    return `<rect class="d-errbar" x="${(x(i) - bw / 2).toFixed(1)}" y="${(eTop + eH - h).toFixed(1)}" width="${bw}" height="${h.toFixed(1)}"/>
+      <text class="${d.err <= (gate && gate.threshold ? gate.threshold : 2) ? 'd-good' : 'd-warn'}"
+        x="${x(i).toFixed(1)}" y="${eTop + eH + 15}" text-anchor="middle">${d.err}${unit === '%' ? 'pp' : '%'}</text>`;
+  }).join('');
+  const gateLine = (gate && gate.threshold)
+    ? `<line class="d-gate" x1="${P.l}" x2="${W - P.r}" y1="${(eTop + eH - (gate.threshold / eMax) * eH).toFixed(1)}"
+         y2="${(eTop + eH - (gate.threshold / eMax) * eH).toFixed(1)}"/>
+       <text class="d-warn" x="${W - P.r}" y="${(eTop + eH - (gate.threshold / eMax) * eH - 6).toFixed(1)}" text-anchor="end">GATE ${gate.threshold}${unit === '%' ? 'PP' : '%'}</text>` : '';
+
+  const dots = series.map((d, i) => `
+    <circle class="d-node" cx="${x(i).toFixed(1)}" cy="${y(d.actual).toFixed(1)}" r="4"/>
+    <circle class="d-pred" cx="${x(i).toFixed(1)}" cy="${y(d.predicted).toFixed(1)}" r="4"/>
+    <text class="d-eyebrow" x="${x(i).toFixed(1)}" y="${P.t + ih + 20}" text-anchor="middle">${d.period}</text>`).join('');
+
+  return `<div class="chart-card">
+    <div class="chart-head"><strong>${label}</strong><span>${n} validated periods</span></div>
+    <div class="chart-body">
+      <div class="legend"><span><i style="background:#111112"></i>Reported actual</span>
+        <span><i style="background:#5b8f2e"></i>${predLabel || 'Model prediction'}</span>
+        <span><i style="background:#e8e3d9;border:1px solid #c8c2b7"></i>${gate && gate.threshold ? 'Error vs gate' : 'Error per period'}</span></div>
+      <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${label}">
+        ${grid}
+        <path class="d-line" d="${path('actual')}"/>
+        <path class="d-predline" d="${path('predicted')}"/>
+        ${dots}${gateLine}${eb}
+      </svg>
+    </div></div>`;
+}
+
+function forwardChart(S, M) {
+  // Every methodology gets a visible current-period graph. Where the lens has
+  // no time series, this is the honest comparison we can make: the lens's
+  // forward estimate against the submitted forecast, or an explicit abstention.
+  const baseMetrics = S.methods.anchor && S.methods.anchor.metrics ? S.methods.anchor.metrics : [];
+  const methodMetrics = new Map((M.metrics || []).map(metric => [metric.label, metric]));
+  const rows = (baseMetrics.length ? baseMetrics : (M.metrics || [])).map(base => {
+    const metric = methodMetrics.get(base.label);
+    return {
+      label: base.label,
+      unit: (metric && metric.unit) || base.unit || '',
+      value: metric && metric.value !== undefined ? metric.value : null,
+      final: metric && metric.final !== undefined ? metric.final : base.final
+    };
+  });
+  if (!rows.length) return '';
+
+  const ratios = rows
+    .filter(row => Number.isFinite(row.value) && Number.isFinite(row.final) && row.final !== 0)
+    .map(row => row.value / row.final * 100);
+  const observed = ratios.length ? ratios : [100];
+  let lo = Math.min(100, ...observed), hi = Math.max(100, ...observed);
+  const spread = Math.max(4, hi - lo);
+  lo -= spread * .35;
+  hi += spread * .35;
+
+  const W = 940, left = 278, right = 150, top = 44, rowH = 78;
+  const H = top + rows.length * rowH + 28;
+  const x = value => left + ((value - lo) / (hi - lo)) * (W - left - right);
+  const referenceX = x(100);
+  const ticks = [lo, (lo + hi) / 2, hi];
+  const grid = ticks.map(value => `
+    <line class="d-grid" x1="${x(value).toFixed(1)}" x2="${x(value).toFixed(1)}" y1="24" y2="${H - 22}"/>
+    <text class="d-mono" x="${x(value).toFixed(1)}" y="16" text-anchor="middle">${value.toFixed(1)}%</text>`).join('');
+  const marks = rows.map((row, index) => {
+    const y = top + index * rowH + 24;
+    const hasValue = Number.isFinite(row.value) && Number.isFinite(row.final) && row.final !== 0;
+    const ratio = hasValue ? row.value / row.final * 100 : null;
+    const lensX = hasValue ? x(ratio) : null;
+    const lensValue = hasValue ? `${fmt(row.value, row.unit)} ${row.unit}` : 'NO ESTIMATE';
+    const submittedValue = Number.isFinite(row.final) ? `${fmt(row.final, row.unit)} ${row.unit}` : 'N/A';
+    return `
+      <text class="d-title" x="12" y="${y - 7}">${row.label}</text>
+      <text class="d-mono" x="12" y="${y + 13}">LENS ${lensValue}</text>
+      <line class="d-forward-track" x1="${left}" x2="${W - right}" y1="${y}" y2="${y}"/>
+      <rect class="d-forward-reference" x="${(referenceX - 4).toFixed(1)}" y="${y - 8}" width="8" height="16"/>
+      ${hasValue ? `<line class="d-forward-link" x1="${Math.min(referenceX, lensX).toFixed(1)}" x2="${Math.max(referenceX, lensX).toFixed(1)}" y1="${y}" y2="${y}"/>
+        <circle class="d-pred" cx="${lensX.toFixed(1)}" cy="${y}" r="7"/>
+        <text class="d-forward-value" x="${lensX.toFixed(1)}" y="${y + 25}" text-anchor="middle">${ratio.toFixed(1)}%</text>`
+        : `<text class="d-warn" x="${left + 14}" y="${y - 11}">${M.metrics && M.metrics.length ? 'ABSTAINED' : 'NO COVERAGE'}</text>`}
+      <text class="d-mono" x="${W - right + 20}" y="${y - 5}">SUBMITTED</text>
+      <text class="d-mono" x="${W - right + 20}" y="${y + 13}">${submittedValue}</text>`;
+  }).join('');
+
+  return `<div class="chart-card forward-chart">
+    <div class="chart-head"><strong>Current-period lens comparison</strong><span>${S.period} · index: submitted forecast = 100%</span></div>
+    <div class="chart-body">
+      <div class="legend"><span><i style="background:#111112"></i>Submitted forecast</span>
+        <span><i style="background:#f3f0e9;border:2px solid #5b8f2e"></i>${METHOD_NAMES[method] || M.label.split(' — ')[0]} estimate</span>
+        <span>Forward comparison — not historical validation</span></div>
+      <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${METHOD_NAMES[method] || M.label} current-period estimates compared with the submitted forecast">
+        ${grid}${marks}
+      </svg>
+    </div></div>`;
+}
+
+function expertFigure(S) {
+  const experts = EXPERTS[stock] || [];
+  const rows = experts.map(expert => {
+    const match = expert.hits.match(/(\d+)\s*\/\s*(\d+)/);
+    const supported = match ? Number(match[1]) : null;
+    const resolved = match ? Number(match[2]) : null;
+    return {...expert, supported, resolved, rate:resolved ? supported / resolved * 100 : null};
+  });
+  const W = 940, left = 310, right = 78, top = 52, rowH = 56;
+  const H = top + rows.length * rowH + 22;
+  const x = rate => left + rate / 100 * (W - left - right);
+  const grid = [0, 50, 100].map(rate => `<line class="d-grid" x1="${x(rate)}" x2="${x(rate)}" y1="28" y2="${H - 18}"/><text class="d-mono" x="${x(rate)}" y="18" text-anchor="middle">${rate}% supported</text>`).join('');
+  const marks = rows.map((expert, index) => {
+    const y = top + index * rowH + 18;
+    const hasEvidence = Number.isFinite(expert.rate);
+    return `<text class="d-title" x="12" y="${y - 5}">${expert.name}</text>
+      <text class="d-mono" x="12" y="${y + 14}">${expert.rank} · ${expert.hits}</text>
+      <line class="d-forward-track" x1="${left}" x2="${W - right}" y1="${y}" y2="${y}"/>
+      ${hasEvidence ? `<rect x="${left}" y="${y - 7}" width="${Math.max(2, x(expert.rate) - left).toFixed(1)}" height="14" fill="#5b8f2e"/><circle class="d-node" cx="${x(expert.rate).toFixed(1)}" cy="${y}" r="5"><title>${expert.supported} of ${expert.resolved} resolved calls supported</title></circle><text class="d-forward-value" x="${Math.min(W - right, x(expert.rate) + 10).toFixed(1)}" y="${y - 11}">${expert.rate.toFixed(0)}%</text>`
+        : `<text class="d-warn" x="${left + 12}" y="${y - 10}">NO RESOLVED CALLS</text>`}`;
+  }).join('');
+  return `<div class="chart-card">
+    <div class="chart-head"><strong>Expert evidence — resolved-call audit</strong><span>${S.period} · qualitative challenge lane · numeric weight 0%</span></div>
+    <div class="chart-body"><p class="muted" style="margin:0 0 18px;max-width:85ch">The rank is provisional and only compares the fixed roster. Wide intervals and small samples prevent a statistically definitive winner.</p>
+      <svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Expert evidence showing the supported share of each expert's resolved calls">${grid}${marks}</svg></div>
+    <div class="expert-grid">${experts.map(expert => `<div class="expert-card"><span class="rank">${expert.rank}</span><b>${expert.name}</b><small>${expert.hits}<br>${expert.loss}</small></div>`).join('')}</div>
+  </div>`;
+}
+
+function aggregateChart(S) {
+  const methodKeys = ['anchor','driver','ml','market'];
+  const base = (S.methods.anchor && S.methods.anchor.metrics) || [];
+  const rows = base.map(baseMetric => ({
+    label:baseMetric.label,
+    unit:baseMetric.unit,
+    final:baseMetric.final,
+    estimates:methodKeys.flatMap(key => {
+      const metric = ((S.methods[key] && S.methods[key].metrics) || []).find(item => item.label === baseMetric.label);
+      return metric && Number.isFinite(metric.value) ? [{key,value:metric.value,label:METHOD_NAMES[key]}] : [];
+    })
+  }));
+  const ratios = rows.flatMap(row => row.estimates.map(estimate => estimate.value / row.final * 100));
+  const rawLo = Math.min(100,...ratios), rawHi = Math.max(100,...ratios);
+  const spread = Math.max(5,rawHi-rawLo);
+  let lo = Math.max(0,rawLo-spread*.1), hi = rawHi+spread*.1;
+  const W = 980,left = 245,right = 150,top = 52,rowH = 92,H = top + rows.length*rowH + 24;
+  const x = value => left + ((value-lo)/(hi-lo))*(W-left-right);
+  const offsets = {anchor:-15,driver:-5,ml:5,market:15};
+  const ticks = [lo,100,hi].filter((value,index,array) => array.findIndex(item => Math.abs(item-value)<.1) === index);
+  const grid = ticks.map(value => `<line class="d-grid" x1="${x(value).toFixed(1)}" x2="${x(value).toFixed(1)}" y1="25" y2="${H-18}"/><text class="d-mono" x="${x(value).toFixed(1)}" y="16" text-anchor="middle">${value.toFixed(1)}%</text>`).join('');
+  const marks = rows.map((row,index) => {
+    const y = top + index*rowH + 28;
+    return `<text class="d-title" x="12" y="${y-4}">${row.label}</text>
+      <text class="d-mono" x="12" y="${y+16}">FINAL ${fmt(row.final,row.unit)} ${row.unit}</text>
+      <line class="d-forward-track" x1="${left}" x2="${W-right}" y1="${y}" y2="${y}"/>
+      <rect class="d-forward-reference" x="${(x(100)-4).toFixed(1)}" y="${y-20}" width="8" height="40"/>
+      ${row.estimates.map(estimate => `<circle class="d-lens-${estimate.key}" cx="${x(estimate.value/row.final*100).toFixed(1)}" cy="${y+offsets[estimate.key]}" r="6"><title>${estimate.label}: ${fmt(estimate.value,row.unit)} ${row.unit}</title></circle>`).join('')}
+      <text class="d-mono" x="${W-right+18}" y="${y-4}">AGGREGATE FINAL</text>
+      <text class="d-forward-value" x="${W-right+18}" y="${y+15}">${fmt(row.final,row.unit)} ${row.unit}</text>`;
+  }).join('');
+  const numericCount = rows.reduce((sum,row) => sum+row.estimates.length,0);
+  const abstained = rows.length*methodKeys.length-numericCount;
+  return `<div class="chart-card">
+    <div class="chart-head"><strong>Aggregate final figure</strong><span>${S.period} · every compatible lens against the submitted forecast</span></div>
+    <div class="chart-body"><div class="legend">
+      <span><i style="background:#6f6a61"></i>Reconstruction</span><span><i style="background:#bd5d23"></i>Fundamental research</span><span><i style="background:#5b8f2e"></i>Ensemble</span><span><i style="background:#367493"></i>Prediction market</span><span><i style="background:#111112"></i>Aggregate final</span>
+    </div><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Aggregate final figure showing every methodology estimate against the submitted forecast">${grid}${marks}</svg></div>
+    <div class="aggregate-note"><div><b>${numericCount}</b><span>compatible numeric estimates</span></div><div><b>${abstained}</b><span>missing or abstained metric-lanes</span></div><div><b>0%</b><span>expert numeric weight without a compatible point estimate</span></div></div>
+  </div>`;
+}
+
+function gatebar(g, floor) {
+  if (!g || g.score === undefined || g.score === null) return '';
+  const u = g.kind === 'mae' ? 'pp' : '%';
+  const pass = g.passed;
+  return `<div class="gatebar">
+    <div class="gatecell"><strong>${g.score}${u}</strong><span>Walk-forward error</span></div>
+    <div class="gatecell"><strong>${g.threshold}${u}</strong><span>Pre-declared gate</span></div>
+    <div class="gatecell"><strong>${g.n ?? '—'}</strong><span>Validated periods</span></div>
+    ${floor ? `<div class="gatecell"><strong>${floor}%</strong><span>Intrinsic floor</span></div>` : ''}
+    <div class="gatecell"><strong>${g.beats_naive ? 'Yes' : 'No'}</strong><span>Beats naive baseline</span></div>
+    <div class="gatecell"><span class="pill ${pass ? '' : 'fail'}">${pass ? 'Gate passed' : 'Gate failed'}</span>
+      <span style="margin-top:10px">${pass ? 'Number is offered' : 'Lens abstains'}</span></div>
+  </div>`;
+}
+
+function render() {
+  const S = DATA[stock], M = getMethod(S, method);
+  document.querySelectorAll('[data-stock]').forEach(b => b.setAttribute('aria-pressed', b.dataset.stock === stock));
+  document.querySelectorAll('[data-method]').forEach(b => b.setAttribute('aria-pressed', b.dataset.method === method));
+  $('#ctx').textContent = `${S.name} · ${S.period} · reports ${S.reports}`;
+  const methodDetail = M.label.includes(' — ') ? M.label.split(' — ').slice(1).join(' — ') : '';
+  $('#title').textContent = METHOD_NAMES[method] ? `${METHOD_NAMES[method]}${methodDetail ? ` — ${methodDetail}` : ''}` : M.label;
+  $('#summary').textContent = M.summary;
+
+  $('#metrics').innerHTML = (M.metrics && M.metrics.length)
+    ? M.metrics.map(m => {
+        const v = fmt(m.value, m.unit);
+        return `<div class="metric">
+          <span class="m-label">${m.label}</span>
+          ${v ? `<span class="m-value">${v}</span><span class="m-unit">${m.unit}</span>`
+              : `<span class="m-value none">abstained</span>`}
+          ${m.final !== null && m.final !== undefined
+             ? `<div class="m-final">Submitted · ${fmt(m.final, m.unit)} ${m.unit}</div>` : ''}
+          <p class="m-why">${m.why || ''}</p></div>`;
+      }).join('')
+    : `<div class="empty">This lens produced no numbers for ${S.name}</div>`;
+
+  const historicalCharts = (M.metrics || []).filter(m => m.series && m.series.length)
+    .map(m => chart(m.series, m.unit, m.seriesLabel || m.label, m.gate, m.predLabel) + gatebar(m.gate, m.floor)).join('');
+  $('#charts').innerHTML = method === 'aggregate' ? aggregateChart(S)
+    : method === 'expert' ? expertFigure(S)
+    : forwardChart(S, M) + historicalCharts;
+
+  $('#steps').innerHTML = M.derivation.map(s => `<li>${s}</li>`).join('');
+  $('#data').innerHTML = M.data && M.data.length
+    ? M.data.map(d => `<li><span class="d-name">${d.name}</span>
+        <span class="d-meta">${d.value ? d.value + ' · ' : ''}published ${d.published}<br>${d.source}</span></li>`).join('')
+    : `<li class="muted">No external data — this lens carries another lens's reconstruction.</li>`;
+
+  document.querySelectorAll('[data-method]').forEach(b => {
+    b.disabled = !methodAvailable(S, b.dataset.method);
+  });
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-stock],[data-method]');
+  if (!b || b.disabled) return;
+  if (b.dataset.stock) stock = b.dataset.stock;
+  if (b.dataset.method) method = b.dataset.method;
+  if (!methodAvailable(DATA[stock], method)) method = 'ml';
+  history.replaceState(null, '', `#${stock}/${method}`);
+  render();
+});
+readHash();
+render();
+</script>
+</body>
+</html>

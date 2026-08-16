@@ -8,6 +8,12 @@ The repository includes a frozen historical corpus of 1,139 filings, call-transc
 
 Your agent should be able to do the research, make the financial judgements and produce completed OpenStocks workbooks with as little manual help as possible.
 
+## Why this system exists
+
+Consensus should not be an opaque institutional number. This system turns time-bounded public evidence into an open, inspectable forecast: structured observations feed independent estimate lanes, unvalidated signals remain explicit critics rather than hidden votes, and one runnable path writes the workbooks, an audit record, and a dated log.
+
+It does not claim that AI has already beaten Wall Street. Earnings settle that question. The purpose of the repository is to make every submitted number reproducible and challengeable: trace it from evidence to estimate, inspect the uncertainty and abstentions, then compare it with the reported result.
+
 ## What the day is for
 
 1. **Build something real.** Create a repeatable agent that researches companies, makes financial judgements and produces completed forecast workbooks.
@@ -70,9 +76,9 @@ Use `HD`, `ADI`, `HAS` or `DE` for the four challenge companies. The output cont
 
 ## Three-engine forecast run
 
-This entry implements the approach in [agents-vs-wall-street-standalone-strategy.md](agents-vs-wall-street-standalone-strategy.md): a reconstructed Street estimate, an independent fundamental/driver model, and a prediction-market lens feed a source-overlap-aware meta-forecaster. Missing market coverage is an explicit abstention rather than a copied estimate.
+This entry implements the approach in [agents-vs-wall-street-standalone-strategy.md](agents-vs-wall-street-standalone-strategy.md): a reconstructed Street estimate and an independent fundamental/driver model feed a source-overlap-aware meta-forecaster, while Polymarket and Numinous act as separately identified critics. Each binary signal is stored natively as `P(actual > strike)`, never as an ensemble-ready EPS point. Polymarket has zero final weight until its pre-resolution walk-forward promotion gate passes; Numinous has zero final weight until a held-out earnings calibration does the same. Missing coverage remains an explicit abstention.
 
-The full React forecast room is deployed at [analyst-evidence-console.zctyurl.chatgpt.site](https://analyst-evidence-console.zctyurl.chatgpt.site). It exposes all 12 submitted forecasts, the three-engine calculation behind each number, candidate research lenses, historical holdouts, the point-in-time Street backtest, pipeline stages, test results, workbook checks, and explicit coverage gaps.
+The full React forecast room is deployed at [analyst-evidence-console.zctyurl.chatgpt.site](https://analyst-evidence-console.zctyurl.chatgpt.site). It exposes all 12 submitted forecasts, the numeric engine calculation and two zero-weight critics behind each number, candidate research lenses, historical holdouts, the point-in-time Street backtest, pipeline stages, test results, workbook checks, and explicit coverage gaps.
 
 ```bash
 python3 -m venv .venv
@@ -80,12 +86,15 @@ python3 -m venv .venv
 npm ci
 npm run test:forecast
 npm run forecast
+npm run backtest:market
 npm run check:forecasts
 ```
 
-The single authoritative runner writes four workbooks and `submission/forecast-audit.json`, which retains every engine estimate, sigma, citation, abstention, source-overlap penalty, and realized weight. A timestamped narrative trail is written under `logs/`.
+The single authoritative runner writes four workbooks and `submission/forecast-audit.json`, which retains every engine estimate or signal, sigma, citation, abstention, source-overlap penalty, and realized weight. A timestamped narrative trail is written under `logs/`.
 
 The Street preparation step rejects look-ahead rows, scores only outcomes resolved by the cutoff, ranks exact-metric histories, corrects persistent signed bias, and shrinks sparse samples. The fundamental engine uses company-specific extractors and deterministic models; Uri's dated physical-driver nowcasts and validation-gated Home Depot classical-ML estimates live inside this engine so they are not double-counted as independent votes. The ML adapter widens uncertainty for its three-sample task-matched validation rather than letting a small historical win dominate current evidence.
+
+The prediction-market backtest converts each archived pre-result beat probability into a shadow EPS estimate using `strike + pre-event surprise sigma × normal_quantile(P(beat))`. Same-day earnings outcomes are excluded from the date-granular dispersion history, every result is compared with an exact first-party actual on the contract's GAAP or non-GAAP basis, and every market price precedes its result cutoff. Promotion requires at least 12 resolved events, mean Brier score no worse than 0.10, at least 10% MAE improvement over the strike, more wins than losses, and a one-sided exact sign-test p-value no greater than 0.05. The current nine-event archive improves MAE by about 49%, but fails the sample-size and significance gates (7–2 wins, p=0.0898), so all live market estimates remain shadow-only at zero weight. The generated audit is written to `research/prediction-market-backtest.json` and `research/prediction-market-backtest.md`.
 
 ## Repository map
 

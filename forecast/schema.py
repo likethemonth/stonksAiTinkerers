@@ -103,15 +103,17 @@ class Company(str, Enum):
 
 
 class Engine(str, Enum):
-    """The three independent top-level forecasting engines."""
+    """Independent top-level estimates and explicitly unweighted critics."""
 
     STREET = "street"
     FUNDAMENTAL = "fundamental"
     PREDICTION_MARKET = "prediction_market"
+    NUMINOUS = "numinous"
 
 
 class ContributionStatus(str, Enum):
     AVAILABLE = "available"
+    SIGNAL_ONLY = "signal_only"
     ABSTAINED = "abstained"
 
 
@@ -282,8 +284,26 @@ class Estimate(BaseModel):
     )
 
 
+class ProbabilityConstraint(BaseModel):
+    """One event-probability constraint, deliberately not a point estimate."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
+
+    provider: Literal["polymarket", "numinous"] = "polymarket"
+    relation: Literal["greater_than"] = "greater_than"
+    threshold: float
+    probability: float = Field(..., ge=0.0, le=1.0)
+    volume: float | None = Field(
+        None,
+        ge=0.0,
+        description="Traded volume when the provider is a market; absent for AI forecasts.",
+    )
+    source_snapshot: str = Field(..., min_length=1)
+    citation: str = Field(..., min_length=1)
+
+
 class EngineContribution(BaseModel):
-    """One top-level engine's estimate or an explicit abstention.
+    """One top-level engine's estimate, research signal, or abstention.
 
     `source_families` identifies shared information such as management guidance
     or a Street-consensus strike. The meta-forecaster uses it to reduce the
@@ -295,16 +315,27 @@ class EngineContribution(BaseModel):
     engine: Engine
     status: ContributionStatus
     estimate: Estimate | None = None
+    signal: ProbabilityConstraint | None = None
     reliability: float = Field(1.0, gt=0.0, le=1.0)
     source_families: list[str] = Field(default_factory=list)
     note: str = Field(..., min_length=1)
 
     @model_validator(mode="after")
     def _estimate_xor_abstention(self) -> "EngineContribution":
-        if self.status is ContributionStatus.AVAILABLE and self.estimate is None:
-            raise ValueError(f"{self.engine.value}: available contribution needs an estimate")
-        if self.status is ContributionStatus.ABSTAINED and self.estimate is not None:
-            raise ValueError(f"{self.engine.value}: abstention cannot carry an estimate")
+        if self.status is ContributionStatus.AVAILABLE:
+            if self.estimate is None or self.signal is not None:
+                raise ValueError(
+                    f"{self.engine.value}: available contribution needs only an estimate"
+                )
+        elif self.status is ContributionStatus.SIGNAL_ONLY:
+            if self.signal is None or self.estimate is not None:
+                raise ValueError(
+                    f"{self.engine.value}: signal_only needs a constraint, not an estimate"
+                )
+        elif self.estimate is not None or self.signal is not None:
+            raise ValueError(
+                f"{self.engine.value}: abstention cannot carry an estimate or signal"
+            )
         return self
 
 
