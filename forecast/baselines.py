@@ -12,8 +12,9 @@ without an extractor there is no observation history to calibrate against. Each
 one is flagged `needs_review` so it is visibly provisional in the run log, and
 each is a direct upgrade target once its extractor lands.
 
-ADI is absent from this module: it has a real extractor and is forecast from
-calibrated guidance in estimators.py.
+Only Deere still uses this. ADI, Hays and Home Depot all have real extractors and
+are forecast from extracted evidence; their entries below are retained only as a
+fallback should an extractor fail mid-run, and are not used on a healthy run.
 """
 
 from __future__ import annotations

@@ -14,6 +14,10 @@ Currently implemented:
     ratio_on_prior_actual   scale a prior-year actual by the change in its driver
     consensus_anchor        anchor on company-compiled consensus, positioned by
                             management's own steer within the disclosed range
+    seasonal_share          divide a full-year anchor into a quarter by that
+                            quarter's measured historical share of the year
+    quarter_vs_year_offset  the same for a rate metric, which offsets rather
+                            than divides
     reconcile               combine the above by inverse variance, flagging any
                             metric where they disagree by more than they claim to
 """
@@ -329,6 +333,188 @@ def ratio_on_prior_actual(
             f"count, so this is if anything conservative."
         ),
         citations=[base.source_file, driver_base.source_file],
+    )
+
+
+def _full_year_totals(
+    observations: list[MetricObservation], company: Company, metric_key: str
+) -> dict[int, tuple[float, dict[int, float]]]:
+    """Fiscal years with all four quarters reported, as (total, {quarter: value}).
+
+    Home Depot never publishes a full-year figure in the releases we parse, but it
+    publishes every quarter, so the year is recoverable by summation. Years missing
+    any quarter are dropped rather than annualised from a partial sum.
+    """
+    by_year: dict[int, dict[int, float]] = {}
+    for o in observations:
+        if (
+            o.company is company
+            and o.metric_key == metric_key
+            and o.kind is Kind.ACTUAL
+            and o.period.quarter is not None
+        ):
+            by_year.setdefault(o.period.year, {})[o.period.quarter] = o.value
+    return {
+        year: (sum(quarters.values()), quarters)
+        for year, quarters in by_year.items()
+        if len(quarters) == 4
+    }
+
+
+def seasonal_share(
+    observations: list[MetricObservation],
+    *,
+    company: Company,
+    metric_key: str,
+    period: Period,
+    growth_estimate: Estimate,
+    shape_key: str | None = None,
+    lookback: int = 5,
+) -> Estimate | None:
+    """A quarter's share of a full-year anchor, measured from history.
+
+    Home Depot guides the full year only, so the route to a quarter is: grow last
+    year's total by the guided rate, then take the quarter's historical share of
+    the year. Both halves come from disclosed numbers.
+
+    `shape_key` allows the seasonal *shape* to be taken from a different metric.
+    HD only began reporting adjusted EPS recently, so there is no adjusted
+    quarterly history to measure a share from — but GAAP EPS, which has years of
+    it, seasonalises almost identically, and the adjustments are small and not
+    concentrated in one quarter.
+    """
+    if period.quarter is None:
+        return None
+    shape_metric = shape_key or metric_key
+
+    totals = _full_year_totals(observations, company, shape_metric)
+    complete = sorted(y for y in totals if y < period.year)[-lookback:]
+    if len(complete) < 2:
+        return None
+
+    shares = [totals[y][1][period.quarter] / totals[y][0] for y in complete]
+    mean_share = statistics.fmean(shares)
+    share_sd = statistics.pstdev(shares) if len(shares) > 1 else 0.0
+
+    # Prefer a directly reported full-year figure over a sum of quarters. HD's
+    # guidance bullet quotes the prior-year adjusted EPS it grows from ("from
+    # $14.69 in fiscal 2025"), which is the whole year stated outright — and
+    # adjusted EPS has no complete quarterly history to sum in any case.
+    prior_year = period.year - 1
+    reported_year = next(
+        (
+            o.value
+            for o in sorted(observations, key=lambda o: o.as_of, reverse=True)
+            if o.company is company
+            and o.metric_key == metric_key
+            and o.kind is Kind.ACTUAL
+            and o.period.quarter is None
+            and o.period.year == prior_year
+        ),
+        None,
+    )
+    if reported_year is not None:
+        prior_total = reported_year
+        basis = "as reported for the full year"
+    else:
+        basis = "summed across its four quarters"
+        prior_totals = _full_year_totals(observations, company, metric_key)
+        if prior_year not in prior_totals:
+            return None
+        prior_total = prior_totals[prior_year][0]
+
+    anchor = prior_total * (1.0 + growth_estimate.value / 100.0)
+    value = anchor * mean_share
+
+    # Two sources of error: the guided growth rate, and the share's variability.
+    growth_sigma = prior_total * (growth_estimate.sigma / 100.0) * mean_share
+    share_sigma = anchor * share_sd
+    sigma = max((growth_sigma**2 + share_sigma**2) ** 0.5, abs(value) * 0.005)
+
+    # Money in millions needs no decimals; per-share figures are meaningless
+    # without them.
+    dp = 0 if abs(value) > 1000 else 2
+
+    shape_note = (
+        ""
+        if shape_key is None
+        else f" The share is measured on {shape_metric}, which has the quarterly "
+        f"history {metric_key} lacks and seasonalises almost identically."
+    )
+    return Estimate(
+        estimator="seasonal_share",
+        value=value,
+        sigma=sigma,
+        n_observations=len(complete),
+        anchor=anchor,
+        correction=mean_share,
+        reasoning=(
+            f"FY{prior_year} {metric_key} was {prior_total:,.{dp}f} {basis}. "
+            f"Guidance of {growth_estimate.value:+.2f}% puts "
+            f"FY{period.year} at {anchor:,.{dp}f}. Q{period.quarter} took "
+            f"{mean_share:.2%} of the year on average over {len(complete)} prior "
+            f"years (sd {share_sd:.2%}), giving {value:,.2f}.{shape_note}"
+        ),
+        citations=growth_estimate.citations,
+    )
+
+
+def quarter_vs_year_offset(
+    observations: list[MetricObservation],
+    *,
+    company: Company,
+    metric_key: str,
+    period: Period,
+    year_estimate: Estimate,
+    lookback: int = 5,
+) -> Estimate | None:
+    """A rate metric's typical offset from its own full-year average.
+
+    Comparable sales is a percentage, not a quantity, so it cannot be divided into
+    quarterly shares. What can be measured is how far a given quarter usually sits
+    from the year's average — for Home Depot, Q2 carries the spring selling season
+    and tends to run above it.
+    """
+    if period.quarter is None:
+        return None
+
+    by_year: dict[int, dict[int, float]] = {}
+    for o in observations:
+        if (
+            o.company is company
+            and o.metric_key == metric_key
+            and o.kind is Kind.ACTUAL
+            and o.period.quarter is not None
+        ):
+            by_year.setdefault(o.period.year, {})[o.period.quarter] = o.value
+
+    offsets = [
+        quarters[period.quarter] - statistics.fmean(quarters.values())
+        for year, quarters in sorted(by_year.items())
+        if year < period.year and len(quarters) == 4
+    ][-lookback:]
+    if len(offsets) < 2:
+        return None
+
+    mean_offset = statistics.fmean(offsets)
+    offset_sd = statistics.pstdev(offsets)
+    value = year_estimate.value + mean_offset
+
+    return Estimate(
+        estimator="quarter_vs_year_offset",
+        value=value,
+        sigma=max((offset_sd**2 + year_estimate.sigma**2) ** 0.5, 0.1),
+        n_observations=len(offsets),
+        anchor=year_estimate.value,
+        correction=mean_offset,
+        reasoning=(
+            f"{metric_key} is a rate, so it is offset rather than shared out. "
+            f"Across {len(offsets)} prior years Q{period.quarter} ran "
+            f"{mean_offset:+.2f}pp against the year's average (sd {offset_sd:.2f}pp). "
+            f"Applied to the full-year figure of {year_estimate.value:+.2f}% this "
+            f"gives {value:+.2f}%."
+        ),
+        citations=year_estimate.citations,
     )
 
 

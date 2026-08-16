@@ -27,11 +27,13 @@ from forecast.estimators import (
     consensus_anchor,
     growth_on_prior_actual,
     guidance_realisation,
+    quarter_vs_year_offset,
     ratio_on_prior_actual,
     reconcile,
+    seasonal_share,
     regression_bridge,
 )
-from forecast.extract import adi, hays
+from forecast.extract import adi, hays, home_depot
 from forecast.metrics import (
     display_name,
     output_file,
@@ -40,7 +42,7 @@ from forecast.metrics import (
     ticker,
     verify_registry,
 )
-from forecast.schema import Company, CompanyForecast, MetricForecast
+from forecast.schema import Company, CompanyForecast, Estimate, Kind, MetricForecast, Period
 from forecast.store import write_calibration_report, write_observations
 from forecast.writer import write_workbook
 
@@ -228,9 +230,95 @@ def _forecast_baseline(company: Company, log: Log) -> list[MetricForecast]:
     return metrics
 
 
+def _forecast_hd(as_of: date | None, log: Log) -> list[MetricForecast]:
+    """Home Depot: full-year guidance divided into a quarter by seasonal history."""
+    docs = load(Company.HD, as_of=as_of)
+    rejected: list[str] = []
+    observations = home_depot.extract(docs, rejected)
+    write_observations(Company.HD, observations, as_of=as_of, rejected=rejected)
+
+    log(f"  {len(docs)} docs -> {len(observations)} observations, "
+        f"{len(rejected)} rejected")
+    for reason in rejected:
+        log(f"  REJECTED {reason}")
+
+    period = target_period(Company.HD)
+    fy = Period(year=period.year, quarter=None)
+    specs = {s.label: s for s in submitted_specs(Company.HD)}
+    metrics: list[MetricForecast] = []
+
+    def _guide(metric_key: str) -> Estimate | None:
+        """The guided full-year rate, as a plain estimate over its own range."""
+        rows = [
+            o for o in observations
+            if o.company is Company.HD and o.metric_key == metric_key
+            and o.period == fy
+        ]
+        mid = max((o for o in rows if o.kind is Kind.GUIDE_MID),
+                  key=lambda o: o.as_of, default=None)
+        if mid is None:
+            return None
+        low = max((o for o in rows if o.kind is Kind.GUIDE_LOW),
+                  key=lambda o: o.as_of, default=None)
+        high = max((o for o in rows if o.kind is Kind.GUIDE_HIGH),
+                   key=lambda o: o.as_of, default=None)
+        # Half the guided range is a fair statement of management's own uncertainty.
+        sigma = (high.value - low.value) / 2.0 if low and high else abs(mid.value) * 0.5
+        return Estimate(
+            estimator="fy_guidance_midpoint",
+            value=mid.value,
+            sigma=max(sigma, 0.05),
+            n_observations=1,
+            anchor=mid.value,
+            reasoning=(
+                f"FY{fy.year} {metric_key} guided to a midpoint of {mid.value:+.2f}%"
+                + (f" across {low.value:+.2f}% to {high.value:+.2f}%" if low and high else "")
+                + f", as of {mid.as_of.isoformat()}."
+            ),
+            citations=[mid.source_file],
+        )
+
+    sales_growth = _guide("total_sales_growth_pct")
+    eps_growth = _guide("adj_eps_growth_pct")
+    comp_guide = _guide("comp_sales_pct")
+    if sales_growth is None or eps_growth is None or comp_guide is None:
+        raise RuntimeError("HD: full-year guidance not found")
+
+    net_sales = seasonal_share(
+        observations, company=Company.HD, metric_key="net_sales",
+        period=period, growth_estimate=sales_growth,
+    )
+    if net_sales is None:
+        raise RuntimeError("HD: not enough quarterly history for the net sales share")
+    spec = specs["Net sales"]
+    metrics.append(reconcile(spec.label, spec.units, [net_sales]))
+
+    # Adjusted EPS has no quarterly history — HD only began reporting it recently
+    # — so the seasonal shape comes from GAAP EPS, which has years of it.
+    eps = seasonal_share(
+        observations, company=Company.HD, metric_key="adj_eps",
+        period=period, growth_estimate=eps_growth, shape_key="diluted_eps_gaap",
+    )
+    if eps is None:
+        raise RuntimeError("HD: not enough EPS history for the seasonal share")
+    spec = specs["Adjusted diluted EPS"]
+    metrics.append(reconcile(spec.label, spec.units, [eps]))
+
+    comps = quarter_vs_year_offset(
+        observations, company=Company.HD, metric_key="comp_sales_pct",
+        period=period, year_estimate=comp_guide,
+    )
+    spec = specs["Comparable sales, total company"]
+    metrics.append(reconcile(spec.label, spec.units, [e for e in (comps, comp_guide) if e]))
+
+    order = {s.label: i for i, s in enumerate(submitted_specs(Company.HD))}
+    return sorted(metrics, key=lambda m: order[m.label])
+
+
 #: Companies with a real extractor and estimators. Anything absent falls back to
 #: the cited provisional baselines. Defined after the functions it references.
 FORECASTERS = {
+    Company.HD: _forecast_hd,
     Company.ADI: _forecast_adi,
     Company.HAS: _forecast_hays,
 }

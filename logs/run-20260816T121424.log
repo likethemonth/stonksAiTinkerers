@@ -1,0 +1,66 @@
+[12:14:24] Agents vs Wall Street — forecast run started 2026-08-16T12:14:24
+[12:14:24] as_of: full frozen corpus
+
+[12:14:24] registry verified against challenge/companies.json
+
+[12:14:24] === Home Depot (HD) FY2026Q2 ===
+[12:14:25]   319 docs -> 125 observations, 0 rejected
+[12:14:25]   Net sales: 46,939.12 USDm
+[12:14:25]       FY2025 net_sales was 164,683 summed across its four quarters. Guidance of +3.50% puts FY2026 at 170,447. Q2 took 27.54% of the year on average over 5 prior years (sd 0.39%), giving 46,939.12.
+[12:14:25]       sources: home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md
+[12:14:25]   Adjusted diluted EPS: 4.59 USD / share
+[12:14:25]       FY2025 adj_eps was 14.69 as reported for the full year. Guidance of +2.00% puts FY2026 at 14.98. Q2 took 30.66% of the year on average over 5 prior years (sd 0.97%), giving 4.59. The share is measured on diluted_eps_gaap, which has the quarterly history adj_eps lacks and seasonalises almost identically.
+[12:14:25]       sources: home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md
+[12:14:25]   Comparable sales, total company: 1.03 %
+[12:14:25]       Inverse-variance combination of quarter_vs_year_offset 1.10 (sigma 1.61, weight 28%); fy_guidance_midpoint 1.00 (sigma 1.00, weight 72%) -> 1.03.
+[12:14:25]       sources: home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md
+[12:14:25]   wrote submission/HD-FY2026Q2.xlsx
+
+[12:14:25] === Analog Devices (ADI) FY2026Q3 ===
+[12:14:25]   271 docs -> 360 observations, 0 rejected, 3 calibrated metrics
+[12:14:25]   Revenue: 3,964.71 USDm
+[12:14:25]       Management guided 3,900.00 for FY2026Q3. Across 12 prior quarters the reported figure landed +1.66% (raw +2.35%) versus the guided midpoint; shrunk by n/(n+5) that correction puts the forecast 64.71 above the guide at 3,964.71.
+[12:14:25]       sources: analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md, analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md, analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md
+[12:14:25]   Adjusted diluted EPS: 3.42 USD / share
+[12:14:25]       Management guided 3.30 for FY2026Q3. Across 12 prior quarters the reported figure landed +3.52% (raw +4.99%) versus the guided midpoint; shrunk by n/(n+5) that correction puts the forecast 0.12 above the guide at 3.42.
+[12:14:25]       sources: analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md, analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md, analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md
+[12:14:25]   Adjusted gross margin: 73.16 %
+[12:14:25]       adj_gross_margin_pct is not guided, but adj_operating_margin_pct is. Fitting adj_gross_margin_pct on adj_operating_margin_pct across 16 reported periods gives adj_gross_margin_pct = 45.56 + 0.557 x adj_operating_margin_pct (residual se 0.48). A slope away from 1.0 means the gap between the two is not constant, so a fixed spread would bias the answer. Applied to the adj_operating_margin_pct forecast of 49.54 this gives 73.16.
+[12:14:25]       sources: analog-devices/filings/2026-05-20__adi-us-20260520-q2-8k__1040581.md, analog-devices/filings/2025-11-25__adi-us-20251125-q4-8k__361005.md, analog-devices/filings/2026-02-18__adi-us-20260218-q1-8k-2__602115.md
+[12:14:25]   wrote submission/ADI-FY2026Q3.xlsx
+
+[12:14:25] === Hays plc (LSE:HAS) FY2026 ===
+[12:14:25]   239 docs -> 63 observations, 5 conflicts/rejections
+[12:14:25]   RESOLVED FY2024 pre_exc_operating_profit: -5.8 outside [1.0, 5000.0] (hays/filings/2025-08-21__has-ln-20250821-h2-8k-2__671218.md)
+[12:14:25]   RESOLVED DISAGREEMENT FY2023 net_fees: documents report [225.7, 1294.6] — kept 1294.6 (reported by 3 of 4 extractions)
+[12:14:25]   RESOLVED DISAGREEMENT FY2024 net_fees: documents report [192.2, 351.8, 1113.6] — kept 1113.6 (reported by 3 of 5 extractions)
+[12:14:25]   RESOLVED DISAGREEMENT FY2025 net_fees: documents report [308.9, 972.4] — kept 972.4 (reported by 2 of 3 extractions)
+[12:14:25]   RESOLVED DISAGREEMENT FY2025 pre_exc_operating_profit: documents report [45.6, 52.1] — kept 45.6 (reported by 2 of 3 extractions)
+[12:14:25]   Net fees: 933.50 GBPm
+[12:14:25]       FY2025 net_fees was 972.4. The FY2026 trading statement dated 2026-07-10 reports -4% on an actual (reported) basis, giving 933.5. The actual basis is used rather than the like-for-like headline because the workbook asks for reported net fees, and like-for-like excludes currency and the closed and divested countries.
+[12:14:25]       sources: hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md, hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md
+[12:14:25]   Pre-exceptional basic EPS: 1.28 GBp
+[12:14:25]       Inverse-variance combination of regression_bridge 1.00 (sigma 0.39, weight 10%); ratio_on_prior_actual 1.31 (sigma 0.13, weight 90%) -> 1.28.
+[12:14:25]       sources: hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md, hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md
+[12:14:25]   Pre-exceptional operating profit: 45.50 GBPm
+[12:14:25]       Company-compiled consensus for FY2026 pre_exc_operating_profit was 43.5 across a 37.0-46.0 range, published 2026-07-10 — after the year closed, so it is well informed. Management stated they expect to land at the top of that range, so we take 45.5, 80% of the way from consensus to the ceiling. Matching consensus would score 1.0 by construction; this is a deliberate deviation the company itself signposted.
+[12:14:25]       sources: hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md
+[12:14:25]   wrote submission/HAS-FY2026.xlsx
+
+[12:14:25] === Deere & Company (DE) FY2026Q3 ===
+[12:14:25]   PROVISIONAL: no extractor yet, using cited baselines
+[12:14:25]   Worldwide net sales and revenues: 11,417.10 USDm  [REVIEW]
+[12:14:25]       Q3 FY2025 worldwide net sales and revenues of $12,018m reduced 5%. The FY2026 segment outlook has Production & Precision Ag down 5-10% with Small Ag & Turf and Construction & Forestry holding up better, so a group decline at the shallower end of the P&PA range is the neutral read.
+[12:14:25]       WARNING provisional baseline; not calibrated
+[12:14:25]       sources: deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md, deere/filings/2025-08-15__de-us-20250815-q3-8k__143410.md
+[12:14:25]   Diluted EPS (GAAP): 4.71 USD / share  [REVIEW]
+[12:14:25]       FY2026 net income guided to $4.5-5.0bn, midpoint $4.75bn. H1 FY2026 delivered $2.429bn, leaving $2.321bn for H2. Q3 takes 55% of that on Deere's usual seasonal split, giving $1.277bn. Divided by the 270.8m diluted shares implied by H1's $2.429bn at $8.97 per share.
+[12:14:25]       WARNING provisional baseline; not calibrated
+[12:14:25]       sources: deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md
+[12:14:25]   Production & Precision Ag operating profit: 592.88 USDm  [REVIEW]
+[12:14:25]       Q3 FY2025 P&PA net sales of $4,273m reduced 7.5%, the midpoint of the FY2026 guidance of down 5-10%, giving ~$3,952m. Applying a 15.0% operating margin: above Q3 FY2025's 13.6% because FY2026 guidance carries ~3.0% positive price realisation, but below the 15.7% Q2 FY2026 achieved ($706m on $4,503m), since Q3 carries lower volume. This is the least-constrained of the twelve and the first to replace with a fitted segment model.
+[12:14:25]       WARNING provisional baseline; not calibrated
+[12:14:25]       sources: deere/filings/2026-05-21__de-us-20260521-q2-8k__1042167.md, deere/filings/2025-08-15__de-us-20250815-q3-8k__143410.md
+[12:14:25]   wrote submission/DE-FY2026Q3.xlsx
+
+[12:14:25] OK — 4 workbooks written in 1.1s
