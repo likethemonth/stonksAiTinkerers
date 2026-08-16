@@ -51,8 +51,8 @@ let traceStepIndex = -1;
 let currentLightning = [];
 let currentBoundaries = [];
 let enabledEngines = new Set(["street", "fundamental", "market"]);
-let selectedMethod = "ml";
-const methodLabels = { ml: "ML", market: "PREDICTION MARKET", expert: "EXPERT", aggregate: "AGGREGATE FINAL" };
+let selectedMethod = "ensemble";
+const methodLabels = { ensemble: "ENSEMBLE", market: "PREDICTION MARKET", expert: "EXPERT", aggregate: "AGGREGATE FINAL" };
 
 function formatValue(value, unit, compact = false) {
   if (value == null || Number.isNaN(value)) return "—";
@@ -90,7 +90,7 @@ function signedPct(value) { return `${value >= 0 ? "+" : ""}${value.toFixed(1)}%
 function escapeHtml(value) { return String(value).replace(/[&<>"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char]); }
 function current() { return { company: companies[selectedCompany], item: companies[selectedCompany].metrics[selectedMetric] }; }
 function replayCompany() { return replay.companies.find(entry => entry.ticker === current().company.id); }
-function normalizeMethodKey(key) { return key === "anchor" || key === "driver" ? "ml" : key; }
+function normalizeMethodKey(key) { return ["anchor", "driver", "ml"].includes(key) ? "ensemble" : key; }
 
 function metricHistory() {
   const { item } = current();
@@ -105,6 +105,17 @@ function metricHistory() {
     return { ...record, error: gateKind === "mae" || item.unit === "%" ? absolute : (absolute / Math.max(Math.abs(actual), Number.EPSILON)) * 100 };
   };
   if (methodMetric?.series?.length) {
+    if (methodMetric.chartType === "prob") {
+      return methodMetric.series.map(point => ({
+        period: point.period,
+        record: normaliseRecord({
+          forecast: { value: point.p },
+          actual: Number.isFinite(point.outcome) ? { value: point.outcome * 100 } : null,
+          actualMatch: "exact",
+          error: Number.isFinite(point.outcome) ? Math.abs(point.p - point.outcome * 100) : null,
+        }),
+      }));
+    }
     return methodMetric.series.map(point => ({
       period: point.period,
       record: normaliseRecord({
@@ -136,7 +147,10 @@ function hydrateForecasts(audit, explorer) {
     const expert = methodModel.methods.driver;
     const aggregateCitations = [...new Set(forecast.metrics.flatMap(metricEntry => metricEntry.engine_contributions.flatMap(contribution => contribution.estimate?.citations || [])))];
     company.methods = {
-      ml: methodModel.methods.ml,
+      ensemble: {
+        ...methodModel.methods.ml,
+        label: methodModel.methods.ml.label.replace(/^ML\s*[—-]\s*/, "Ensemble — "),
+      },
       market: methodModel.methods.market,
       expert: {
         ...expert,
@@ -213,12 +227,11 @@ function renderCompanyTabs() {
 }
 
 function renderMethodTabs() {
-  const { company, item } = current();
+  const { item } = current();
   $("#method-tabs").innerHTML = Object.keys(methodLabels).map(key => {
     const metric = item.methodMetrics?.[key];
     const hasSeries = Boolean(metric?.series?.length);
-    const available = Boolean(company.methods?.[key]);
-    return `<button type="button" data-method="${key}" class="${key === selectedMethod ? "active" : ""} ${hasSeries ? "" : "no-series"}" ${available ? "" : "disabled"} title="${hasSeries ? `${metric.series.length} validated periods` : "Reasoning and sources available; no method-specific backtest"}">${methodLabels[key]}</button>`;
+    return `<button type="button" data-method="${key}" class="${key === selectedMethod ? "active" : ""} ${hasSeries ? "" : "no-series"}" title="${hasSeries ? `${metric.series.length} validated periods` : "Reasoning and sources available; no method-specific backtest"}">${methodLabels[key]}</button>`;
   }).join("");
   const series = item.methodMetrics?.[selectedMethod]?.series;
   $(".range-switch span").textContent = series?.length ? `${series.length} VALIDATED PERIODS · ALL DATA` : "NO METHOD SERIES · META REPLAY";
@@ -295,6 +308,8 @@ function electrifyPolyline(points, seed) {
 function renderMainChart(previousFinal = null) {
   const { company, item } = current();
   const final = activeFinal(item);
+  const methodMetric = item.methodMetrics?.[selectedMethod];
+  const probabilityMode = methodMetric?.chartType === "prob";
   const history = metricHistory();
   const chartScroll = $("#chart-scroll");
   const pointSpacing = 76;
@@ -308,12 +323,17 @@ function renderMainChart(previousFinal = null) {
   requestAnimationFrame(() => { chartScroll.scrollLeft = 0; });
   const validForecasts = history.filter(row => row.record?.forecast).map(row => row.record.forecast.value);
   const validActuals = history.filter(row => row.record?.actual).map(row => row.record.actual.value);
-  const values = [...validForecasts, ...validActuals, item.street, final, ...engineEntries(item).flatMap(engine => engine.value == null ? [] : [engine.value]), ...item.steps.map(step => step.after)];
-  let min = Math.min(...values);
-  let max = Math.max(...values);
-  const padding = Math.max((max - min) * 0.14, Math.abs(max) * 0.025, item.unit === "%" ? 0.3 : 0.08);
-  min -= padding;
-  max += padding;
+  const chartFinal = probabilityMode ? validForecasts.at(-1) : final;
+  const values = probabilityMode
+    ? [...validForecasts, ...validActuals]
+    : [...validForecasts, ...validActuals, item.street, final, ...engineEntries(item).flatMap(engine => engine.value == null ? [] : [engine.value]), ...item.steps.map(step => step.after)];
+  let min = probabilityMode ? 0 : Math.min(...values);
+  let max = probabilityMode ? 100 : Math.max(...values);
+  if (!probabilityMode) {
+    const padding = Math.max((max - min) * 0.14, Math.abs(max) * 0.025, item.unit === "%" ? 0.3 : 0.08);
+    min -= padding;
+    max += padding;
+  }
 
   const liveEnd = viewWidth - 28;
   const historyEnd = liveEnd - submissionWidth;
@@ -336,7 +356,7 @@ function renderMainChart(previousFinal = null) {
   for (let index = 0; index < 5; index += 1) {
     const yy = top + index * ((bottom - top) / 4);
     addSvg(grid, "line", { class: `grid-line ${index === 4 ? "major" : ""}`, x1: left, y1: yy, x2: liveEnd, y2: yy });
-    addSvg(axes, "text", { class: "axis-label", x: 4, y: yy + 3 }, formatValue(max - index * ((max - min) / 4), item.unit, true));
+    addSvg(axes, "text", { class: "axis-label", x: 4, y: yy + 3 }, formatValue(max - index * ((max - min) / 4), probabilityMode ? "%" : item.unit, true));
   }
   history.forEach((row, index) => {
     if (index % 4 === 0) {
@@ -357,7 +377,7 @@ function renderMainChart(previousFinal = null) {
   const errors = history.map(row => row.record?.error).filter(value => Number.isFinite(value));
   if (errors.length) {
     const gate = item.methodMetrics?.[selectedMethod]?.gate;
-    const errorUnit = gate?.kind === "mae" || item.unit === "%" ? "PP" : "%";
+    const errorUnit = probabilityMode || gate?.kind === "mae" || item.unit === "%" ? "PP" : "%";
     const errorTop = bottom + 50;
     const errorBottom = viewHeight - 58;
     const errorMax = Math.max(...errors, gate?.threshold || 0, 1) * 1.2;
@@ -376,11 +396,13 @@ function renderMainChart(previousFinal = null) {
     addSvg(labels, "text", { class: "error-strip-label", x: left, y: errorTop - 10 }, `ABSOLUTE ERROR BY PERIOD · ${errorUnit}`);
   }
   const latestHistoryX = xHistory(history.length - 1);
-  addSvg(streetLayer, "line", { class: "street-line", x1: latestHistoryX, y1: y(item.street), x2: liveEnd, y2: y(item.street) });
-  addSvg(labels, "text", { class: "terminal-label", x: liveEnd, y: y(item.street) + 24 }, `STREET ${formatValue(item.street, item.unit, true)}`);
+  if (!probabilityMode) {
+    addSvg(streetLayer, "line", { class: "street-line", x1: latestHistoryX, y1: y(item.street), x2: liveEnd, y2: y(item.street) });
+    addSvg(labels, "text", { class: "terminal-label", x: liveEnd, y: y(item.street) + 24 }, `STREET ${formatValue(item.street, item.unit, true)}`);
+  }
   if (actualPoints.length) addSvg(labels, "text", { class: "axis-label", x: latestHistoryX + 5, y: actualPoints.at(-1).y + 15 }, "ACTUAL PENDING");
 
-  const predictionPoints = [...forecastPoints, { x: liveEnd, y: y(final), value: final }];
+  const predictionPoints = [...forecastPoints, { x: liveEnd, y: y(chartFinal), value: chartFinal }];
   let predictionPath = null;
   let livePredictionDot = null;
   if (predictionPoints.length) {
@@ -408,7 +430,7 @@ function renderMainChart(previousFinal = null) {
     });
     currentLightning.push(segment);
   }
-  if (Number.isFinite(previousFinal) && previousFinal !== final) {
+  if (!probabilityMode && Number.isFinite(previousFinal) && previousFinal !== final) {
     const fromPrediction = predictionPoints.map((point, index, points) => index === points.length - 1 ? { ...point, y: y(previousFinal) } : point);
     const lastSegment = currentLightning.at(-1);
     const fromLightning = lastSegment.straight.map((point, index, points) => index === points.length - 1 ? { ...point, y: y(previousFinal) } : point);
@@ -434,7 +456,7 @@ function renderMainChart(previousFinal = null) {
     addSvg(lightningLayer, "circle", { class: "trace-node", cx: point.x, cy: point.y, r: index === 4 ? 4 : 3, "data-trace-node": index });
   });
   const sourceX = [liveEnd - 90, liveEnd - 60, liveEnd - 30];
-  engineEntries(item).forEach((engine, index) => {
+  if (!probabilityMode) engineEntries(item).forEach((engine, index) => {
     if (engine.value == null) {
       addSvg(predictionLayer, "circle", { class: "meta-source-dot unavailable", cx: sourceX[index], cy: bottom - 9, r: 4.5, "data-engine-node": engine.key });
       addSvg(labels, "text", { class: "source-dot-label unavailable", x: sourceX[index], y: bottom + 7 }, "M×");
@@ -445,7 +467,7 @@ function renderMainChart(previousFinal = null) {
     addSvg(predictionLayer, "circle", { class: "meta-source-dot", cx: sourceX[index], cy: y(engine.value), r: 5, "data-engine-node": engine.key });
     addSvg(labels, "text", { class: "source-dot-label", x: sourceX[index], y: y(engine.value) + (index === 1 ? 16 : -10) }, engine.key[0].toUpperCase());
   });
-  addSvg(labels, "text", { class: "terminal-label final-label", x: liveEnd, y: y(final) - 27 }, `FINAL ${formatValue(final, item.unit)}`);
+  addSvg(labels, "text", { class: "terminal-label final-label", x: liveEnd, y: y(chartFinal) - 27 }, probabilityMode ? `MARKET ${formatValue(chartFinal, "%")}` : `FINAL ${formatValue(final, item.unit)}`);
 }
 
 function renderQuoteAndHeader() {
@@ -463,11 +485,12 @@ function renderEngineTable() {
   $("#engine-table").innerHTML = engineEntries(item).map(engine => {
     const available = engine.value != null && engine.weight > 0;
     const active = available && enabledEngines.has(engine.key);
-    return `<button class="engine-row ${active ? "active" : "off"} ${available ? "" : "unavailable"}" data-engine-toggle="${engine.key}" type="button" aria-pressed="${active}" ${available ? "" : "disabled"}>
+    const unavailableTitle = engine.key === "market" ? "No direct market contribution for this metric. Click to inspect the market evidence." : "No contribution is available for this metric.";
+    return `<button class="engine-row ${active ? "active" : "off"} ${available ? "" : "unavailable"}" data-engine-toggle="${engine.key}" type="button" aria-pressed="${active}" data-engine-available="${available}" title="${available ? `Toggle ${engine.name}` : unavailableTitle}">
       <span class="engine-switch" aria-hidden="true">${active ? "●" : "○"}</span>
       <span class="engine-name">${engine.name.replace(" reconstruction", "").replace(" research", "")}</span>
-      <span class="engine-value">${formatValue(engine.value, item.unit, true)}</span>
-      <span class="engine-weight" style="--weight:${active ? engine.weight : 0}%"><i></i><span>${active ? engine.weight.toFixed(0) : 0}%</span></span>
+      <span class="engine-value">${available ? formatValue(engine.value, item.unit, true) : "NO SIGNAL"}</span>
+      <span class="engine-weight" style="--weight:${active ? engine.weight : 0}%"><i></i><span>${available ? `${active ? engine.weight.toFixed(0) : 0}%` : engine.key === "market" ? "VIEW EVIDENCE" : "UNAVAILABLE"}</span></span>
     </button>`;
   }).join("");
 }
@@ -672,7 +695,7 @@ function resetEngineSelection() {
 }
 
 function chooseDefaultMethod() {
-  selectedMethod = "ml";
+  selectedMethod = "ensemble";
 }
 
 async function init() {
@@ -683,8 +706,8 @@ async function init() {
   ]);
   replay = replayData;
   hydrateForecasts(audit, explorer);
-  selectedMethod = normalizeMethodKey(new URLSearchParams(window.location.search).get("method") || "ml");
-  if (!methodLabels[selectedMethod]) selectedMethod = "ml";
+  selectedMethod = normalizeMethodKey(new URLSearchParams(window.location.search).get("method") || "ensemble");
+  if (!methodLabels[selectedMethod]) selectedMethod = "ensemble";
   $("#global-coverage").textContent = `${replay.summary.actualAvailable} / ${replay.summary.requestedMetricSlots} ACTUALS`;
   renderSelection();
 }
@@ -721,9 +744,20 @@ $("#details-control").addEventListener("click", () => {
 $("#details-close").addEventListener("click", () => $("#method-inspector").classList.remove("open"));
 $("#engine-table").addEventListener("click", event => {
   const control = event.target.closest("[data-engine-toggle]");
-  if (!control || control.disabled || traceRunning) return;
+  if (!control || traceRunning) return;
   const key = control.dataset.engineToggle;
   const { item } = current();
+  if (control.dataset.engineAvailable !== "true") {
+    if (key === "market") {
+      selectedMethod = "market";
+      renderMethodTabs();
+      renderMethodInspector();
+      renderMainChart();
+      resetTrace();
+      $("#method-inspector").classList.add("open");
+    }
+    return;
+  }
   const previousFinal = activeFinal(item);
   const activeAvailable = engineEntries(item).filter(engine => engine.value != null && enabledEngines.has(engine.key));
   if (enabledEngines.has(key) && activeAvailable.length === 1) return;
