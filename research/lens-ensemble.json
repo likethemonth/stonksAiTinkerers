@@ -1,0 +1,347 @@
+{
+  "meta": {
+    "title": "Four-lens ensemble, weighted by measured error",
+    "generated": "2026-08-16",
+    "rule": "weight \u221d 1/err within each metric; err = validated backtest error where one exists, the market's implied-mean MAPE for the market lens, and the pre-declared gate for unvalidated lenses; abstentions and declared carries contribute nothing",
+    "note": "Companion output. The twelve submitted numbers are locked and produced by the constant-reliability meta-forecaster documented in the audit; this is the same evidence re-combined by measured skill."
+  },
+  "rows": [
+    {
+      "ticker": "ADI",
+      "label": "Revenue",
+      "unit": "USDm",
+      "final": 4006.93,
+      "expectedErr": 0.56,
+      "submitted": 3996.71,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 4010,
+          "err": 3.74,
+          "errBasis": "validated (calibration series)",
+          "weight": 0.1506
+        },
+        {
+          "lens": "driver",
+          "value": 4009,
+          "err": 1.28,
+          "errBasis": "validated (n=6)",
+          "weight": 0.4402
+        },
+        {
+          "lens": "ml",
+          "value": 4003.571,
+          "err": 1.377,
+          "errBasis": "validated (n=14)",
+          "weight": 0.4092
+        }
+      ]
+    },
+    {
+      "ticker": "ADI",
+      "label": "Adjusted diluted EPS",
+      "unit": "USD / share",
+      "final": 3.49,
+      "expectedErr": 0.84,
+      "submitted": 3.43,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 3.48,
+          "err": 5.51,
+          "errBasis": "validated (calibration series)",
+          "weight": 0.1518
+        },
+        {
+          "lens": "driver",
+          "value": 3.51,
+          "err": 2.78,
+          "errBasis": "validated (n=6)",
+          "weight": 0.3009
+        },
+        {
+          "lens": "ml",
+          "value": 3.49,
+          "err": 3.441,
+          "errBasis": "validated (n=14)",
+          "weight": 0.2431
+        },
+        {
+          "lens": "market",
+          "value": 3.47,
+          "err": 2.75,
+          "errBasis": "market-implied (n=3)",
+          "weight": 0.3042
+        }
+      ]
+    },
+    {
+      "ticker": "ADI",
+      "label": "Adjusted gross margin",
+      "unit": "%",
+      "final": 73.01,
+      "expectedErr": 0.25,
+      "submitted": 73.15,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 72.9,
+          "err": 1.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 0.2496
+        },
+        {
+          "lens": "driver",
+          "value": 72.9,
+          "err": 0.53,
+          "errBasis": "validated (n=6)",
+          "weight": 0.4709
+        },
+        {
+          "lens": "ml",
+          "value": 73.29,
+          "err": 0.893,
+          "errBasis": "validated (n=14)",
+          "weight": 0.2795
+        }
+      ]
+    },
+    {
+      "ticker": "HD",
+      "label": "Net sales",
+      "unit": "USDm",
+      "final": 47750.71,
+      "expectedErr": 0.25,
+      "submitted": 47105.31,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 47500,
+          "err": 2.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 0.1265
+        },
+        {
+          "lens": "driver",
+          "value": 47770,
+          "err": 1.05,
+          "errBasis": "validated (n=8)",
+          "weight": 0.241
+        },
+        {
+          "lens": "ml",
+          "value": 47793.5,
+          "err": 0.4,
+          "errBasis": "validated (n=6)",
+          "weight": 0.6325
+        }
+      ]
+    },
+    {
+      "ticker": "HD",
+      "label": "Adjusted diluted EPS",
+      "unit": "USD / share",
+      "final": 4.72,
+      "expectedErr": 0.83,
+      "submitted": 4.64,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 4.8,
+          "err": 5.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 0.1658
+        },
+        {
+          "lens": "driver",
+          "value": 4.74,
+          "err": 2.65,
+          "errBasis": "validated (n=8)",
+          "weight": 0.3128
+        },
+        {
+          "lens": "ml",
+          "value": 4.52,
+          "err": 4.17,
+          "errBasis": "validated (n=3)",
+          "weight": 0.1988
+        },
+        {
+          "lens": "market",
+          "value": 4.769,
+          "err": 2.57,
+          "errBasis": "market-implied (n=3)",
+          "weight": 0.3226
+        }
+      ]
+    },
+    {
+      "ticker": "HD",
+      "label": "Comparable sales, total company",
+      "unit": "%",
+      "final": 1.1,
+      "expectedErr": 0.16,
+      "submitted": 1.13,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 1.4,
+          "err": 0.8,
+          "errBasis": "assumed-at-gate",
+          "weight": 0.202
+        },
+        {
+          "lens": "driver",
+          "value": 1.9,
+          "err": 0.41,
+          "errBasis": "validated (n=8)",
+          "weight": 0.3941
+        },
+        {
+          "lens": "ml",
+          "value": 0.17,
+          "err": 0.4,
+          "errBasis": "validated (n=3)",
+          "weight": 0.4039
+        }
+      ]
+    },
+    {
+      "ticker": "Hays",
+      "label": "Net fees",
+      "unit": "GBPm",
+      "final": 890.16,
+      "expectedErr": 0.86,
+      "submitted": 903.49,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 888,
+          "err": 2.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 0.4312
+        },
+        {
+          "lens": "ml",
+          "value": 891.8,
+          "err": 1.516,
+          "errBasis": "validated (n=4)",
+          "weight": 0.5688
+        }
+      ]
+    },
+    {
+      "ticker": "Hays",
+      "label": "Pre-exceptional operating profit",
+      "unit": "GBPm",
+      "final": 46.1,
+      "expectedErr": 10.0,
+      "submitted": 45.39,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 46.1,
+          "err": 10.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 1.0
+        }
+      ]
+    },
+    {
+      "ticker": "Hays",
+      "label": "Pre-exceptional basic EPS",
+      "unit": "GBp",
+      "final": 1.14,
+      "expectedErr": 10.0,
+      "submitted": 1.19,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 1.14,
+          "err": 10.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 1.0
+        }
+      ]
+    },
+    {
+      "ticker": "DE",
+      "label": "Worldwide net sales and revenues",
+      "unit": "USDm",
+      "final": 12438.57,
+      "expectedErr": 0.9,
+      "submitted": 12486.77,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 12400,
+          "err": 2.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 0.449
+        },
+        {
+          "lens": "driver",
+          "value": 12470,
+          "err": 1.63,
+          "errBasis": "validated (n=6)",
+          "weight": 0.551
+        }
+      ]
+    },
+    {
+      "ticker": "DE",
+      "label": "Diluted EPS (GAAP)",
+      "unit": "USD / share",
+      "final": 5.03,
+      "expectedErr": 1.64,
+      "submitted": 5.03,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 4.95,
+          "err": 5.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 0.3279
+        },
+        {
+          "lens": "driver",
+          "value": 5.0,
+          "err": 3.73,
+          "errBasis": "validated (n=6)",
+          "weight": 0.4395
+        },
+        {
+          "lens": "market",
+          "value": 5.189,
+          "err": 7.05,
+          "errBasis": "market-implied (n=3)",
+          "weight": 0.2326
+        }
+      ]
+    },
+    {
+      "ticker": "DE",
+      "label": "Production & Precision Ag operating profit",
+      "unit": "USDm",
+      "final": 510.63,
+      "expectedErr": 7.89,
+      "submitted": 519.09,
+      "lenses": [
+        {
+          "lens": "anchor",
+          "value": 510,
+          "err": 10.0,
+          "errBasis": "assumed-at-gate",
+          "weight": 0.7892
+        },
+        {
+          "lens": "driver",
+          "value": 513,
+          "err": 37.44,
+          "errBasis": "validated (n=6)",
+          "weight": 0.2108
+        }
+      ]
+    }
+  ]
+}

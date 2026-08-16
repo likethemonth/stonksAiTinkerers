@@ -16,6 +16,7 @@ research/*
 # The blinded-LLM-replay evidence chain and the beat-market reliability record
 # are inputs to architecture/predictions.html — a fresh clone must rebuild it.
 !research/polymarket-reliability.json
+!research/lens-ensemble.json
 !research/llm-replay/
 !research/llm-replay/**
 .DS_Store

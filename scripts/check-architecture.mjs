@@ -42,8 +42,12 @@ const text = (fragment) =>
 
 // --- the forecast table -----------------------------------------------------
 
+// Scope to the "Forecast outputs" table: the 03b ensemble table reuses the
+// same Company/Metric leading cells and must not shadow the submitted rows.
+const forecastStart = html.indexOf('aria-label="Forecast outputs"');
+const forecastTable = html.slice(forecastStart, html.indexOf("</table>", forecastStart));
 const tableRows = new Map();
-for (const row of html.match(/<tr[^>]*>[\s\S]*?<\/tr>/g) ?? []) {
+for (const row of forecastTable.match(/<tr[^>]*>[\s\S]*?<\/tr>/g) ?? []) {
   const cells = [...row.matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map((m) => text(m[1]));
   if (cells.length >= 5) tableRows.set(`${cells[0]}|${cells[1]}`, { value: cells[2], weights: cells[4] });
 }
@@ -171,6 +175,41 @@ if (backtest) {
       fail(`${rowLabel}: page says beat ${beat}, backtest says ${block.beat}`);
     }
   }
+}
+
+// --- the four-lens ensemble (section 03b) ------------------------------------
+// The injected table must match research/lens-ensemble.json, and the artifact
+// must be internally consistent: weights sum to 1, the final is the weighted
+// mean, and it sits inside the participating lenses' range.
+
+const ensemblePath = path.join(root, "research", "lens-ensemble.json");
+try {
+  const ensemble = JSON.parse(await fs.readFile(ensemblePath, "utf8"));
+  for (const row of ensemble.rows) {
+    const weightSum = row.lenses.reduce((sum, lens) => sum + lens.weight, 0);
+    if (Math.abs(weightSum - 1) > 0.005) {
+      fail(`ensemble ${row.ticker} · ${row.label}: weights sum to ${weightSum.toFixed(4)}`);
+    }
+    const mean = row.lenses.reduce((sum, lens) => sum + lens.weight * lens.value, 0);
+    if (Math.abs(mean - row.final) > Math.max(0.02, Math.abs(row.final) * 0.001)) {
+      fail(`ensemble ${row.ticker} · ${row.label}: final ${row.final} != weighted mean ${mean.toFixed(2)}`);
+    }
+    const values = row.lenses.map((lens) => lens.value);
+    if (row.final < Math.min(...values) - 0.01 || row.final > Math.max(...values) + 0.01) {
+      fail(`ensemble ${row.ticker} · ${row.label}: final ${row.final} outside lens range`);
+    }
+    const finalText = row.final.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    if (!html.includes(`<strong>${finalText}</strong>`)) {
+      fail(`ensemble table is missing the final ${finalText} for ${row.ticker} · ${row.label}`);
+    }
+  }
+  if (ensemble.rows.length !== 12) fail(`ensemble artifact has ${ensemble.rows.length} rows, expected 12`);
+  if (!html.includes('id="ensemble"')) fail("page is missing the 03b ensemble section");
+} catch (error) {
+  fail(`ensemble check failed: ${error.message}`);
 }
 
 // --- report -----------------------------------------------------------------
