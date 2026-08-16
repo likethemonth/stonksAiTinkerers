@@ -25,6 +25,7 @@ assert.match(html, /id="method-tabs"/, "Uri method explorer controls are missing
 assert.doesNotMatch(html, /id="reasoning-tape"|id="coverage-monitor"/, "persistent reasoning and coverage panels must not crowd the graph");
 assert.match(html, /id="cinematic-reason"/, "cinematic reasoning card is missing");
 assert.match(html, /id="cinematic-reason"[^>]*hidden/, "reasoning card must start outside layout and interaction");
+assert.match(html, /id="trace-close"[^>]*aria-label="Exit reasoning trace"/, "reasoning trace needs an explicit exit control");
 assert.match(html, /id="cinematic-calculation"/, "trace calculation field is missing");
 assert.match(html, /id="cinematic-sources"/, "trace evidence list is missing");
 assert.match(html, /CLICK CARD OR NEXT TO ADVANCE/, "trace card does not expose its click progression");
@@ -66,6 +67,9 @@ assert.match(js, /contribution\.source_families \|\| \[\]/, "source families are
 assert.match(js, /Precision weighting scales 1\/σ²/, "meta-forecast calculation is not explained");
 assert.match(js, /absolute \/ Math\.max\(Math\.abs\(actual\)/, "missing period errors are not derived from prediction and actual");
 assert.match(js, /function activeFinal/, "interactive meta-forecast recalculation is missing");
+assert.match(js, /function cancelTrace\(event\)[\s\S]*resetTrace\(\)/, "trace cancellation must reuse the complete reset path");
+assert.match(js, /\$\("#trace-close"\)\.addEventListener\("click", cancelTrace\)/, "trace close button is not wired");
+assert.match(js, /event\.key === "Escape" && traceRunning.*cancelTrace\(event\)/, "Escape must exit an active trace");
 assert.match(js, /function hydrateForecasts/, "Uri forecast explorer is not joined to the themed terminal");
 assert.match(js, /data-engine-toggle|renderEngineTable/, "three-lens contribution buttons must remain interactive");
 assert.match(js, /data-engine-available="\$\{available\}"/, "three-lens controls must expose contribution availability");

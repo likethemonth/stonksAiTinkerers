@@ -165,7 +165,11 @@ button { border: 0; cursor: pointer; }
 .cinematic-reason[hidden] { display: none; }
 .cinematic-reason:focus-visible { outline: 2px solid var(--ice-hot); outline-offset: 3px; }
 .cinematic-reason header { display: flex; justify-content: space-between; color: #5f655f; font: 500 11px var(--mono); letter-spacing: .08em; }
+.cinematic-reason header > div { display: flex; align-items: center; gap: 12px; }
 .cinematic-reason header b { color: #171917; font-weight: 500; }
+.cinematic-reason #trace-close { display: grid; place-items: center; width: 30px; height: 30px; margin: -8px -10px -6px 0; border: 1px solid var(--line); border-radius: 50%; background: rgba(20,22,21,.04); color: #3e433f; font: 400 20px/1 var(--sans); letter-spacing: 0; cursor: pointer; }
+.cinematic-reason #trace-close:hover { border-color: #8b918c; background: rgba(20,22,21,.09); color: #111; }
+.cinematic-reason #trace-close:focus-visible { outline: 2px solid var(--ice-hot); outline-offset: 2px; }
 .cinematic-reason h2 { margin: 12px 0 8px; color: #151715; font: 600 clamp(30px, 2.4vw, 40px)/1.08 var(--sans); letter-spacing: -.04em; }
 .cinematic-reason > p { margin: 0; color: #444944; font: 400 15px/1.55 var(--sans); }
 .cinematic-number { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }

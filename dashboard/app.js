@@ -518,6 +518,12 @@ function resetTrace() {
   $("#trace-control").disabled = false;
 }
 
+function cancelTrace(event) {
+  event?.preventDefault();
+  event?.stopPropagation();
+  resetTrace();
+}
+
 const wait = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 function shortSource(source) {
@@ -772,11 +778,16 @@ $("#engine-table").addEventListener("click", event => {
 });
 $("#trace-control").addEventListener("click", runTrace);
 $("#cinematic-reason").addEventListener("click", runTrace);
+$("#trace-close").addEventListener("click", cancelTrace);
 $("#cinematic-reason").addEventListener("keydown", event => {
+  if (event.target.closest("#trace-close")) return;
   if (event.key === "Enter" || event.key === " ") {
     event.preventDefault();
     runTrace();
   }
+});
+document.addEventListener("keydown", event => {
+  if (event.key === "Escape" && traceRunning) cancelTrace(event);
 });
 
 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) $("#storm-video")?.pause();
