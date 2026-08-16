@@ -11,6 +11,14 @@ Each cell rebuilds the corpus as of the day before the actual was published, run
 - Beat the benchmark on **68 of 75** (91%).
 - Mean absolute error 65.29 versus benchmark 373.6.
 
+## Each engine alone, against the aggregate
+
+An engine is judged only on the cells where it actually produced a value, and the aggregate is shown on those same cells so the comparison is like for like. `Aggregate better` counts the cells where the meta-forecast beat that engine on its own.
+
+| Engine | Cells it spoke on | Mean score alone | Median alone | Beat benchmark alone | Aggregate on same cells | Aggregate better |
+|---|---:|---:|---:|---:|---:|---:|
+| fundamental | 75 | **0.37** | 0.15 | 68/75 | 0.37 | 2/75 |
+
 ## By metric
 
 | Company · Metric | n | Mean score | Median | Beat | Mean err | Benchmark err |

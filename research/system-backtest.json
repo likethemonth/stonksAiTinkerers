@@ -16,6 +16,16 @@
       "meanSystemError": 65.29108539687664,
       "meanBaselineError": 373.59836847449816
     },
+    "byEngine": {
+      "fundamental": {
+        "n": 75,
+        "meanScoreAlone": 0.3734774999560982,
+        "medianScoreAlone": 0.15087112845223516,
+        "beatBenchmarkAlone": 68,
+        "meanScoreOfAggregateOnSameCells": 0.3734774999560982,
+        "aggregateBetterOnCells": 2
+      }
+    },
     "byMetric": {
       "ADI \u00b7 Adjusted diluted EPS": {
         "n": 19,
@@ -114,6 +124,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: ADI: not enough paired history for the margin bridge"
     },
@@ -135,6 +148,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: ADI: not enough paired history for the margin bridge"
     },
@@ -156,6 +172,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: ADI: not enough paired history for the margin bridge"
     },
@@ -179,6 +198,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.77 (sigma 0.09, reliability 85%, overlap penalty 100%, weight 100%) -> 1.77.",
+      "engine_values": {
+        "fundamental": 1.7727738427031903
+      },
+      "engine_errors": {
+        "fundamental": 0.04277384270319029
+      },
+      "engine_scores": {
+        "fundamental": 0.14749600932134582
+      },
       "status": "scored",
       "note": null
     },
@@ -202,6 +230,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 71.80 (sigma 0.55, reliability 85%, overlap penalty 100%, weight 100%) -> 71.80.",
+      "engine_values": {
+        "fundamental": 71.79840470788429
+      },
+      "engine_errors": {
+        "fundamental": 0.8984047078842821
+      },
+      "engine_scores": {
+        "fundamental": 0.9982274532047516
+      },
       "status": "scored",
       "note": null
     },
@@ -225,6 +262,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1,804.81 (sigma 41.46, reliability 85%, overlap penalty 100%, weight 100%) -> 1,804.81.",
+      "engine_values": {
+        "fundamental": 1804.8082046568632
+      },
+      "engine_errors": {
+        "fundamental": 535.1917953431368
+      },
+      "engine_scores": {
+        "fundamental": 0.6574837780628217
+      },
       "status": "scored",
       "note": null
     },
@@ -248,6 +294,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.83 (sigma 0.09, reliability 85%, overlap penalty 100%, weight 100%) -> 1.83.",
+      "engine_values": {
+        "fundamental": 1.8296963514272244
+      },
+      "engine_errors": {
+        "fundamental": 0.11030364857277553
+      },
+      "engine_scores": {
+        "fundamental": 0.5252554693941687
+      },
       "status": "scored",
       "note": null
     },
@@ -271,6 +326,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 71.35 (sigma 0.54, reliability 85%, overlap penalty 100%, weight 100%) -> 71.35.",
+      "engine_values": {
+        "fundamental": 71.35065312046443
+      },
+      "engine_errors": {
+        "fundamental": 0.5493468795355767
+      },
+      "engine_scores": {
+        "fundamental": 0.5493468795355767
+      },
       "status": "scored",
       "note": null
     },
@@ -294,6 +358,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,723.10 (sigma 348.22, reliability 85%, overlap penalty 100%, weight 100%) -> 2,723.10.",
+      "engine_values": {
+        "fundamental": 2723.0967950600966
+      },
+      "engine_errors": {
+        "fundamental": 39.09679506009661
+      },
+      "engine_scores": {
+        "fundamental": 0.1325627227721111
+      },
       "status": "scored",
       "note": null
     },
@@ -317,6 +390,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.14 (sigma 0.10, reliability 85%, overlap penalty 100%, weight 100%) -> 2.14.",
+      "engine_values": {
+        "fundamental": 2.1406203947802913
+      },
+      "engine_errors": {
+        "fundamental": 0.2593796052197086
+      },
+      "engine_scores": {
+        "fundamental": 0.5927735780294883
+      },
       "status": "scored",
       "note": null
     },
@@ -340,6 +422,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 72.51 (sigma 0.57, reliability 85%, overlap penalty 100%, weight 100%) -> 72.51.",
+      "engine_values": {
+        "fundamental": 72.50610954490537
+      },
+      "engine_errors": {
+        "fundamental": 1.6938904550946319
+      },
+      "engine_scores": {
+        "fundamental": 0.8915212921550734
+      },
       "status": "scored",
       "note": null
     },
@@ -363,6 +454,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,928.36 (sigma 337.52, reliability 85%, overlap penalty 100%, weight 100%) -> 2,928.36.",
+      "engine_values": {
+        "fundamental": 2928.3553552120934
+      },
+      "engine_errors": {
+        "fundamental": 43.6446447879066
+      },
+      "engine_scores": {
+        "fundamental": 0.16299063102976252
+      },
       "status": "scored",
       "note": null
     },
@@ -386,6 +486,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.53 (sigma 0.14, reliability 85%, overlap penalty 100%, weight 100%) -> 2.53.",
+      "engine_values": {
+        "fundamental": 2.530127955805141
+      },
+      "engine_errors": {
+        "fundamental": 0.010127955805141031
+      },
+      "engine_scores": {
+        "fundamental": 0.04994608342261337
+      },
       "status": "scored",
       "note": null
     },
@@ -409,6 +518,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 74.09 (sigma 0.75, reliability 85%, overlap penalty 100%, weight 100%) -> 74.09.",
+      "engine_values": {
+        "fundamental": 74.09239509340303
+      },
+      "engine_errors": {
+        "fundamental": 0.007604906596966998
+      },
+      "engine_scores": {
+        "fundamental": 0.01267484432827845
+      },
       "status": "scored",
       "note": null
     },
@@ -432,6 +550,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3,194.14 (sigma 334.61, reliability 85%, overlap penalty 100%, weight 100%) -> 3,194.14.",
+      "engine_values": {
+        "fundamental": 3194.1376082457414
+      },
+      "engine_errors": {
+        "fundamental": 84.13760824574138
+      },
+      "engine_scores": {
+        "fundamental": 1.0552420920825691
+      },
       "status": "scored",
       "note": null
     },
@@ -455,6 +582,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.69 (sigma 0.14, reliability 85%, overlap penalty 100%, weight 100%) -> 2.69.",
+      "engine_values": {
+        "fundamental": 2.686057758629867
+      },
+      "engine_errors": {
+        "fundamental": 0.04394224137013314
+      },
+      "engine_scores": {
+        "fundamental": 0.14779085769743583
+      },
       "status": "scored",
       "note": null
     },
@@ -478,6 +614,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 74.46 (sigma 0.70, reliability 85%, overlap penalty 100%, weight 100%) -> 74.46.",
+      "engine_values": {
+        "fundamental": 74.46230707355086
+      },
+      "engine_errors": {
+        "fundamental": 0.46230707355086054
+      },
+      "engine_scores": {
+        "fundamental": 0.5136745261676277
+      },
       "status": "scored",
       "note": null
     },
@@ -501,6 +646,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3,291.62 (sigma 323.81, reliability 85%, overlap penalty 100%, weight 100%) -> 3,291.62.",
+      "engine_values": {
+        "fundamental": 3291.622079937567
+      },
+      "engine_errors": {
+        "fundamental": 43.62207993756692
+      },
+      "engine_scores": {
+        "fundamental": 0.05216687813869411
+      },
       "status": "scored",
       "note": null
     },
@@ -524,6 +678,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.72 (sigma 0.13, reliability 85%, overlap penalty 100%, weight 100%) -> 2.72.",
+      "engine_values": {
+        "fundamental": 2.7208321481368407
+      },
+      "engine_errors": {
+        "fundamental": 0.02916785186315929
+      },
+      "engine_scores": {
+        "fundamental": 0.3159238363012226
+      },
       "status": "scored",
       "note": null
     },
@@ -547,6 +710,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 74.17 (sigma 0.65, reliability 85%, overlap penalty 100%, weight 100%) -> 74.17.",
+      "engine_values": {
+        "fundamental": 74.16914093707999
+      },
+      "engine_errors": {
+        "fundamental": 0.5691409370799931
+      },
+      "engine_scores": {
+        "fundamental": 0.7114261713499813
+      },
       "status": "scored",
       "note": null
     },
@@ -570,6 +742,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3,288.27 (sigma 304.23, reliability 85%, overlap penalty 100%, weight 100%) -> 3,288.27.",
+      "engine_values": {
+        "fundamental": 3288.266535326985
+      },
+      "engine_errors": {
+        "fundamental": 38.26653532698492
+      },
+      "engine_scores": {
+        "fundamental": 0.027854834447840683
+      },
       "status": "scored",
       "note": null
     },
@@ -593,6 +774,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.88 (sigma 0.13, reliability 85%, overlap penalty 100%, weight 100%) -> 2.88.",
+      "engine_values": {
+        "fundamental": 2.8800068487882426
+      },
+      "engine_errors": {
+        "fundamental": 0.050006848788242575
+      },
+      "engine_scores": {
+        "fundamental": 0.0794806046236705
+      },
       "status": "scored",
       "note": null
     },
@@ -616,6 +806,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 74.39 (sigma 0.62, reliability 85%, overlap penalty 100%, weight 100%) -> 74.39.",
+      "engine_values": {
+        "fundamental": 74.38793491239988
+      },
+      "engine_errors": {
+        "fundamental": 0.6879349123998821
+      },
+      "engine_scores": {
+        "fundamental": 0.2547907082962524
+      },
       "status": "scored",
       "note": null
     },
@@ -639,6 +838,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3,337.68 (sigma 292.38, reliability 85%, overlap penalty 100%, weight 100%) -> 3,337.68.",
+      "engine_values": {
+        "fundamental": 3337.684532190535
+      },
+      "engine_errors": {
+        "fundamental": 74.68453219053481
+      },
+      "engine_scores": {
+        "fundamental": 0.04739987406609944
+      },
       "status": "scored",
       "note": null
     },
@@ -662,6 +870,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.64 (sigma 0.12, reliability 85%, overlap penalty 100%, weight 100%) -> 2.64.",
+      "engine_values": {
+        "fundamental": 2.6360785848545265
+      },
+      "engine_errors": {
+        "fundamental": 0.1460785848545263
+      },
+      "engine_scores": {
+        "fundamental": 0.13498735572915166
+      },
       "status": "scored",
       "note": null
     },
@@ -685,6 +902,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 73.33 (sigma 0.60, reliability 85%, overlap penalty 100%, weight 100%) -> 73.33.",
+      "engine_values": {
+        "fundamental": 73.32739287812458
+      },
+      "engine_errors": {
+        "fundamental": 1.1273928781245814
+      },
+      "engine_scores": {
+        "fundamental": 0.29668233634857427
+      },
       "status": "scored",
       "note": null
     },
@@ -708,6 +934,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3,228.56 (sigma 270.79, reliability 85%, overlap penalty 100%, weight 100%) -> 3,228.56.",
+      "engine_values": {
+        "fundamental": 3228.5585145222753
+      },
+      "engine_errors": {
+        "fundamental": 152.55851452227535
+      },
+      "engine_scores": {
+        "fundamental": 0.09011462816827287
+      },
       "status": "scored",
       "note": null
     },
@@ -731,6 +966,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.08 (sigma 0.10, reliability 85%, overlap penalty 100%, weight 100%) -> 2.08.",
+      "engine_values": {
+        "fundamental": 2.084879899445332
+      },
+      "engine_errors": {
+        "fundamental": 0.07487989944533213
+      },
+      "engine_scores": {
+        "fundamental": 0.042451786068222516
+      },
       "status": "scored",
       "note": null
     },
@@ -754,6 +998,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 71.56 (sigma 0.62, reliability 85%, overlap penalty 100%, weight 100%) -> 71.56.",
+      "engine_values": {
+        "fundamental": 71.55850117463814
+      },
+      "engine_errors": {
+        "fundamental": 1.3585011746381355
+      },
+      "engine_scores": {
+        "fundamental": 0.24258949547109587
+      },
       "status": "scored",
       "note": null
     },
@@ -777,6 +1030,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,803.67 (sigma 229.97, reliability 85%, overlap penalty 100%, weight 100%) -> 2,803.67.",
+      "engine_values": {
+        "fundamental": 2803.66572254339
+      },
+      "engine_errors": {
+        "fundamental": 87.66572254339007
+      },
+      "engine_scores": {
+        "fundamental": 0.0432182384797614
+      },
       "status": "scored",
       "note": null
     },
@@ -800,6 +1062,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.77 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 1.77.",
+      "engine_values": {
+        "fundamental": 1.7684039195562657
+      },
+      "engine_errors": {
+        "fundamental": 0.038403919556265764
+      },
+      "engine_scores": {
+        "fundamental": 0.01853892894694093
+      },
       "status": "scored",
       "note": null
     },
@@ -823,6 +1094,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 70.47 (sigma 0.72, reliability 85%, overlap penalty 100%, weight 100%) -> 70.47.",
+      "engine_values": {
+        "fundamental": 70.47264781786649
+      },
+      "engine_errors": {
+        "fundamental": 1.4726478178664877
+      },
+      "engine_scores": {
+        "fundamental": 0.230101221541639
+      },
       "status": "scored",
       "note": null
     },
@@ -846,6 +1126,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,591.21 (sigma 206.04, reliability 85%, overlap penalty 100%, weight 100%) -> 2,591.21.",
+      "engine_values": {
+        "fundamental": 2591.211958643477
+      },
+      "engine_errors": {
+        "fundamental": 78.21195864347692
+      },
+      "engine_scores": {
+        "fundamental": 0.04573171897285104
+      },
       "status": "scored",
       "note": null
     },
@@ -869,6 +1158,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.30 (sigma 0.06, reliability 85%, overlap penalty 100%, weight 100%) -> 1.30.",
+      "engine_values": {
+        "fundamental": 1.3040254336961348
+      },
+      "engine_errors": {
+        "fundamental": 0.09597456630386514
+      },
+      "engine_scores": {
+        "fundamental": 0.042199239615446756
+      },
       "status": "scored",
       "note": null
     },
@@ -892,6 +1190,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 68.41 (sigma 0.82, reliability 85%, overlap penalty 100%, weight 100%) -> 68.41.",
+      "engine_values": {
+        "fundamental": 68.41125647820371
+      },
+      "engine_errors": {
+        "fundamental": 1.7112564782037083
+      },
+      "engine_scores": {
+        "fundamental": 0.22516532607943546
+      },
       "status": "scored",
       "note": null
     },
@@ -915,6 +1222,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,172.48 (sigma 174.77, reliability 85%, overlap penalty 100%, weight 100%) -> 2,172.48.",
+      "engine_values": {
+        "fundamental": 2172.483927613462
+      },
+      "engine_errors": {
+        "fundamental": 13.483927613462129
+      },
+      "engine_scores": {
+        "fundamental": 0.008386590989343964
+      },
       "status": "scored",
       "note": null
     },
@@ -938,6 +1254,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.56 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 1.56.",
+      "engine_values": {
+        "fundamental": 1.5560877011788714
+      },
+      "engine_errors": {
+        "fundamental": 0.023912298821128664
+      },
+      "engine_scores": {
+        "fundamental": 0.02138384954022508
+      },
       "status": "scored",
       "note": null
     },
@@ -961,6 +1286,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 69.24 (sigma 1.02, reliability 85%, overlap penalty 100%, weight 100%) -> 69.24.",
+      "engine_values": {
+        "fundamental": 69.24350675255317
+      },
+      "engine_errors": {
+        "fundamental": 1.3435067525531679
+      },
+      "engine_scores": {
+        "fundamental": 0.43338927501715174
+      },
       "status": "scored",
       "note": null
     },
@@ -984,6 +1318,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,347.01 (sigma 189.17, reliability 85%, overlap penalty 100%, weight 100%) -> 2,347.01.",
+      "engine_values": {
+        "fundamental": 2347.0124059272684
+      },
+      "engine_errors": {
+        "fundamental": 35.012405927268446
+      },
+      "engine_scores": {
+        "fundamental": 0.0389989845836353
+      },
       "status": "scored",
       "note": null
     },
@@ -1007,6 +1350,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.69 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 1.69.",
+      "engine_values": {
+        "fundamental": 1.6895113925578644
+      },
+      "engine_errors": {
+        "fundamental": 0.019511392557864493
+      },
+      "engine_scores": {
+        "fundamental": 0.30979921007907035
+      },
       "status": "scored",
       "note": null
     },
@@ -1030,6 +1382,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 69.53 (sigma 1.09, reliability 85%, overlap penalty 100%, weight 100%) -> 69.53.",
+      "engine_values": {
+        "fundamental": 69.5325252063686
+      },
+      "engine_errors": {
+        "fundamental": 1.632525206368598
+      },
+      "engine_scores": {
+        "fundamental": 2.968227647942921
+      },
       "status": "scored",
       "note": null
     },
@@ -1053,6 +1414,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,479.14 (sigma 200.65, reliability 85%, overlap penalty 100%, weight 100%) -> 2,479.14.",
+      "engine_values": {
+        "fundamental": 2479.135229716863
+      },
+      "engine_errors": {
+        "fundamental": 36.135229716862796
+      },
+      "engine_scores": {
+        "fundamental": 1.0115491515105768
+      },
       "status": "scored",
       "note": null
     },
@@ -1076,6 +1446,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.59 (sigma 0.07, reliability 85%, overlap penalty 100%, weight 100%) -> 1.59.",
+      "engine_values": {
+        "fundamental": 1.5875457200225693
+      },
+      "engine_errors": {
+        "fundamental": 0.042454279977430565
+      },
+      "engine_scores": {
+        "fundamental": 0.15468842145813289
+      },
       "status": "scored",
       "note": null
     },
@@ -1099,6 +1478,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 68.83 (sigma 1.13, reliability 85%, overlap penalty 100%, weight 100%) -> 68.83.",
+      "engine_values": {
+        "fundamental": 68.83235495513534
+      },
+      "engine_errors": {
+        "fundamental": 0.032354955135346586
+      },
+      "engine_scores": {
+        "fundamental": 0.011352615836963738
+      },
       "status": "scored",
       "note": null
     },
@@ -1122,6 +1510,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,386.47 (sigma 42.05, reliability 85%, overlap penalty 100%, weight 100%) -> 2,386.47.",
+      "engine_values": {
+        "fundamental": 2386.4735393312935
+      },
+      "engine_errors": {
+        "fundamental": 36.52646066870648
+      },
+      "engine_scores": {
+        "fundamental": 0.15087112845223516
+      },
       "status": "scored",
       "note": null
     },
@@ -1145,6 +1542,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.74 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 1.74.",
+      "engine_values": {
+        "fundamental": 1.7407634976098947
+      },
+      "engine_errors": {
+        "fundamental": 0.1092365023901054
+      },
+      "engine_scores": {
+        "fundamental": 0.14506389893799476
+      },
       "status": "scored",
       "note": null
     },
@@ -1168,6 +1574,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 68.89 (sigma 1.06, reliability 85%, overlap penalty 100%, weight 100%) -> 68.89.",
+      "engine_values": {
+        "fundamental": 68.88943855326349
+      },
+      "engine_errors": {
+        "fundamental": 0.5105614467365172
+      },
+      "engine_scores": {
+        "fundamental": 0.08879329508461167
+      },
       "status": "scored",
       "note": null
     },
@@ -1191,6 +1606,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,538.62 (sigma 44.57, reliability 85%, overlap penalty 100%, weight 100%) -> 2,538.62.",
+      "engine_values": {
+        "fundamental": 2538.6187166275913
+      },
+      "engine_errors": {
+        "fundamental": 101.38128337240869
+      },
+      "engine_scores": {
+        "fundamental": 0.1322960878600873
+      },
       "status": "scored",
       "note": null
     },
@@ -1214,6 +1638,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.98 (sigma 0.07, reliability 85%, overlap penalty 100%, weight 100%) -> 1.98.",
+      "engine_values": {
+        "fundamental": 1.9828674536075082
+      },
+      "engine_errors": {
+        "fundamental": 0.06713254639249167
+      },
+      "engine_scores": {
+        "fundamental": 0.08267723086704648
+      },
       "status": "scored",
       "note": null
     },
@@ -1237,6 +1670,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 69.20 (sigma 0.84, reliability 85%, overlap penalty 100%, weight 100%) -> 69.20.",
+      "engine_values": {
+        "fundamental": 69.20291192088803
+      },
+      "engine_errors": {
+        "fundamental": 0.0029119208880246106
+      },
+      "engine_scores": {
+        "fundamental": 0.0006694071006953136
+      },
       "status": "scored",
       "note": null
     },
@@ -1260,6 +1702,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2,791.60 (sigma 46.23, reliability 85%, overlap penalty 100%, weight 100%) -> 2,791.60.",
+      "engine_values": {
+        "fundamental": 2791.6024370298464
+      },
+      "engine_errors": {
+        "fundamental": 88.39756297015356
+      },
+      "engine_scores": {
+        "fundamental": 0.10119455519134729
+      },
       "status": "scored",
       "note": null
     },
@@ -1283,6 +1734,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.30 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 2.30.",
+      "engine_values": {
+        "fundamental": 2.2961361969283822
+      },
+      "engine_errors": {
+        "fundamental": 0.036136196928382436
+      },
+      "engine_scores": {
+        "fundamental": 0.037979591019193196
+      },
       "status": "scored",
       "note": null
     },
@@ -1306,6 +1766,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 70.19 (sigma 0.73, reliability 85%, overlap penalty 100%, weight 100%) -> 70.19.",
+      "engine_values": {
+        "fundamental": 70.19129453105747
+      },
+      "engine_errors": {
+        "fundamental": 0.3912945310574685
+      },
+      "engine_scores": {
+        "fundamental": 0.07904940021363017
+      },
       "status": "scored",
       "note": null
     },
@@ -1329,6 +1798,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3,050.26 (sigma 55.45, reliability 85%, overlap penalty 100%, weight 100%) -> 3,050.26.",
+      "engine_values": {
+        "fundamental": 3050.255170193689
+      },
+      "engine_errors": {
+        "fundamental": 25.744829806310918
+      },
+      "engine_scores": {
+        "fundamental": 0.02693388219180727
+      },
       "status": "scored",
       "note": null
     },
@@ -1352,6 +1830,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.36 (sigma 0.09, reliability 85%, overlap penalty 100%, weight 100%) -> 2.36.",
+      "engine_values": {
+        "fundamental": 2.362577662403464
+      },
+      "engine_errors": {
+        "fundamental": 0.09742233759653596
+      },
+      "engine_scores": {
+        "fundamental": 0.09598538615516494
+      },
       "status": "scored",
       "note": null
     },
@@ -1375,6 +1862,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 70.07 (sigma 0.66, reliability 85%, overlap penalty 100%, weight 100%) -> 70.07.",
+      "engine_values": {
+        "fundamental": 70.07077151572416
+      },
+      "engine_errors": {
+        "fundamental": 1.129228484275842
+      },
+      "engine_scores": {
+        "fundamental": 0.3093776669248877
+      },
       "status": "scored",
       "note": null
     },
@@ -1398,6 +1894,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3,150.88 (sigma 56.75, reliability 85%, overlap penalty 100%, weight 100%) -> 3,150.88.",
+      "engine_values": {
+        "fundamental": 3150.876747762237
+      },
+      "engine_errors": {
+        "fundamental": 9.123252237763154
+      },
+      "engine_scores": {
+        "fundamental": 0.010112644392860267
+      },
       "status": "scored",
       "note": null
     },
@@ -1421,6 +1926,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.97 (sigma 0.11, reliability 85%, overlap penalty 100%, weight 100%) -> 2.97.",
+      "engine_values": {
+        "fundamental": 2.974079374353488
+      },
+      "engine_errors": {
+        "fundamental": 0.11592062564651195
+      },
+      "engine_scores": {
+        "fundamental": 0.11383628550777058
+      },
       "status": "scored",
       "note": null
     },
@@ -1444,6 +1958,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 72.33 (sigma 0.67, reliability 85%, overlap penalty 100%, weight 100%) -> 72.33.",
+      "engine_values": {
+        "fundamental": 72.33328923842109
+      },
+      "engine_errors": {
+        "fundamental": 0.6667107615789121
+      },
+      "engine_scores": {
+        "fundamental": 0.218593692320955
+      },
       "status": "scored",
       "note": null
     },
@@ -1467,6 +1990,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3,554.89 (sigma 63.12, reliability 85%, overlap penalty 100%, weight 100%) -> 3,554.89.",
+      "engine_values": {
+        "fundamental": 3554.8903614309042
+      },
+      "engine_errors": {
+        "fundamental": 68.10963856909575
+      },
+      "engine_scores": {
+        "fundamental": 0.09251593641595193
+      },
       "status": "scored",
       "note": null
     },
@@ -1488,6 +2020,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1509,6 +2044,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1530,6 +2068,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1551,6 +2092,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1572,6 +2116,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1593,6 +2140,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1614,6 +2164,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1635,6 +2188,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1656,6 +2212,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1677,6 +2236,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1698,6 +2260,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1719,6 +2284,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1740,6 +2308,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1761,6 +2332,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1782,6 +2356,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1803,6 +2380,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1824,6 +2404,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1845,6 +2428,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1866,6 +2452,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1887,6 +2476,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1908,6 +2500,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1929,6 +2524,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1950,6 +2548,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1971,6 +2572,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -1992,6 +2596,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2013,6 +2620,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2034,6 +2644,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2055,6 +2668,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2076,6 +2692,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2097,6 +2716,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2118,6 +2740,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2139,6 +2764,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2160,6 +2788,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2181,6 +2812,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2202,6 +2836,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2223,6 +2860,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2244,6 +2884,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2265,6 +2908,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2286,6 +2932,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2307,6 +2956,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2328,6 +2980,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2349,6 +3004,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2370,6 +3028,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2391,6 +3052,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2412,6 +3076,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: HD: full-year guidance not found"
     },
@@ -2435,6 +3102,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3.48 (sigma 0.44, reliability 85%, overlap penalty 100%, weight 100%) -> 3.48.",
+      "engine_values": {
+        "fundamental": 3.4785373409260387
+      },
+      "engine_errors": {
+        "fundamental": 0.028537340926038546
+      },
+      "engine_scores": {
+        "fundamental": 0.9483523799866019
+      },
       "status": "scored",
       "note": null
     },
@@ -2458,6 +3134,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.01 (sigma 0.50, reliability 85%, overlap penalty 100%, weight 100%) -> 1.01.",
+      "engine_values": {
+        "fundamental": 1.0132209835896688
+      },
+      "engine_errors": {
+        "fundamental": 1.3132209835896689
+      },
+      "engine_scores": {
+        "fundamental": 0.27646757549256185
+      },
       "status": "scored",
       "note": null
     },
@@ -2481,6 +3166,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 38,749.55 (sigma 2,241.44, reliability 85%, overlap penalty 100%, weight 100%) -> 38,749.55.",
+      "engine_values": {
+        "fundamental": 38749.54939932256
+      },
+      "engine_errors": {
+        "fundamental": 1106.450600677439
+      },
+      "engine_scores": {
+        "fundamental": 0.26267138603848034
+      },
       "status": "scored",
       "note": null
     },
@@ -2504,6 +3198,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 4.62 (sigma 0.23, reliability 85%, overlap penalty 100%, weight 100%) -> 4.62.",
+      "engine_values": {
+        "fundamental": 4.623528342293414
+      },
+      "engine_errors": {
+        "fundamental": 0.04352834229341429
+      },
+      "engine_scores": {
+        "fundamental": 0.20882161624415832
+      },
       "status": "scored",
       "note": null
     },
@@ -2527,6 +3230,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 0.98 (sigma 0.50, reliability 85%, overlap penalty 100%, weight 100%) -> 0.98.",
+      "engine_values": {
+        "fundamental": 0.9801962372850843
+      },
+      "engine_errors": {
+        "fundamental": 0.019803762714915685
+      },
+      "engine_scores": {
+        "fundamental": 0.004830186028028216
+      },
       "status": "scored",
       "note": null
     },
@@ -2550,6 +3262,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 45,588.14 (sigma 1,208.78, reliability 85%, overlap penalty 100%, weight 100%) -> 45,588.14.",
+      "engine_values": {
+        "fundamental": 45588.14405474878
+      },
+      "engine_errors": {
+        "fundamental": 311.14405474878004
+      },
+      "engine_scores": {
+        "fundamental": 0.12945201880684873
+      },
       "status": "scored",
       "note": null
     },
@@ -2573,6 +3294,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3.80 (sigma 0.11, reliability 85%, overlap penalty 100%, weight 100%) -> 3.80.",
+      "engine_values": {
+        "fundamental": 3.798395632979675
+      },
+      "engine_errors": {
+        "fundamental": 0.17839563297967498
+      },
+      "engine_scores": {
+        "fundamental": 1.645419311958383
+      },
       "status": "scored",
       "note": null
     },
@@ -2596,6 +3326,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 0.97 (sigma 0.49, reliability 85%, overlap penalty 100%, weight 100%) -> 0.97.",
+      "engine_values": {
+        "fundamental": 0.9709948757613844
+      },
+      "engine_errors": {
+        "fundamental": 0.7709948757613845
+      },
+      "engine_scores": {
+        "fundamental": 1.541989751522769
+      },
       "status": "scored",
       "note": null
     },
@@ -2619,6 +3358,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 40,782.66 (sigma 828.46, reliability 85%, overlap penalty 100%, weight 100%) -> 40,782.66.",
+      "engine_values": {
+        "fundamental": 40782.65587521699
+      },
+      "engine_errors": {
+        "fundamental": 569.3441247830124
+      },
+      "engine_scores": {
+        "fundamental": 2.7536473436980673
+      },
       "status": "scored",
       "note": null
     },
@@ -2642,6 +3390,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.94 (sigma 0.18, reliability 85%, overlap penalty 100%, weight 100%) -> 2.94.",
+      "engine_values": {
+        "fundamental": 2.94183852001105
+      },
+      "engine_errors": {
+        "fundamental": 0.3618385200110499
+      },
+      "engine_scores": {
+        "fundamental": 0.9942196633568795
+      },
       "status": "scored",
       "note": null
     },
@@ -2665,6 +3422,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 0.96 (sigma 0.49, reliability 85%, overlap penalty 100%, weight 100%) -> 0.96.",
+      "engine_values": {
+        "fundamental": 0.9555317659653312
+      },
+      "engine_errors": {
+        "fundamental": 0.5555317659653312
+      },
+      "engine_scores": {
+        "fundamental": 0.2583868678908517
+      },
       "status": "scored",
       "note": null
     },
@@ -2688,6 +3454,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 38,935.65 (sigma 1,514.61, reliability 85%, overlap penalty 100%, weight 100%) -> 38,935.65.",
+      "engine_values": {
+        "fundamental": 38935.64586656909
+      },
+      "engine_errors": {
+        "fundamental": 737.645866569088
+      },
+      "engine_scores": {
+        "fundamental": 0.24322534644463487
+      },
       "status": "scored",
       "note": null
     },
@@ -2711,6 +3486,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 3.69 (sigma 0.09, reliability 85%, overlap penalty 100%, weight 100%) -> 3.69.",
+      "engine_values": {
+        "fundamental": 3.6939215544177193
+      },
+      "engine_errors": {
+        "fundamental": 0.26392155441771914
+      },
+      "engine_scores": {
+        "fundamental": 0.024596949352818715
+      },
       "status": "scored",
       "note": null
     },
@@ -2734,6 +3518,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 1.05 (sigma 0.99, reliability 85%, overlap penalty 100%, weight 100%) -> 1.05.",
+      "engine_values": {
+        "fundamental": 1.0468713939362215
+      },
+      "engine_errors": {
+        "fundamental": 0.44687139393622155
+      },
+      "engine_scores": {
+        "fundamental": 0.5257310516896724
+      },
       "status": "scored",
       "note": null
     },
@@ -2757,6 +3550,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 41,235.67 (sigma 1,282.15, reliability 85%, overlap penalty 100%, weight 100%) -> 41,235.67.",
+      "engine_values": {
+        "fundamental": 41235.66739926898
+      },
+      "engine_errors": {
+        "fundamental": 529.332600731017
+      },
+      "engine_scores": {
+        "fundamental": 1.4063490772187102
+      },
       "status": "scored",
       "note": null
     },
@@ -2778,6 +3580,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2799,6 +3604,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2820,6 +3628,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2841,6 +3652,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2862,6 +3676,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2883,6 +3700,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2904,6 +3724,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2925,6 +3748,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2946,6 +3772,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2967,6 +3796,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -2988,6 +3820,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -3009,6 +3844,9 @@
       "beat_baseline": null,
       "system_engines": [],
       "system_reasoning": "",
+      "engine_values": {},
+      "engine_errors": {},
+      "engine_scores": {},
       "status": "engine_failed",
       "note": "RuntimeError: Hays: no company-compiled consensus found"
     },
@@ -3032,6 +3870,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 991.10 (sigma 5.57, reliability 85%, overlap penalty 100%, weight 100%) -> 991.10.",
+      "engine_values": {
+        "fundamental": 991.1039999999999
+      },
+      "engine_errors": {
+        "fundamental": 18.70399999999995
+      },
+      "engine_scores": {
+        "fundamental": 0.14718283799744608
+      },
       "status": "scored",
       "note": null
     },
@@ -3055,6 +3902,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 2.08 (sigma 0.10, reliability 60%, overlap penalty 100%, weight 100%) -> 2.08.",
+      "engine_values": {
+        "fundamental": 2.0824481763113707
+      },
+      "engine_errors": {
+        "fundamental": 0.7724481763113706
+      },
+      "engine_scores": {
+        "fundamental": 0.39252544240615067
+      },
       "status": "scored",
       "note": null
     },
@@ -3078,6 +3934,15 @@
         "fundamental"
       ],
       "system_reasoning": "Meta-forecast: fundamental 56.40 (sigma 2.82, reliability 85%, overlap penalty 100%, weight 100%) -> 56.40.",
+      "engine_values": {
+        "fundamental": 56.4
+      },
+      "engine_errors": {
+        "fundamental": 10.799999999999997
+      },
+      "engine_scores": {
+        "fundamental": 0.26540845513126865
+      },
       "status": "scored",
       "note": null
     }

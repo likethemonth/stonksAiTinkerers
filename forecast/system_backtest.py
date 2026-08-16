@@ -125,6 +125,11 @@ class Cell:
     beat_baseline: bool | None = None
     system_engines: list[str] = field(default_factory=list)
     system_reasoning: str = ""
+    #: Each top-level engine scored on its own against the same actual, so the
+    #: aggregate can be compared with the parts it was built from.
+    engine_values: dict[str, float] = field(default_factory=dict)
+    engine_errors: dict[str, float] = field(default_factory=dict)
+    engine_scores: dict[str, float] = field(default_factory=dict)
     status: str = "scored"
     note: str | None = None
 
@@ -254,6 +259,19 @@ def _run_company(company: Company, as_of: date, quarters: int) -> list[dict[str,
                 if contribution.status.value == "available"
             ]
             cell.system_reasoning = produced.reasoning
+            # Score every engine that spoke, on its own, against the same actual
+            # and the same benchmark. Without this the aggregate can only be
+            # asserted to be worth building, never shown to be.
+            for contribution in produced.engine_contributions:
+                if contribution.status.value != "available" or contribution.estimate is None:
+                    continue
+                name = contribution.engine.value
+                error = abs(contribution.estimate.value - actual.value)
+                cell.engine_values[name] = contribution.estimate.value
+                cell.engine_errors[name] = error
+                cell.engine_scores[name] = _score(
+                    error, cell.baseline_error, spec.units, actual.value
+                )
             cells.append(cell)
 
     return [asdict(cell) for cell in cells]
@@ -278,8 +296,28 @@ def _summarise(rows: list[dict[str, Any]]) -> dict[str, Any]:
             ),
         }
 
+    # Each engine judged only on the cells where it actually spoke, plus the
+    # aggregate restricted to those same cells so the comparison is like for
+    # like: an engine that abstains 60 times must not look good on the 3 it took.
+    engines: dict[str, dict[str, Any]] = {}
+    for name in sorted({key for row in scored for key in row["engine_scores"]}):
+        spoke = [row for row in scored if name in row["engine_scores"]]
+        alone = [row["engine_scores"][name] for row in spoke]
+        together = [row["score"] for row in spoke]
+        engines[name] = {
+            "n": len(spoke),
+            "meanScoreAlone": statistics.fmean(alone),
+            "medianScoreAlone": statistics.median(alone),
+            "beatBenchmarkAlone": sum(1 for value in alone if value < 1.0),
+            "meanScoreOfAggregateOnSameCells": statistics.fmean(together),
+            "aggregateBetterOnCells": sum(
+                1 for row in spoke if row["score"] < row["engine_scores"][name]
+            ),
+        }
+
     return {
         "overall": block(scored) if scored else None,
+        "byEngine": engines,
         "byMetric": {key: block(items) for key, items in sorted(by_metric.items())},
         "counts": {
             status: sum(1 for row in rows if row["status"] == status)
@@ -317,6 +355,29 @@ def _markdown(payload: dict[str, Any]) -> str:
             f"{overall['meanBaselineError']:.4g}.",
             "",
         ]
+
+    if summary.get("byEngine"):
+        lines += [
+            "## Each engine alone, against the aggregate",
+            "",
+            "An engine is judged only on the cells where it actually produced a "
+            "value, and the aggregate is shown on those same cells so the "
+            "comparison is like for like. `Aggregate better` counts the cells "
+            "where the meta-forecast beat that engine on its own.",
+            "",
+            "| Engine | Cells it spoke on | Mean score alone | Median alone | "
+            "Beat benchmark alone | Aggregate on same cells | Aggregate better |",
+            "|---|---:|---:|---:|---:|---:|---:|",
+        ]
+        for name, item in summary["byEngine"].items():
+            lines.append(
+                f"| {name} | {item['n']} | **{item['meanScoreAlone']:.2f}** | "
+                f"{item['medianScoreAlone']:.2f} | "
+                f"{item['beatBenchmarkAlone']}/{item['n']} | "
+                f"{item['meanScoreOfAggregateOnSameCells']:.2f} | "
+                f"{item['aggregateBetterOnCells']}/{item['n']} |"
+            )
+        lines.append("")
 
     lines += [
         "## By metric",
