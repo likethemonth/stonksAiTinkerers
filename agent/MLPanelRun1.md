@@ -11,7 +11,9 @@
 
 **Headline: 4 of 9 metrics pass; the pipeline transfers to ADI in full and to Hays net fees.** ADI passes all three gates via a zero-parameter guidance-realisation model. Hays net fees passes at 1.52% MAPE once a loader bug was fixed. Deere fails all three, and the run *proves* that failure is a property of the data rather than of the models.
 
-> **Correction (same day).** The first version of this run concluded Hays had no usable data. That was wrong, and it was my bug, not the data's. `load_series` keyed observations by their `period` string, but Hays tags every quarterly trading update with the **fiscal year** rather than the quarter — so four readings per year collapsed into one and a **20-point quarterly series silently became ~6 annual points**. Section 4 is rewritten around the corrected result. ADI and Deere were unaffected (zero conflicting keys), and the loader now raises rather than overwriting when a period holds two different values.
+> **Correction 2 (same day).** A follow-up audit of ADI and Deere found that **all four observation files on disk were stale** — regenerating them from the corpus yields deere 82→116, hays 69→71, home-depot 125→133, analog-devices 360→375 observations. Deere was missing **every Q4** (the extractor handles them; the file predated that). The live pipeline (`run.py`) re-extracts at run time, so the team's submission was never affected — only this lens, which read the on-disk artifacts. Everything below is re-run on regenerated data; **no verdict changed**, and Deere's evidence got substantially stronger (§3).
+
+> **Correction 1 (same day).** The first version of this run concluded Hays had no usable data. That was wrong, and it was my bug, not the data's. `load_series` keyed observations by their `period` string, but Hays tags every quarterly trading update with the **fiscal year** rather than the quarter — so four readings per year collapsed into one and a **20-point quarterly series silently became ~6 annual points**. Section 4 is rewritten around the corrected result. ADI and Deere were unaffected (zero conflicting keys), and the loader now raises rather than overwriting when a period holds two different values.
 
 ---
 
@@ -40,11 +42,13 @@ Gates were fixed before any model ran, set from what would be competitive agains
 
 Zero fitted parameters, so nothing can be overfit and the walk-forward is exact. The legality argument is identical to HD's: guidance for quarter *t* is published before quarter *t* is reported. The naive baseline is deliberately strong — **trust the guidance verbatim**, which is what a lazy forecaster does.
 
-| Metric | Walk-forward score (n=13) | Naive (trust guidance) | Gate | Verdict |
+| Metric | Walk-forward score (n=14) | Naive (trust guidance) | Gate | Verdict |
 |---|---|---|---|---|
-| Revenue | **1.45% MAPE** | 2.36% | ≤2% | **PASS** |
-| Adjusted EPS | **3.44% MAPE** | 4.68% | ≤5% | **PASS** |
-| Adjusted gross margin | **0.83pp MAE** | 1.05pp | ≤1.0pp | **PASS** |
+| Revenue | **1.38% MAPE** | 2.41% | ≤2% | **PASS** |
+| Adjusted EPS | **3.44% MAPE** | 4.74% | ≤5% | **PASS** |
+| Adjusted gross margin | **0.89pp MAE** | 1.03pp | ≤1.0pp | **PASS** |
+
+The pure-history framing was also runnable on the regenerated data and lost badly (revenue 6.71% vs guidance-realisation's 1.38%; EPS 16.51% vs 3.44%), which confirms the reframe rather than the estimator is doing the work.
 
 Recent walk-forward points (revenue): FY2025Q4 0.08%, FY2026Q1 0.66%, FY2026Q2 0.92%. The realisation ratio is remarkably stable — mean 1.026, sd 0.018, and 19 of 20 quarters above 1.0. ADI beats its own guidance almost every quarter, by a consistent amount.
 
@@ -77,9 +81,9 @@ Note that `expanding_mean` is *not* the best variant in either column. It was fi
 
 | Metric | **ML panel** | Anchor lens | Guide | Gap |
 |---|---|---|---|---|
-| Revenue | **$4,002M** | $4,010M | $3,900M | 0.2% |
-| Adjusted EPS | **$3.48** | $3.48 | $3.30 | ~0 |
-| Adjusted gross margin | **73.19%** | 72.9% | ~72.5% implied | +0.29pp |
+| Revenue | **$4,004M** | $4,010M | $3,900M | 0.2% |
+| Adjusted EPS | **$3.49** | $3.48 | $3.30 | ~0 |
+| Adjusted gross margin | **73.29%** | 72.9% | ~72.5% implied | +0.39pp |
 
 The convergence on revenue and EPS is the most valuable output of this run: a **mechanical, zero-parameter model independently reproduces the anchor lens's judgement calls** (3.484 vs 3.48 on EPS). Two methods sharing no reasoning arrived at the same place.
 
@@ -93,11 +97,15 @@ No pre-published quarterly information exists, so only pure history was availabl
 
 | Metric | Walk-forward | Naive | Gate | Verdict |
 |---|---|---|---|---|
-| Worldwide net sales & revenues | 4.03% (n=2) | 3.02% | ≤2% | **FAIL** — loses to naive |
-| Diluted EPS (GAAP) | 32.19% (n=4) | 23.81% | ≤5% | **FAIL** — loses to naive |
-| PPA operating profit | not runnable | — | ≤10% | **FAIL** — insufficient history |
+| Worldwide net sales & revenues | 7.26% (n=9) | 7.31% | ≤2% | **FAIL** — 3.6× the gate |
+| Diluted EPS (GAAP) | 24.25% (n=9) | 19.57% | ≤5% | **FAIL** — loses to naive |
+| PPA operating profit | 24.19% (n=4) | 74.80% | ≤10% | **FAIL** — 2.4× the gate |
+
+These are the *regenerated-data* results, with roughly 4× the walk-forward samples of the first run. More data did not help, and the reason is the next table.
 
 Losing to the naive baseline says the model learned nothing. But is that the model's fault or the data's? The pipeline now answers that directly by computing an **intrinsic floor**: the dispersion of the target transition's own ratio history. If the Q2→Q3 ratio has coefficient of variation *c*, no estimator using only that history can average better than roughly *c*% MAPE.
+
+Adding every Q4 back changed none of these, because Q4 does not enter a Q2→Q3 ratio:
 
 | Metric | Q2→Q3 ratio history (ex-COVID) | Floor | Gate | Achievable? |
 |---|---|---|---|---|
@@ -105,7 +113,7 @@ Losing to the naive baseline says the model learned nothing. But is that the mod
 | Diluted EPS | 0.798, 0.905, 1.057, 0.737, 0.715 | **16.7%** | 5% | **No** |
 | PPA operating profit | 1.223, 0.821, 0.704, 0.505 | **37.2%** | 10% | **No** |
 
-**Every Deere gate is unreachable by construction.** A perfect history-only estimator would still miss revenue by ~8% and PPA operating profit by ~37%. The PPA ratio history is the clearest picture of why: 1.223 → 0.821 → 0.704 → 0.505, a monotone collapse as agricultural operating leverage works in reverse. History cannot forecast that; it is precisely what the driver lens (AEM tractor units, dealer inventories) and the anchor lens (management's segment guidance) exist to capture.
+**Every Deere gate is unreachable by construction.** A perfect history-only estimator would still miss revenue by ~8% and PPA operating profit by ~37%. The regenerated run is the cleanest possible confirmation: with n=9 walk-forward points the revenue model scored **7.26% against a predicted floor of 8.1%** — it landed exactly where the floor said it would, which is what a genuine information limit looks like as opposed to a tuning failure. The PPA ratio history is the clearest picture of why: 1.223 → 0.821 → 0.704 → 0.505, a monotone collapse as agricultural operating leverage works in reverse. History cannot forecast that; it is precisely what the driver lens (AEM tractor units, dealer inventories) and the anchor lens (management's segment guidance) exist to capture.
 
 This is the run's most useful negative result: **Deere's Q3 is not a machine-learning problem.** Effort spent tuning estimators here would have been wasted, and the intrinsic floor made that visible before any tuning happened.
 
@@ -173,16 +181,51 @@ Applying FY2025's overshoot to FY2026 gives ≈£35m — which flatly contradict
 
 So the abstention stands, but it is now a measured result rather than an assertion — and it locates precisely what the ML lens cannot see.
 
+## 4b. Data audit — checking ADI and Deere for the same class of problem
+
+The Hays bug prompted a systematic audit of the other two files, looking for every way data can hide: collapsed keys, unused metrics, unused `kind`s, and periods missing from the extraction that exist in the corpus.
+
+**ADI — clean.** Each metric shows 24 rows against 22 unique periods, but the two extras are FY2020Q4/FY2021Q1 captured from two documents (the 8-K on 2020-10-24 and a later filing on 2020-11-24) with **identical values**. Zero conflicting keys. No hidden sub-period granularity. No conclusions affected.
+
+**Deere — zero collapsed keys, but the file itself was stale.** The observations on disk had no Q4 rows at all and no guidance rows, which is what drove my original "nothing is pre-published" verdict. Both turned out to be wrong:
+
+1. **Q4 actuals are in the corpus and the extractor already handles them** (`_period()` matches "Fourth Quarter" in the title). The file simply predated that code. Re-running the extractor yields **116 observations across 33 quarters** versus 82 across 25 on disk.
+2. **Deere does publish full-year guidance** — net income ranges for FY2021, FY2022, FY2024, FY2025 and FY2026 are all in the corpus. I had used them in the anchor and driver lenses and then wrongly asserted Deere had nothing pre-published, because the *observation table* had no guidance rows.
+
+Checking all four files against a fresh extraction found every one stale:
+
+| Company | On disk | Fresh | Missing |
+|---|---|---|---|
+| deere | 82 | 116 | +34 (all Q4s) |
+| analog-devices | 360 | 375 | +15 |
+| home-depot | 125 | 133 | +8 |
+| hays | 69 | 71 | +2 |
+
+**The live pipeline is not affected**: `run.py` calls `<company>.extract(...)` and re-writes the observations at run time, so a real run always uses fresh data. Only consumers of the on-disk artifacts — this lens — saw stale input. All results above are re-run on regenerated files.
+
+### Would Deere's recovered guidance have rescued it?
+
+No, and this is worth stating precisely because it is the one place the audit could have overturned a verdict. A Q3 forecaster can only use guidance issued **at or before Q2**, so the realisation ratio has to be estimated within a single vintage:
+
+| Guidance vintage | Samples | Realisation ratios | Dispersion |
+|---|---|---|---|
+| Start of year (Nov) | 3 | 1.056, 0.888, 0.958 | sd 0.085 |
+| Q1 (Feb) | 1 | 0.931 | not estimable |
+| **Q2 (May) — the usable one** | **1** | 0.981 | **not estimable** |
+| Q3 (Aug) | 2 | 1.028, 1.005 | published after Q3 reports |
+
+The only legally usable vintage has **n=1**. The start-of-year vintage has n=3 but sd 8.5%, which on a $4,750M guide is ±$400M of net income — roughly ±$1.50 of EPS. So completing the extraction gives Deere a much better-documented failure, not a passing model.
+
 ## 5. Results summary
 
 | Company | Metric | Score | Gate | Beats naive | Usable |
 |---|---|---|---|---|---|
-| ADI | Revenue | 1.45% | 2% | ✓ | **$4,002M** |
-| ADI | Adjusted EPS | 3.44% | 5% | ✓ | **$3.48** |
-| ADI | Adjusted gross margin | 0.83pp | 1.0pp | ✓ | **73.19%** |
-| Deere | Net sales & revenues | 4.03% | 2% | ✗ | abstained |
-| Deere | Diluted EPS | 32.19% | 5% | ✗ | abstained |
-| Deere | PPA operating profit | n/a | 10% | — | abstained |
+| ADI | Revenue | 1.38% | 2% | ✓ | **$4,004M** |
+| ADI | Adjusted EPS | 3.44% | 5% | ✓ | **$3.49** |
+| ADI | Adjusted gross margin | 0.89pp | 1.0pp | ✓ | **73.29%** |
+| Deere | Net sales & revenues | 7.26% | 2% | ✓ (barely) | abstained |
+| Deere | Diluted EPS | 24.25% | 5% | ✗ | abstained |
+| Deere | PPA operating profit | 24.19% | 10% | ✓ | abstained |
 | **Hays** | **Net fees** | **1.52%** | 2% | ✓ (naive 15.4%) | **£891.8m** |
 | Hays | Pre-exc operating profit | n/a | 10% | — | abstained |
 | Hays | Pre-exc basic EPS | n/a | 10% | — | abstained |

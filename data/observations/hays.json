@@ -1,7 +1,7 @@
 {
   "company": "hays",
   "as_of": null,
-  "observation_count": 69,
+  "observation_count": 71,
   "rejected": [
     "FY2024 pre_exc_operating_profit: -5.8 outside [1.0, 5000.0] (hays/filings/2025-08-21__has-ln-20250821-h2-8k-2__671218.md)",
     "DISAGREEMENT FY2023 net_fees: documents report [225.7, 1294.6] \u2014 kept 1294.6 (reported by 3 of 4 extractions)",
@@ -241,12 +241,12 @@
       "value": 3.67,
       "units": "GBp",
       "kind": "ACTUAL",
-      "as_of": "2021-08-26",
-      "source_file": "hays/filings/2021-08-26__has-ln-20210826-h2-8k__119734.md",
+      "as_of": "2022-08-25",
+      "source_file": "hays/filings/2022-08-25__has-ln-20220825-h2-8k__119750.md",
       "doc_type": "FILING",
-      "excerpt": "| Basic earnings per share (before exceptional items) (2) | 3.67p | 5.28p | (30)% | |",
+      "excerpt": "| Basic earnings per share | 9.22 p | 3.67 p | 151% | |",
       "extractor": "hays.annual_results",
-      "note": null
+      "note": "prior-year comparative"
     },
     {
       "company": "hays",
@@ -255,12 +255,12 @@
       "value": 95.1,
       "units": "GBPm",
       "kind": "ACTUAL",
-      "as_of": "2021-08-26",
-      "source_file": "hays/filings/2021-08-26__has-ln-20210826-h2-8k__119734.md",
+      "as_of": "2022-08-25",
+      "source_file": "hays/filings/2022-08-25__has-ln-20220825-h2-8k__119750.md",
       "doc_type": "FILING",
-      "excerpt": "| Operating profit (before exceptional items) (2) | 95.1 | 135.0 | (30)% | (31)% |",
+      "excerpt": "| Operating profit | 210.1 | 95.1 | 121% | 128% |",
       "extractor": "hays.annual_results",
-      "note": null
+      "note": "prior-year comparative"
     },
     {
       "company": "hays",
@@ -331,6 +331,34 @@
       "excerpt": "On an actual basis, net fees increased by 36%",
       "extractor": "hays.net_fee_growth",
       "note": null
+    },
+    {
+      "company": "hays",
+      "metric_key": "pre_exc_basic_eps",
+      "period": "FY2022",
+      "value": 9.22,
+      "units": "GBp",
+      "kind": "ACTUAL",
+      "as_of": "2023-08-24",
+      "source_file": "hays/filings/2023-08-24__has-ln-20230824-h2-8k__119735.md",
+      "doc_type": "FILING",
+      "excerpt": "| Basic earnings per share | 8.59p | 9.22p | (7)% | |",
+      "extractor": "hays.annual_results",
+      "note": "prior-year comparative"
+    },
+    {
+      "company": "hays",
+      "metric_key": "pre_exc_operating_profit",
+      "period": "FY2022",
+      "value": 210.1,
+      "units": "GBPm",
+      "kind": "ACTUAL",
+      "as_of": "2023-08-24",
+      "source_file": "hays/filings/2023-08-24__has-ln-20230824-h2-8k__119735.md",
+      "doc_type": "FILING",
+      "excerpt": "| Operating profit | 197.0 | 210.1 | (6)% | (9)% |",
+      "extractor": "hays.annual_results",
+      "note": "prior-year comparative"
     },
     {
       "company": "hays",

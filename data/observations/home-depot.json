@@ -1,7 +1,7 @@
 {
   "company": "home-depot",
   "as_of": null,
-  "observation_count": 125,
+  "observation_count": 133,
   "rejected": [],
   "observations": [
     {
@@ -650,6 +650,20 @@
     },
     {
       "company": "home-depot",
+      "metric_key": "comp_sales_pct",
+      "period": "FY2019Q4",
+      "value": 5.2,
+      "units": "%",
+      "kind": "ACTUAL",
+      "as_of": "2020-02-25",
+      "source_file": "home-depot/filings/2020-02-25__hd-us-20200225-q4-8k__437581.md",
+      "doc_type": "FILING",
+      "excerpt": "Comparable sales for the fourth quarter of fiscal 2019 increased 5.2 percent",
+      "extractor": "hd.comps_prose",
+      "note": null
+    },
+    {
+      "company": "home-depot",
       "metric_key": "diluted_eps_gaap",
       "period": "FY2019Q4",
       "value": 2.28,
@@ -762,6 +776,20 @@
     },
     {
       "company": "home-depot",
+      "metric_key": "comp_sales_pct",
+      "period": "FY2020Q4",
+      "value": 24.5,
+      "units": "%",
+      "kind": "ACTUAL",
+      "as_of": "2021-02-23",
+      "source_file": "home-depot/filings/2021-02-23__hd-us-20210223-q4-8k__101835.md",
+      "doc_type": "FILING",
+      "excerpt": "Comparable sales for the fourth quarter of fiscal 2020 increased 24.5 percent",
+      "extractor": "hd.comps_prose",
+      "note": null
+    },
+    {
+      "company": "home-depot",
       "metric_key": "diluted_eps_gaap",
       "period": "FY2020Q4",
       "value": 2.65,
@@ -787,6 +815,20 @@
       "excerpt": "| Net sales | $ 35,719 | $ 32,261 | 10.7 % | $ 151,157 | $ 132,110 | 14.4 % |",
       "extractor": "hd.results_table",
       "note": "prior-year comparative"
+    },
+    {
+      "company": "home-depot",
+      "metric_key": "comp_sales_pct",
+      "period": "FY2021Q1",
+      "value": 31.0,
+      "units": "%",
+      "kind": "ACTUAL",
+      "as_of": "2021-05-18",
+      "source_file": "home-depot/filings/2021-05-18__hd-us-20210518-q1-8k__101823.md",
+      "doc_type": "FILING",
+      "excerpt": "Comparable sales for the first quarter of fiscal 2021 increased 31.0 percent",
+      "extractor": "hd.comps_prose",
+      "note": null
     },
     {
       "company": "home-depot",
@@ -818,6 +860,20 @@
     },
     {
       "company": "home-depot",
+      "metric_key": "comp_sales_pct",
+      "period": "FY2021Q2",
+      "value": 4.5,
+      "units": "%",
+      "kind": "ACTUAL",
+      "as_of": "2021-08-17",
+      "source_file": "home-depot/filings/2021-08-17__hd-us-20210817-q2-8k__101848.md",
+      "doc_type": "FILING",
+      "excerpt": "Comparable sales for the second quarter of fiscal 2021 increased 4.5 percent",
+      "extractor": "hd.comps_prose",
+      "note": null
+    },
+    {
+      "company": "home-depot",
       "metric_key": "diluted_eps_gaap",
       "period": "FY2021Q2",
       "value": 4.53,
@@ -843,6 +899,20 @@
       "excerpt": "| Net sales | $ 43,792 | $ 41,118 | 6.5 % | $ 82,700 | $ 78,618 | 5.2 % |",
       "extractor": "hd.results_table",
       "note": "prior-year comparative"
+    },
+    {
+      "company": "home-depot",
+      "metric_key": "comp_sales_pct",
+      "period": "FY2021Q3",
+      "value": 6.1,
+      "units": "%",
+      "kind": "ACTUAL",
+      "as_of": "2021-11-16",
+      "source_file": "home-depot/filings/2021-11-16__hd-us-20211116-q3-8k__101850.md",
+      "doc_type": "FILING",
+      "excerpt": "Comparable sales for the third quarter of fiscal 2021 increased 6.1 percent",
+      "extractor": "hd.comps_prose",
+      "note": null
     },
     {
       "company": "home-depot",
@@ -874,6 +944,20 @@
     },
     {
       "company": "home-depot",
+      "metric_key": "comp_sales_pct",
+      "period": "FY2021Q4",
+      "value": 8.1,
+      "units": "%",
+      "kind": "ACTUAL",
+      "as_of": "2022-02-22",
+      "source_file": "home-depot/filings/2022-02-22__hd-us-20220222-q4-8k__101852.md",
+      "doc_type": "FILING",
+      "excerpt": "Comparable sales for the fourth quarter of fiscal 2021 increased 8.1 percent",
+      "extractor": "hd.comps_prose",
+      "note": null
+    },
+    {
+      "company": "home-depot",
       "metric_key": "diluted_eps_gaap",
       "period": "FY2021Q4",
       "value": 3.21,
@@ -899,6 +983,20 @@
       "excerpt": "| Net sales | $ 35,831 | $ 35,719 | 0.3% | $ 157,403 | $ 151,157 | 4.1% |",
       "extractor": "hd.results_table",
       "note": "prior-year comparative"
+    },
+    {
+      "company": "home-depot",
+      "metric_key": "comp_sales_pct",
+      "period": "FY2022Q1",
+      "value": 2.2,
+      "units": "%",
+      "kind": "ACTUAL",
+      "as_of": "2022-05-17",
+      "source_file": "home-depot/filings/2022-05-17__hd-us-20220517-q1-8k__101820.md",
+      "doc_type": "FILING",
+      "excerpt": "Comparable sales for the first quarter of fiscal 2022 increased 2.2 percent",
+      "extractor": "hd.comps_prose",
+      "note": null
     },
     {
       "company": "home-depot",
@@ -936,9 +1034,9 @@
       "units": "%",
       "kind": "ACTUAL",
       "as_of": "2022-08-16",
-      "source_file": "home-depot/filings/2022-08-16__hd-us-20220816-q2-10q__101824.md",
+      "source_file": "home-depot/filings/2022-08-16__hd-us-20220816-q2-8k__101829.md",
       "doc_type": "FILING",
-      "excerpt": "comparable sales for the second quarter of fiscal 2022 increased 5.8%",
+      "excerpt": "Comparable sales for the second quarter of fiscal 2022 increased 5.8 percent",
       "extractor": "hd.comps_prose",
       "note": null
     },
@@ -978,9 +1076,9 @@
       "units": "%",
       "kind": "ACTUAL",
       "as_of": "2022-11-15",
-      "source_file": "home-depot/filings/2022-11-15__hd-us-20221115-q3-10q__101826.md",
+      "source_file": "home-depot/filings/2022-11-15__hd-us-20221115-q3-8k__101843.md",
       "doc_type": "FILING",
-      "excerpt": "comparable sales for the third quarter of fiscal 2022 increased 4.3%",
+      "excerpt": "Comparable sales for the third quarter of fiscal 2022 increased 4.3 percent",
       "extractor": "hd.comps_prose",
       "note": null
     },
@@ -1011,6 +1109,20 @@
       "excerpt": "| Net sales | $ 37,710 | $ 38,872 | (3.0)% | $ 117,883 | $ 121,572 | (3.0)% |",
       "extractor": "hd.results_table",
       "note": "prior-year comparative"
+    },
+    {
+      "company": "home-depot",
+      "metric_key": "comp_sales_pct",
+      "period": "FY2022Q4",
+      "value": -0.3,
+      "units": "%",
+      "kind": "ACTUAL",
+      "as_of": "2023-02-21",
+      "source_file": "home-depot/filings/2023-02-21__hd-us-20230221-q4-8k__101845.md",
+      "doc_type": "FILING",
+      "excerpt": "Comparable sales for the fourth quarter of fiscal 2022 decreased 0.3 percent",
+      "extractor": "hd.comps_prose",
+      "note": null
     },
     {
       "company": "home-depot",
