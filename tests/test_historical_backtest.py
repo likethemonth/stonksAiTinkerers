@@ -100,6 +100,18 @@ def test_home_depot_adjusted_eps_proxy_is_explicit(replay: dict) -> None:
     assert all("labelled proxy" in row["actual"]["note"] for row in proxy_rows)
 
 
+def test_home_depot_adjusted_eps_baseline_never_uses_full_year_eps_as_quarterly_anchor(replay: dict) -> None:
+    home_depot = next(company for company in replay["companies"] if company["ticker"] == "HD")
+    period = next(period for period in home_depot["periods"] if period["period"] == "FY2026Q1")
+    eps = next(metric for metric in period["metrics"] if metric["metricKey"] == "adj_eps")
+    baseline = next(lane for lane in eps["lanes"] if lane["id"] == "fundamental")
+    assert baseline["estimate"] == pytest.approx(3.3631128108305264)
+    inputs = eps["baselineForecast"]["trace"]["inputs"]
+    assert inputs
+    assert all("Q" in item["period"] for item in inputs)
+    assert eps["forecast"]["value"] == pytest.approx(3.3865564054152633)
+
+
 def test_cross_unit_summaries_do_not_average_raw_deltas(replay: dict) -> None:
     assert replay["summary"]["meanAbsoluteDelta"] is None
     assert replay["summary"]["rawDeltaAggregation"] == "not_comparable_across_units"
@@ -113,3 +125,81 @@ def test_cross_unit_summaries_do_not_average_raw_deltas(replay: dict) -> None:
 
 def test_replay_is_deterministic(replay: dict) -> None:
     assert build_backtest(as_of=date(2026, 8, 16), quarters=20) == replay
+
+
+def test_period_engine_lane_denominators_are_explicit(replay: dict) -> None:
+    coverage = replay["summary"]["laneCoverage"]
+    assert coverage == {
+        "fundamental": {"available": 195, "requested": 240},
+        "street": {"available": 50, "requested": 240},
+        "expert": {"available": 5, "requested": 240},
+        "market": {"available": 9, "requested": 240},
+    }
+    assert replay["meta"]["modelVersion"] == "period-engine-replay-v2"
+    assert "Missing lanes abstain" in replay["meta"]["modelScope"]
+
+
+def test_2025_q1_replays_real_street_data_without_inventing_other_lanes(replay: dict) -> None:
+    home_depot = next(company for company in replay["companies"] if company["ticker"] == "HD")
+    period = next(period for period in home_depot["periods"] if period["period"] == "FY2025Q1")
+    eps = next(metric for metric in period["metrics"] if metric["metricKey"] == "adj_eps")
+    lanes = {lane["id"]: lane for lane in eps["lanes"]}
+    assert lanes["street"]["status"] == "available"
+    assert lanes["street"]["estimate"] == 3.59
+    assert lanes["street"]["components"][0]["publishedAt"] == "2025-05-19"
+    assert lanes["expert"]["status"] == "abstained"
+    assert lanes["market"]["status"] == "abstained"
+    assert eps["metaForecast"]["eligibleLanes"] == ["fundamental", "street"]
+
+
+def test_exact_named_expert_call_enters_only_its_matching_period_and_metric(replay: dict) -> None:
+    adi = next(company for company in replay["companies"] if company["ticker"] == "ADI")
+    period = next(period for period in adi["periods"] if period["period"] == "FY2023Q4")
+    revenue = next(metric for metric in period["metrics"] if metric["metricKey"] == "revenue")
+    expert = next(lane for lane in revenue["lanes"] if lane["id"] == "expert")
+    assert expert["status"] == "available"
+    assert expert["estimate"] == 3000.0
+    assert expert["components"][0]["sourceName"] == "Brian Colello"
+    assert expert["components"][0]["publishedAt"] == "2023-08-23"
+
+
+def test_external_numeric_sources_obey_cutoffs_and_exact_units(replay: dict) -> None:
+    for row in metric_rows(replay):
+        if row["forecast"] is None:
+            continue
+        cutoff = date.fromisoformat(row["forecast"]["cutoff"])
+        for lane in row["lanes"]:
+            for component in lane["components"]:
+                assert component["units"] == row["units"]
+                assert date.fromisoformat(component["publishedAt"]) <= cutoff
+                assert "guidance issued" not in str(component.get("claimId", "")).lower()
+                assert component["sourceRole"] != "anonymous"
+
+
+def test_market_lane_is_binary_signal_only_and_point_in_time(replay: dict) -> None:
+    signals = [
+        lane
+        for row in metric_rows(replay)
+        for lane in row["lanes"]
+        if lane["id"] == "market" and lane["status"] == "signal_only"
+    ]
+    assert len(signals) == 9
+    assert replay["summary"]["marketMeanBrierScore"] == pytest.approx(0.049843221765333366)
+    for lane in signals:
+        signal = lane["signal"]
+        assert lane["estimate"] is None
+        assert lane["numericWeight"] == 0
+        assert 0 <= signal["probability"] <= 1
+        assert signal["outcomeConsistent"] is True
+        assert signal["lastTradeAt"] < signal["cutoff"]
+        assert signal["sourceContentSha256"]
+
+
+def test_sources_below_three_matured_calls_are_not_ranked(replay: dict) -> None:
+    for scorecard in replay["sourceScorecards"]:
+        if scorecard["n"] < 3:
+            assert scorecard["status"] == "case_study"
+            assert scorecard["rank"] is None
+        else:
+            assert scorecard["status"] == "rankable"
+            assert scorecard["rank"] is not None
