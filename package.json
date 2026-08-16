@@ -11,6 +11,8 @@
     "backtest:walkforward": "mkdir -p research && .venv/bin/python -m forecast.backtest | tee research/walkforward-skill.md",
     "backtest:system": "mkdir -p research && .venv/bin/python -m forecast.system_backtest --as-of 2026-08-16",
     "test:forecast": ".venv/bin/python -m pytest -q tests forecasting/test_backtest.py",
+    "prototype": "python3 -m http.server 4173 -d dashboard",
+    "check:prototype": "node scripts/check-dashboard.mjs",
     "setup:entry": "node scripts/setup-entry.mjs",
     "check:entry": "node scripts/check-entry.mjs",
     "check:forecasts": "node scripts/check-forecasts.mjs submission",

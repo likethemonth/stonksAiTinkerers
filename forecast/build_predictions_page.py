@@ -35,6 +35,8 @@ import numpy as np
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 OUT = REPO_ROOT / "architecture" / "predictions.html"
+DASHBOARD_METHODS_OUT = REPO_ROOT / "dashboard" / "data" / "method-explorer.json"
+DASHBOARD_AUDIT_OUT = REPO_ROOT / "dashboard" / "data" / "forecast-audit.json"
 
 
 def load(path: Path):
@@ -1072,8 +1074,8 @@ render();
 """
 
 
-def build_html() -> str:
-    model = build_model()
+def build_html(model: dict | None = None) -> str:
+    model = model or build_model()
     generated = date.today().isoformat()
     stocks = "".join(
         f'<button type="button" data-stock="{k}" aria-pressed="false">{v["name"]}</button>'
@@ -1157,9 +1159,13 @@ def build_html() -> str:
 
 
 def main() -> int:
-    html = build_html()
+    model = build_model()
+    html = build_html(model)
     OUT.write_text(html)
+    DASHBOARD_METHODS_OUT.write_text(json.dumps(model, indent=2) + "\n")
+    DASHBOARD_AUDIT_OUT.write_text((REPO_ROOT / "submission" / "forecast-audit.json").read_text())
     print(f"wrote {OUT.relative_to(REPO_ROOT)} ({len(html.encode()) / 1024:.1f} KB, self-contained)")
+    print(f"wrote {DASHBOARD_METHODS_OUT.relative_to(REPO_ROOT)} and {DASHBOARD_AUDIT_OUT.relative_to(REPO_ROOT)}")
     return 0
 
 

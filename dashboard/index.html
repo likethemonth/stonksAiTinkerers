@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Wall Street Weather — an auditable three-lens forecast visualisation.">
+  <title>Wall Street Weather</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=32">
+</head>
+<body>
+  <main class="terminal" id="terminal">
+    <header class="function-bar">
+      <a class="terminal-mark" href="#" aria-label="NC · Wall Street Weather home"><b>NC</b><span>Wall Street Weather</span></a>
+      <nav class="function-nav" id="company-tabs" aria-label="Companies"></nav>
+      <div class="system-state"><i></i><span id="global-coverage">195 / 240 ACTUALS</span><time>FROZEN · 16 AUG 2026</time></div>
+    </header>
+
+    <section class="workbench">
+      <section class="primary-stack">
+        <article class="market-chart panel" id="market-chart-panel">
+          <header class="chart-head panel-head">
+            <div class="instrument-id">
+              <h1 id="instrument-title">Home Depot · Net sales</h1>
+            </div>
+            <div class="chart-actions"><button class="detail-trigger" id="details-control" type="button">DETAILS</button><button class="trace-trigger" id="trace-control" type="button">RUN TRACE <span>▶</span></button></div>
+          </header>
+
+          <div class="forecast-deck">
+            <nav class="metric-tabs" id="universe-list" aria-label="Company metrics"></nav>
+            <section class="quote-panel compact-quote" aria-label="Selected forecast">
+              <span>FINAL FORECAST</span><strong id="quote-value">$46.94bn</strong>
+              <div class="quote-change"><b id="quote-change">+0.8%</b><span>VS STREET</span></div>
+            </section>
+            <section class="engine-panel compact-engines" aria-label="Forecast source contributions">
+              <header><span>THREE-LENS CONTRIBUTIONS</span><b>CLICK TO TOGGLE</b></header>
+              <div class="engine-table" id="engine-table"></div>
+            </section>
+          </div>
+
+          <div class="chart-stage" id="chart-stage">
+            <video class="storm-field" id="storm-video" muted autoplay loop playsinline preload="metadata" aria-hidden="true">
+              <source src="assets/storm-clouds-2066.mp4" type="video/mp4">
+            </video>
+            <div class="chart-toolbar">
+              <div class="legend"><span class="model-key"><i></i>MODEL / PREDICTION</span><span class="actual-key"><i></i>ACTUAL</span><span class="street-key"><i></i>STREET</span></div>
+              <div class="method-tabs" id="method-tabs" aria-label="Historical method"></div>
+              <div class="range-switch"><span>ALL AVAILABLE PERIODS</span></div>
+            </div>
+            <div class="chart-scroll" id="chart-scroll">
+            <svg id="history-chart" viewBox="0 0 980 420" role="img" aria-labelledby="chart-title chart-desc">
+              <title id="chart-title">Complete validated model prediction and actual history</title>
+              <desc id="chart-desc">Every validated period supplied by the selected methodology, followed by the current lightning forecast trace.</desc>
+              <defs>
+                <filter id="electric-glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4" result="blur"></feGaussianBlur><feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+              </defs>
+              <g id="chart-grid"></g>
+              <g id="chart-axes"></g>
+              <g id="actual-series"></g>
+              <g id="prediction-series"></g>
+              <g id="street-series"></g>
+              <g id="lightning-series"></g>
+              <g id="error-series"></g>
+              <g id="chart-labels"></g>
+            </svg>
+            </div>
+            <aside class="method-inspector" id="method-inspector" aria-label="Method details">
+              <header><span id="inspector-method">METHOD</span><button id="details-close" type="button" aria-label="Close details">×</button></header>
+              <div id="inspector-content"></div>
+            </aside>
+            <article class="cinematic-reason" id="cinematic-reason" aria-live="polite" role="button" tabindex="0" aria-label="Reasoning step. Click to advance.">
+              <header><span id="cinematic-stage">STREET</span><b id="cinematic-count">01 / 05</b></header>
+              <h2 id="cinematic-title">Reconstruct Street</h2>
+              <p id="cinematic-claim">Public estimates establish the benchmark.</p>
+              <div class="cinematic-number"><strong id="cinematic-value">$46.57bn</strong><span id="cinematic-weight">10% META WEIGHT</span></div>
+              <p class="cinematic-calculation" id="cinematic-calculation"></p>
+              <section class="cinematic-provenance">
+                <span id="cinematic-source-label">DATA USED</span>
+                <ul id="cinematic-sources"></ul>
+              </section>
+              <footer>CLICK CARD OR NEXT TO ADVANCE <span>→</span></footer>
+            </article>
+          </div>
+        </article>
+
+      </section>
+
+    </section>
+
+  </main>
+  <script src="app.js?v=32"></script>
+</body>
+</html>
