@@ -18,6 +18,8 @@ Sources read:
     forecast/data/drivers/<date>.json            driver observations
     forecast/data/polymarket/<date>/…            market lens
     data/observations/analog-devices.json        ADI guidance calibration
+    research/llm-replay/llm-driver-backtest.json blinded LLM replay (driver backtest)
+    research/polymarket-reliability.json         resolved beat-market reliability
 
 Usage:  .venv/bin/python -m forecast.build_predictions_page
 """
@@ -86,6 +88,140 @@ def panel_series(panel, company, metric, block) -> list[dict]:
                     "predicted": r["predicted"],
                     "err": r.get("err", r.get("err_pct"))})
     return out
+
+
+def load_optional(path: Path):
+    return json.loads(path.read_text()) if path.exists() else None
+
+
+# Which blinded-replay metric backs each driver-view metric tile.
+LLM_METRIC_BY_LABEL = {
+    ("ADI", "Revenue"): "revenue",
+    ("ADI", "Adjusted diluted EPS"): "adj_eps",
+    ("ADI", "Adjusted gross margin"): "adj_gross_margin_pct",
+    ("HD", "Net sales"): "net_sales",
+    # HD published no separate adjusted figure for most of the window; the
+    # replay is scored on GAAP EPS, mirroring the ML lens's own EPS chart.
+    ("HD", "Adjusted diluted EPS"): "diluted_eps_gaap",
+    ("HD", "Comparable sales, total company"): "comp_sales_pct",
+    ("DE", "Worldwide net sales and revenues"): "worldwide_net_sales_revenues",
+    ("DE", "Diluted EPS (GAAP)"): "diluted_eps_gaap",
+    ("DE", "Production & Precision Ag operating profit"): "ppa_operating_profit",
+}
+
+
+def attach_llm_replay(M: dict, llm: dict | None) -> None:
+    """Give every driver view its blinded point-in-time LLM backtest."""
+    if llm is None:
+        return
+    for ticker in ("ADI", "HD", "DE"):
+        block = llm["companies"].get(ticker)
+        if block is None:
+            continue
+        driver = M[ticker]["methods"]["driver"]
+        for metric in driver["metrics"]:
+            key = LLM_METRIC_BY_LABEL.get((ticker, metric["label"]))
+            entry = block["metrics"].get(key) if key else None
+            if not entry or not entry["rows"]:
+                continue
+            metric["series"] = [
+                {"period": r["period"], "actual": r["actual"],
+                 "predicted": r["predicted"], "err": r["err"]}
+                for r in entry["rows"]]
+            metric["seriesLabel"] = (
+                "Blinded LLM replay — fresh session per quarter, anonymized "
+                "point-in-time packet" + (" (scored on GAAP EPS)" if
+                                          ticker == "HD" and key == "diluted_eps_gaap"
+                                          else ""))
+            metric["predLabel"] = "Blinded LLM replay"
+            metric["gate"] = entry["gate"]
+        n_packets = max((len(e["rows"]) for e in block["metrics"].values()),
+                        default=0)
+        driver["derivation"].append(
+            "Backtest protocol: for each historical quarter a packet was built "
+            "holding only data published before that quarter's results (same "
+            "extractors and cutoffs as the five-year replay), with the company, "
+            "all dates and fiscal labels stripped and every currency value "
+            "multiplied by an undisclosed constant. A fresh, tool-less LLM "
+            f"session answered each of the {n_packets} packets; predictions were "
+            "de-scaled and scored against the filing actuals under the ML "
+            "lens's pre-declared gates.")
+        driver["derivation"].append(
+            "Leakage caveat, measured not assumed: sessions had to disclose any "
+            "identity guess, and several recognized the company from COVID-era "
+            "growth fingerprints; a few in-training quarters show recall-level "
+            "errors. The gate bar therefore also reports the error on quarters "
+            "reported AFTER the predictor's training window (post-Jan-2026) — "
+            "those cannot be memorized and carry the honest signal.")
+        driver["data"].extend([
+            {"name": "Blinded point-in-time packets (prompt + world-view manifest per quarter)",
+             "published": "cutoffs = day before each historical print",
+             "source": "research/llm-replay/packets/"},
+            {"name": "Fresh-session LLM responses (one session per packet) and scored series",
+             "published": llm["meta"]["generated"],
+             "source": "research/llm-replay/llm-driver-backtest.json"},
+        ])
+
+
+def attach_market_history(M: dict, rel: dict | None, llm: dict | None) -> None:
+    """Give every market view the resolved beat-market reliability series."""
+    if rel is None:
+        return
+    for ticker in ("ADI", "HD", "DE"):
+        block = rel["companies"].get(ticker)
+        if block is None:
+            continue
+        market = M[ticker]["methods"]["market"]
+        done = [r for r in block["rows"]
+                if r.get("outcome") is not None and r.get("pDayBefore") is not None]
+        if not done:
+            continue
+        series = [{"period": r["period"], "actual": r["outcome"] * 100,
+                   "predicted": round(r["pDayBefore"] * 100, 1),
+                   "err": round(abs(r["pDayBefore"] - r["outcome"]) * 100, 1)}
+                  for r in done]
+        if market["metrics"]:
+            m = market["metrics"][0]
+            m["series"] = series
+            m["seriesLabel"] = ("Resolved beat-markets: day-before price vs outcome "
+                                "(100 = beat happened; error in probability points)")
+            m["predLabel"] = "Market P(beat), day before"
+        outcomes = [r["outcome"] for r in done]
+        market["derivation"].append(
+            f"Historical reliability: Polymarket has listed {len(block['rows'])} "
+            f"quarterly beat-markets for this name (series began Nov 2025); "
+            f"{len(done)} have resolved, {sum(outcomes)} of them YES. Day-before "
+            f"Brier {block['brierDayBefore']}. Across all nine resolved markets "
+            f"the day-before Brier is {rel['summary']['brierDayBefore']} against "
+            f"{rel['summary']['brierBaseRate']} for always guessing the base "
+            "rate — with beats this routine, the market's information is mostly "
+            "in the strike (the leaked consensus), not the price.")
+        # No accuracy gate was pre-declared for probabilities, so the summary
+        # strip reports Brier scores instead of inventing a post-hoc gate.
+        market["brier"] = {"market": block["brierDayBefore"],
+                           "baseRate": rel["summary"]["brierBaseRate"],
+                           "n": len(done)}
+        market["data"].append(
+            {"name": "Resolved beat-market snapshots + 12h CLOB price history",
+             "published": "2025-11-18 → 2026-08-16",
+             "source": "forecast/data/polymarket/history/ · research/polymarket-reliability.json"})
+        llm_block = (llm or {}).get("companies", {}).get(ticker)
+        pb = (llm_block or {}).get("pBeat", {})
+        scored = [r for r in pb.get("rows", []) if r.get("brierLLM") is not None]
+        if scored:
+            market["extraSeries"] = [{
+                "label": "Blinded LLM replay on the same events: P(beat) vs outcome",
+                "unit": "%",
+                "predLabel": "LLM P(beat), day-before packet",
+                "series": [{"period": r["period"], "actual": r["outcome"] * 100,
+                            "predicted": round(r["pLLM"] * 100, 1),
+                            "err": round(abs(r["pLLM"] - r["outcome"]) * 100, 1)}
+                           for r in scored]}]
+            market["derivation"].append(
+                f"The blinded LLM replay answered the same beat questions from its "
+                f"anonymized packets: Brier {pb['brierLLM']} vs the market's "
+                f"{pb['brierMarket']} on the identical {len(scored)} events.")
+            market["brier"]["llm"] = pb["brierLLM"]
 
 
 def submitted_numbers() -> dict[tuple[str, str], float]:
@@ -634,10 +770,40 @@ def build_model() -> dict:
         },
     }
 
+    llm = load_optional(REPO_ROOT / "research" / "llm-replay" / "llm-driver-backtest.json")
+    rel = load_optional(REPO_ROOT / "research" / "polymarket-reliability.json")
+    attach_llm_replay(M, llm)
+    attach_market_history(M, rel, llm)
+
     for ticker, block in M.items():
         for metric_list in [block["methods"][k].get("metrics", []) for k in block["methods"]]:
             for m in metric_list:
                 m["final"] = submitted.get((ticker, m["label"]))
+
+    # Average error per category (stock × method). Metrics mix percent-error and
+    # percentage-point error, so averaging them raw would add different units.
+    # The comparable figure is each metric's error divided by its own gate:
+    # unit-free, and 1.0 means "exactly at the bar we set before running".
+    for ticker, block in M.items():
+        for key, method in block["methods"].items():
+            rel, mape, mae, validated, abstained = [], [], [], 0, 0
+            for m in method.get("metrics", []):
+                g = m.get("gate") or {}
+                if g.get("score") is not None and g.get("threshold"):
+                    rel.append(g["score"] / g["threshold"])
+                    (mae if g.get("kind") == "mae" else mape).append(g["score"])
+                    validated += 1
+                elif m.get("value") is None:
+                    abstained += 1
+            method["stats"] = {
+                "validated": validated,
+                "abstained": abstained,
+                "total": len(method.get("metrics", [])),
+                "mean_gate_relative": round(sum(rel) / len(rel), 2) if rel else None,
+                "mean_mape": round(sum(mape) / len(mape), 2) if mape else None,
+                "mean_mae": round(sum(mae) / len(mae), 2) if mae else None,
+                "all_within_gate": bool(rel) and max(rel) <= 1.0,
+            }
     return M
 
 
@@ -717,6 +883,17 @@ ul.data li{padding:14px 0;border-bottom:1px solid var(--rule);font-size:14px}
 ul.data li:last-child{border-bottom:0}
 ul.data .d-name{font-weight:650}
 ul.data .d-meta{display:block;margin-top:5px;color:var(--muted);font:10px/1.6 var(--mono);letter-spacing:.05em;word-break:break-all}
+.mxt{min-width:820px}
+.mxt th:first-child,.mxr{text-align:left;font-weight:700}
+.mxr{background:var(--paper-deep)}
+td.mx{cursor:pointer;vertical-align:top;text-align:center;transition:background .12s}
+td.mx:hover{background:rgba(184,255,69,.22)}
+td.mx strong{display:block;font-size:26px;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+td.mx span{display:block;margin-top:5px;color:var(--muted);font:9.5px var(--mono);letter-spacing:.07em}
+td.mx.good strong{color:#3d7a1f}
+td.mx.bad strong{color:var(--warn)}
+td.mx.none{color:var(--muted);font:10px var(--mono);letter-spacing:.08em;text-transform:uppercase;vertical-align:middle;text-align:center}
+.mxnote{padding:16px 18px;margin:0;border-top:1px solid var(--rule);background:var(--paper-deep);font-size:13px;line-height:1.6;color:var(--muted);max-width:none}
 .empty{padding:40px 22px;color:var(--muted);font:12px var(--mono);letter-spacing:.08em;text-transform:uppercase;text-align:center}
 /* SVG vocabulary reused verbatim from the architecture diagram in index.html */
 .d-box{fill:rgba(255,255,255,.55);stroke:var(--rule)}
@@ -821,6 +998,8 @@ function gatebar(g, floor) {
   const pass = g.passed;
   return `<div class="gatebar">
     <div class="gatecell"><strong>${g.score}${u}</strong><span>Walk-forward error</span></div>
+    ${g.postScore !== undefined && g.postScore !== null
+      ? `<div class="gatecell"><strong>${g.postScore}${u}</strong><span>Post-training-cutoff only (n=${g.postN})</span></div>` : ''}
     <div class="gatecell"><strong>${g.threshold}${u}</strong><span>Pre-declared gate</span></div>
     <div class="gatecell"><strong>${g.n ?? '—'}</strong><span>Validated periods</span></div>
     ${floor ? `<div class="gatecell"><strong>${floor}%</strong><span>Intrinsic floor</span></div>` : ''}
@@ -830,6 +1009,35 @@ function gatebar(g, floor) {
   </div>`;
 }
 
+function matrix() {
+  const methods = [['anchor','Anchor'],['driver','Driver'],['ml','ML'],['market','Market']];
+  const cell = (st, mk) => {
+    const m = DATA[st].methods[mk];
+    if (!m) return '<td class="mx none">—</td>';
+    const s = m.stats || {};
+    if (s.mean_gate_relative === null || s.mean_gate_relative === undefined) {
+      if (m.brier) return `<td class="mx" data-go="${st}/${mk}">
+        <strong>${m.brier.market}</strong><span>Brier, day before</span>
+        <span>${m.brier.n} resolved markets</span></td>`;
+      return `<td class="mx none" data-go="${st}/${mk}">not backtested</td>`;
+    }
+    const cls = s.all_within_gate ? 'mx good' : 'mx bad';
+    const raw = [s.mean_mape !== null ? s.mean_mape + '%' : null,
+                 s.mean_mae !== null ? s.mean_mae + 'pp' : null].filter(Boolean).join(' · ');
+    return `<td class="${cls}" data-go="${st}/${mk}">
+      <strong>${s.mean_gate_relative}×</strong><span>${raw}</span>
+      <span>${s.validated} of ${s.total} validated</span></td>`;
+  };
+  return `<div class="table-wrap"><table class="mxt">
+    <thead><tr><th>Average error by category</th>${methods.map(m=>`<th>${m[1]}</th>`).join('')}</tr></thead>
+    <tbody>${Object.keys(DATA).map(st => `<tr><td class="mxr">${DATA[st].name}</td>
+      ${methods.map(m => cell(st, m[0])).join('')}</tr>`).join('')}</tbody></table>
+    <p class="mxnote">Each cell is the mean of that category's metrics, expressed as
+    <strong>error ÷ its own pre-declared gate</strong> — metrics mix percent and percentage-point
+    errors, so the ratio is the only unit-free way to average them. Under 1.0× is inside the bar.
+    Raw means are shown beneath. Click a cell to open it.</p></div>`;
+}
+
 function render() {
   const S = DATA[stock], M = S.methods[method];
   document.querySelectorAll('[data-stock]').forEach(b => b.setAttribute('aria-pressed', b.dataset.stock === stock));
@@ -837,6 +1045,26 @@ function render() {
   $('#ctx').textContent = `${S.name} · ${S.period} · reports ${S.reports}`;
   $('#title').textContent = M.label;
   $('#summary').textContent = M.summary;
+  const sm = M.stats || {};
+  $('#headline').innerHTML = (sm.mean_gate_relative !== null && sm.mean_gate_relative !== undefined)
+    ? `<div class="gatebar"><div class="gatecell"><strong>${sm.mean_gate_relative}×</strong>
+        <span>Average error ÷ gate</span></div>
+       ${sm.mean_mape !== null ? `<div class="gatecell"><strong>${sm.mean_mape}%</strong><span>Mean percent error</span></div>` : ''}
+       ${sm.mean_mae !== null ? `<div class="gatecell"><strong>${sm.mean_mae}pp</strong><span>Mean point error</span></div>` : ''}
+       <div class="gatecell"><strong>${sm.validated} / ${sm.total}</strong><span>Metrics validated</span></div>
+       <div class="gatecell"><strong>${sm.abstained}</strong><span>Abstentions</span></div></div>`
+    : (M.brier
+      ? `<div class="gatebar">
+          <div class="gatecell"><strong>${M.brier.market}</strong><span>Market Brier, day before</span></div>
+          ${M.brier.llm !== undefined && M.brier.llm !== null
+            ? `<div class="gatecell"><strong>${M.brier.llm}</strong><span>Blinded LLM Brier, same events</span></div>` : ''}
+          <div class="gatecell"><strong>${M.brier.baseRate}</strong><span>Always-guess-base-rate Brier</span></div>
+          <div class="gatecell"><strong>${M.brier.n}</strong><span>Resolved markets</span></div>
+          <div class="gatecell"><span class="pill abstain">no gate</span>
+            <span style="margin-top:10px">Probabilities are scored by Brier (lower is better); no accuracy gate was pre-declared, so none is claimed.</span></div></div>`
+      : `<div class="gatebar"><div class="gatecell" style="flex:1 1 100%"><span class="pill abstain">not backtested</span>
+        <span style="margin-top:10px">This lens produces a single forward estimate with no per-period history to score.
+        Its reasoning and sources are below.</span></div></div>`);
 
   $('#metrics').innerHTML = (M.metrics && M.metrics.length)
     ? M.metrics.map(m => {
@@ -852,7 +1080,9 @@ function render() {
     : `<div class="empty">This lens produced no numbers for ${S.name}</div>`;
 
   const charts = (M.metrics || []).filter(m => m.series && m.series.length)
-    .map(m => chart(m.series, m.unit, m.seriesLabel || m.label, m.gate, m.predLabel) + gatebar(m.gate, m.floor)).join('');
+    .map(m => chart(m.series, m.unit, m.seriesLabel || m.label, m.gate, m.predLabel) + gatebar(m.gate, m.floor)).join('')
+    + (M.extraSeries || []).filter(s => s.series && s.series.length)
+      .map(s => chart(s.series, s.unit, s.label, s.gate, s.predLabel)).join('');
   $('#charts').innerHTML = charts ||
     `<div class="chart-card"><div class="empty">No per-period validation series for this lens —
      it produces a single forward estimate. The derivation below shows how that number was reached.</div></div>`;
@@ -869,6 +1099,17 @@ function render() {
 }
 
 document.addEventListener('click', e => {
+  const go = e.target.closest('[data-go]');
+  if (go) {
+    const [st, mk] = go.dataset.go.split('/');
+    if (DATA[st] && DATA[st].methods[mk]) {
+      stock = st; method = mk;
+      history.replaceState(null, '', `#${stock}/${method}`);
+      render();
+      document.getElementById('explorer').scrollIntoView({behavior: 'smooth'});
+      return;
+    }
+  }
   const b = e.target.closest('[data-stock],[data-method]');
   if (!b || b.disabled) return;
   if (b.dataset.stock) stock = b.dataset.stock;
@@ -878,6 +1119,7 @@ document.addEventListener('click', e => {
   render();
 });
 readHash();
+$('#matrix').innerHTML = matrix();
 render();
 """
 
@@ -932,8 +1174,10 @@ def build_html() -> str:
 
   <section>
     <div class="shell">
-      <h2 id="title"></h2>
+      <div id="matrix"></div>
+      <h2 id="title" style="margin-top:52px"></h2>
       <p class="summary muted" id="summary"></p>
+      <div id="headline"></div>
       <div class="metric-grid" id="metrics"></div>
       <div id="charts"></div>
     </div>
