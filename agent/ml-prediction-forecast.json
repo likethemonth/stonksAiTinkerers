@@ -273,27 +273,27 @@
    }
   },
   "comp_sales_pct": {
-   "n_rows": 11,
+   "n_rows": 18,
    "holdout": [
     {
      "period": "FY2025Q3",
      "actual": 0.2,
-     "predicted": 0.01
+     "predicted": 0.24
     },
     {
      "period": "FY2025Q4",
      "actual": 0.4,
-     "predicted": -0.5
+     "predicted": -0.14
     },
     {
      "period": "FY2026Q1",
      "actual": 0.6,
-     "predicted": -0.13
+     "predicted": -0.02
     }
    ],
-   "holdout_mae_pp": 0.61,
+   "holdout_mae_pp": 0.4,
    "prediction_period": "FY2026Q2",
-   "prediction": 0.02,
+   "prediction": 0.17,
    "passes_gate": true
   }
  },
@@ -324,7 +324,7 @@
   },
   "comp_sales_pct": {
    "period": "FY2026Q2",
-   "value": 0.02,
+   "value": 0.17,
    "model": "ridge[lag1,lag4]",
    "caveat": "n=15 series, history-only; carries no 2026 category data"
   },
@@ -354,7 +354,7 @@
    "passed": true
   },
   "comp_sales_pct": {
-   "holdout_mae_pp": 0.61,
+   "holdout_mae_pp": 0.4,
    "gate_mae_pp": 0.8,
    "passed": true
   }

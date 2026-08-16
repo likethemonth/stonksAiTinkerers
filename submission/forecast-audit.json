@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T14:25:21",
+  "generated_at": "2026-08-16T14:30:46",
   "as_of": "2026-08-16",
   "forecasts": [
     {
@@ -300,9 +300,9 @@
         {
           "label": "Comparable sales, total company",
           "units": "%",
-          "value": 1.2178441586321842,
-          "sigma": 0.36568881897560707,
-          "reasoning": "Meta-forecast: street 1.30 (sigma 0.30, reliability 45%, overlap penalty 100%, weight 67%); fundamental 1.05 (sigma 0.59, reliability 85%, overlap penalty 100%, weight 33%) -> 1.22.",
+          "value": 1.1255076461852835,
+          "sigma": 0.35437524071984633,
+          "reasoning": "Meta-forecast: street 1.30 (sigma 0.30, reliability 45%, overlap penalty 100%, weight 63%); fundamental 0.83 (sigma 0.54, reliability 85%, overlap penalty 100%, weight 37%) -> 1.13.",
           "estimates": [
             {
               "estimator": "street_research_reconstruction",
@@ -319,12 +319,12 @@
             },
             {
               "estimator": "fundamental_engine",
-              "value": 1.0520635304500066,
-              "sigma": 0.5856958237316872,
-              "n_observations": 9,
+              "value": 0.831049178403636,
+              "sigma": 0.5356095156437866,
+              "n_observations": 11,
               "anchor": null,
               "correction": null,
-              "reasoning": "Inverse-variance combination of fundamental_core 1.03 (sigma 0.85, weight 48%); driver_nowcast 1.90 (sigma 1.08, weight 29%); ml_comp_lag_ridge 0.02 (sigma 1.22, weight 23%) -> 1.05.",
+              "reasoning": "Inverse-variance combination of fundamental_core 0.94 (sigma 0.97, weight 31%); driver_nowcast 1.90 (sigma 1.08, weight 25%); ml_comp_lag_ridge 0.17 (sigma 0.80, weight 45%) -> 0.83.",
               "observation_ids": [],
               "citations": [
                 "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
@@ -363,12 +363,12 @@
               "status": "available",
               "estimate": {
                 "estimator": "fundamental_engine",
-                "value": 1.0520635304500066,
-                "sigma": 0.5856958237316872,
-                "n_observations": 9,
+                "value": 0.831049178403636,
+                "sigma": 0.5356095156437866,
+                "n_observations": 11,
                 "anchor": null,
                 "correction": null,
-                "reasoning": "Inverse-variance combination of fundamental_core 1.03 (sigma 0.85, weight 48%); driver_nowcast 1.90 (sigma 1.08, weight 29%); ml_comp_lag_ridge 0.02 (sigma 1.22, weight 23%) -> 1.05.",
+                "reasoning": "Inverse-variance combination of fundamental_core 0.94 (sigma 0.97, weight 31%); driver_nowcast 1.90 (sigma 1.08, weight 25%); ml_comp_lag_ridge 0.17 (sigma 0.80, weight 45%) -> 0.83.",
                 "observation_ids": [],
                 "citations": [
                   "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
@@ -401,13 +401,13 @@
               "engine": "street",
               "raw_weight": 5.0,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.6686415616188716
+              "normalized_weight": 0.6279090561762452
             },
             {
               "engine": "fundamental",
-              "raw_weight": 2.477848053438862,
+              "raw_weight": 2.962936592200656,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.3313584383811284
+              "normalized_weight": 0.37209094382375485
             }
           ],
           "citations": [
@@ -418,8 +418,8 @@
             "agent/ml-prediction-forecast.json",
             "data/observations/home-depot.json"
           ],
-          "plausible_low": -0.24491111727024406,
-          "plausible_high": 2.6805994345346127,
+          "plausible_low": -0.2919933166941018,
+          "plausible_high": 2.543008609064669,
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
@@ -970,8 +970,8 @@
         {
           "label": "Pre-exceptional basic EPS",
           "units": "GBp",
-          "value": 1.188304961613412,
-          "sigma": 0.0838484763990255,
+          "value": 1.1887001375785915,
+          "sigma": 0.08387260191951434,
           "reasoning": "Meta-forecast: street 1.13 (sigma 0.09, reliability 70%, overlap penalty 100%, weight 60%); fundamental 1.28 (sigma 0.12, reliability 85%, overlap penalty 100%, weight 40%) -> 1.19.",
           "estimates": [
             {
@@ -989,12 +989,12 @@
             },
             {
               "estimator": "fundamental_engine",
-              "value": 1.276574038116768,
-              "sigma": 0.12256893369048705,
-              "n_observations": 8,
+              "value": 1.2776961695164353,
+              "sigma": 0.12265764875437225,
+              "n_observations": 9,
               "anchor": null,
               "correction": null,
-              "reasoning": "Inverse-variance combination of regression_bridge 1.00 (sigma 0.39, weight 10%); ratio_on_prior_actual 1.31 (sigma 0.13, weight 90%) -> 1.28.",
+              "reasoning": "Inverse-variance combination of regression_bridge 1.01 (sigma 0.39, weight 10%); ratio_on_prior_actual 1.31 (sigma 0.13, weight 90%) -> 1.28.",
               "observation_ids": [],
               "citations": [
                 "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md",
@@ -1030,12 +1030,12 @@
               "status": "available",
               "estimate": {
                 "estimator": "fundamental_engine",
-                "value": 1.276574038116768,
-                "sigma": 0.12256893369048705,
-                "n_observations": 8,
+                "value": 1.2776961695164353,
+                "sigma": 0.12265764875437225,
+                "n_observations": 9,
                 "anchor": null,
                 "correction": null,
-                "reasoning": "Inverse-variance combination of regression_bridge 1.00 (sigma 0.39, weight 10%); ratio_on_prior_actual 1.31 (sigma 0.13, weight 90%) -> 1.28.",
+                "reasoning": "Inverse-variance combination of regression_bridge 1.01 (sigma 0.39, weight 10%); ratio_on_prior_actual 1.31 (sigma 0.13, weight 90%) -> 1.28.",
                 "observation_ids": [],
                 "citations": [
                   "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md",
@@ -1062,13 +1062,13 @@
               "engine": "street",
               "raw_weight": 85.65666849400893,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.602214946367491
+              "normalized_weight": 0.6025615439399772
             },
             {
               "engine": "fundamental",
-              "raw_weight": 56.57937033346062,
+              "raw_weight": 56.49755517901961,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.39778505363250916
+              "normalized_weight": 0.39743845606002287
             }
           ],
           "citations": [
@@ -1076,8 +1076,8 @@
             "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md",
             "hays/filings/2025-08-21__has-ln-20250821-h2-8k__143890.md"
           ],
-          "plausible_low": 0.8529110560173101,
-          "plausible_high": 1.523698867209514,
+          "plausible_low": 0.8532097299005341,
+          "plausible_high": 1.5241905452566489,
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
@@ -1480,9 +1480,9 @@
         {
           "label": "Production & Precision Ag operating profit",
           "units": "USDm",
-          "value": 522.6515676407972,
-          "sigma": 34.93365639642209,
-          "reasoning": "Meta-forecast: street 520.00 (sigma 41.60, reliability 45%, overlap penalty 100%, weight 32%); fundamental 523.88 (sigma 38.98, reliability 85%, overlap penalty 100%, weight 68%) -> 522.65.",
+          "value": 519.0856856393771,
+          "sigma": 35.18003106644076,
+          "reasoning": "Meta-forecast: street 520.00 (sigma 41.60, reliability 45%, overlap penalty 100%, weight 32%); fundamental 518.65 (sigma 39.39, reliability 85%, overlap penalty 100%, weight 68%) -> 519.09.",
           "estimates": [
             {
               "estimator": "street_research_reconstruction",
@@ -1499,12 +1499,12 @@
             },
             {
               "estimator": "fundamental_engine",
-              "value": 523.8841250000847,
-              "sigma": 38.98062076659089,
+              "value": 518.6518039239127,
+              "sigma": 39.3853256198162,
               "n_observations": 16,
               "anchor": null,
               "correction": null,
-              "reasoning": "Inverse-variance combination of driver_nowcast 513.00 (sigma 41.00, weight 90%); regression_bridge 626.28 (sigma 125.76, weight 10%) -> 523.88.",
+              "reasoning": "Inverse-variance combination of driver_nowcast 513.00 (sigma 41.00, weight 92%); regression_bridge 586.20 (sigma 141.74, weight 8%) -> 518.65.",
               "observation_ids": [],
               "citations": [
                 "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
@@ -1541,12 +1541,12 @@
               "status": "available",
               "estimate": {
                 "estimator": "fundamental_engine",
-                "value": 523.8841250000847,
-                "sigma": 38.98062076659089,
+                "value": 518.6518039239127,
+                "sigma": 39.3853256198162,
                 "n_observations": 16,
                 "anchor": null,
                 "correction": null,
-                "reasoning": "Inverse-variance combination of driver_nowcast 513.00 (sigma 41.00, weight 90%); regression_bridge 626.28 (sigma 125.76, weight 10%) -> 523.88.",
+                "reasoning": "Inverse-variance combination of driver_nowcast 513.00 (sigma 41.00, weight 92%); regression_bridge 586.20 (sigma 141.74, weight 8%) -> 518.65.",
                 "observation_ids": [],
                 "citations": [
                   "https://www.globenewswire.com/news-release/2026/08/11/3343098/0/en/aem-united-states-ag-tractor-and-combine-report-july-2026.html",
@@ -1575,13 +1575,13 @@
               "engine": "street",
               "raw_weight": 0.0002600314349112426,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.317332052717315
+              "normalized_weight": 0.32182389725064814
             },
             {
               "engine": "fundamental",
-              "raw_weight": 0.000559398662630411,
+              "raw_weight": 0.000547961498903491,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.682667947282685
+              "normalized_weight": 0.6781761027493518
             }
           ],
           "citations": [
@@ -1590,8 +1590,8 @@
             "https://drgnews.com/2026/07/23/u-s-and-canadian-sales-of-combines-see-slight-increase-in-june-2026/",
             "challenge/offline-data/deere/slides/2026-05-21__de-us-20260521-slide__1042212.md"
           ],
-          "plausible_low": 382.91694205510885,
-          "plausible_high": 662.3861932264856,
+          "plausible_low": 378.365561373614,
+          "plausible_high": 659.8058099051401,
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],

@@ -10,7 +10,8 @@
     "setup:entry": "node scripts/setup-entry.mjs",
     "check:entry": "node scripts/check-entry.mjs",
     "check:forecasts": "node scripts/check-forecasts.mjs submission",
-    "check:submission": "npm run check:entry && npm run check:forecasts",
+    "check:architecture": "node scripts/check-architecture.mjs",
+    "check:submission": "npm run check:entry && npm run check:forecasts && npm run check:architecture",
     "test:starter": "python3 -m unittest discover -s starter -p 'test_*.py'"
   },
   "dependencies": {
