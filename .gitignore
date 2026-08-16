@@ -1,6 +1,8 @@
 node_modules/
 __pycache__/
 *.py[cod]
+.venv/
+.pytest_cache/
 research/
 .DS_Store
 .env
