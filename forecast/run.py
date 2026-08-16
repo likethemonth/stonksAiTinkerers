@@ -23,8 +23,15 @@ from pathlib import Path
 from forecast.baselines import BASELINES
 from forecast.calibrate import calibrate
 from forecast.corpus import load
-from forecast.estimators import guidance_realisation, reconcile, regression_bridge
-from forecast.extract import adi
+from forecast.estimators import (
+    consensus_anchor,
+    growth_on_prior_actual,
+    guidance_realisation,
+    ratio_on_prior_actual,
+    reconcile,
+    regression_bridge,
+)
+from forecast.extract import adi, hays
 from forecast.metrics import (
     display_name,
     output_file,
@@ -39,8 +46,6 @@ from forecast.writer import write_workbook
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 LOG_DIR = REPO_ROOT / "logs"
-
-EXTRACTORS = {Company.ADI: adi.extract}
 
 
 class Log:
@@ -130,6 +135,86 @@ def _forecast_adi(as_of: date | None, log: Log) -> list[MetricForecast]:
     return sorted(metrics, key=lambda m: order[m.label])
 
 
+#: How far from consensus toward the top of its disclosed range to sit for Hays'
+#: operating profit. Management said they expect the TOP of the range, so this is
+#: high; not 1.0 because "top of the range" is a directional steer, not a point
+#: commitment, and the ceiling is the most optimistic analyst rather than a target.
+_HAYS_CONSENSUS_POSITION = 0.8
+
+
+def _forecast_hays(as_of: date | None, log: Log) -> list[MetricForecast]:
+    """Hays: the only company where a real analyst benchmark exists in the corpus."""
+    docs = load(Company.HAS, as_of=as_of)
+    rejected: list[str] = []
+    observations = hays.extract(docs, rejected)
+    write_observations(Company.HAS, observations, as_of=as_of, rejected=rejected)
+
+    log(f"  {len(docs)} docs -> {len(observations)} observations, "
+        f"{len(rejected)} conflicts/rejections")
+    for reason in rejected:
+        log(f"  RESOLVED {reason}")
+
+    period = target_period(Company.HAS)
+    specs = {s.label: s for s in submitted_specs(Company.HAS)}
+    metrics: list[MetricForecast] = []
+
+    # Net fees: prior-year actual moved by the disclosed reported-basis growth.
+    fees = growth_on_prior_actual(
+        observations,
+        company=Company.HAS,
+        metric_key="net_fees",
+        growth_key="net_fees_growth_actual_pct",
+        period=period,
+    )
+    if fees is None:
+        raise RuntimeError("Hays: no net fee growth or prior-year base found")
+    spec = specs["Net fees"]
+    metrics.append(reconcile(spec.label, spec.units, [fees]))
+
+    # Operating profit: consensus, positioned by management's own steer.
+    profit = consensus_anchor(
+        observations,
+        company=Company.HAS,
+        metric_key="pre_exc_operating_profit",
+        period=period,
+        position=_HAYS_CONSENSUS_POSITION,
+    )
+    if profit is None:
+        raise RuntimeError("Hays: no company-compiled consensus found")
+    spec = specs["Pre-exceptional operating profit"]
+    profit_forecast = reconcile(spec.label, spec.units, [profit])
+    metrics.append(profit_forecast)
+
+    # EPS: two independent routes, reconciled by inverse variance rather than
+    # chosen between here. The regression spans operating profit from 45 to 249
+    # and is dominated by the high-profit years, so it carries a wide sigma and
+    # little weight; the ratio estimator anchors on FY2025, whose profit is
+    # within 0.1 of the FY2026 forecast, and carries most of it.
+    eps = regression_bridge(
+        observations,
+        company=Company.HAS,
+        target_key="pre_exc_basic_eps",
+        source_key="pre_exc_operating_profit",
+        source_estimate=profit,
+    )
+    scaled = ratio_on_prior_actual(
+        observations,
+        company=Company.HAS,
+        metric_key="pre_exc_basic_eps",
+        driver_key="pre_exc_operating_profit",
+        driver_estimate=profit,
+        period=period,
+    )
+    eps_estimates = [e for e in (eps, scaled) if e is not None]
+    if not eps_estimates:
+        raise RuntimeError("Hays: no usable EPS estimate")
+    spec = specs["Pre-exceptional basic EPS"]
+    metrics.append(reconcile(spec.label, spec.units, eps_estimates))
+
+    order = {s.label: i for i, s in enumerate(submitted_specs(Company.HAS))}
+    return sorted(metrics, key=lambda m: order[m.label])
+
+
 def _forecast_baseline(company: Company, log: Log) -> list[MetricForecast]:
     """Provisional, cited baselines for a company without an extractor."""
     log("  PROVISIONAL: no extractor yet, using cited baselines")
@@ -143,12 +228,21 @@ def _forecast_baseline(company: Company, log: Log) -> list[MetricForecast]:
     return metrics
 
 
+#: Companies with a real extractor and estimators. Anything absent falls back to
+#: the cited provisional baselines. Defined after the functions it references.
+FORECASTERS = {
+    Company.ADI: _forecast_adi,
+    Company.HAS: _forecast_hays,
+}
+
+
 def run_company(company: Company, as_of: date | None, log: Log) -> Path:
     log(f"=== {display_name(company)} ({ticker(company)}) "
         f"{target_period(company).key} ===")
 
-    if company in EXTRACTORS:
-        metrics = _forecast_adi(as_of, log)
+    forecaster = FORECASTERS.get(company)
+    if forecaster is not None:
+        metrics = forecaster(as_of, log)
     else:
         metrics = _forecast_baseline(company, log)
 

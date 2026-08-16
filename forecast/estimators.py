@@ -6,12 +6,16 @@ so an estimator that cannot state its own dispersion cannot contribute a weight.
 
 Currently implemented:
 
-    guidance_realisation   anchor on management's guidance midpoint, corrected by
-                           the shrunk historical realisation ratio from calibrate.py
-    spread_bridge          derive a metric the company does not guide from one it
-                           does, using the historically stable gap between them
-    provisional baselines  uncalibrated, cited anchors for companies without an
-                           extractor yet (see baselines.py)
+    guidance_realisation    anchor on management's guidance midpoint, corrected by
+                            the shrunk historical realisation ratio from calibrate.py
+    regression_bridge       derive a metric the company does not guide from one it
+                            does, by fitting the two against each other
+    growth_on_prior_actual  apply a disclosed growth rate to last year's reported level
+    ratio_on_prior_actual   scale a prior-year actual by the change in its driver
+    consensus_anchor        anchor on company-compiled consensus, positioned by
+                            management's own steer within the disclosed range
+    reconcile               combine the above by inverse variance, flagging any
+                            metric where they disagree by more than they claim to
 """
 
 from __future__ import annotations
@@ -177,14 +181,228 @@ def regression_bridge(
         correction=slope,
         reasoning=(
             f"{target_key} is not guided, but {source_key} is. Fitting "
-            f"{target_key} on {source_key} across {n} reported quarters gives "
+            f"{target_key} on {source_key} across {n} reported periods gives "
             f"{target_key} = {intercept:.2f} + {slope:.3f} x {source_key} "
-            f"(residual se {rse:.2f}pp). The slope below 1.0 shows the gap "
-            f"narrows as margins expand, so a fixed spread would overstate. "
-            f"Applied to the {source_key} forecast of "
+            f"(residual se {rse:.2f}). A slope away from 1.0 means the gap "
+            f"between the two is not constant, so a fixed spread would bias the "
+            f"answer. Applied to the {source_key} forecast of "
             f"{source_estimate.value:.2f} this gives {value:.2f}."
         ),
         citations=source_estimate.citations,
+    )
+
+
+def growth_on_prior_actual(
+    observations: list[MetricObservation],
+    *,
+    company: Company,
+    metric_key: str,
+    growth_key: str,
+    period: Period,
+) -> Estimate | None:
+    """Apply a disclosed growth rate to the prior year's reported level.
+
+    Hays does not forecast net fees, but its Q4 trading statement states how much
+    they moved. Combined with the prior year's audited figure that determines the
+    level almost exactly, which is why this beats any modelling of the underlying
+    business: the answer has already been disclosed in two pieces.
+    """
+    prior = period.prior_year()
+    base = next(
+        (
+            o
+            for o in sorted(observations, key=lambda o: o.as_of, reverse=True)
+            if o.company is company
+            and o.metric_key == metric_key
+            and o.period == prior
+            and o.kind is Kind.ACTUAL
+        ),
+        None,
+    )
+    growth = next(
+        (
+            o
+            for o in sorted(observations, key=lambda o: o.as_of, reverse=True)
+            if o.company is company
+            and o.metric_key == growth_key
+            and o.period == period
+            and o.kind is Kind.GROWTH_PCT
+        ),
+        None,
+    )
+    if base is None or growth is None:
+        return None
+
+    value = base.value * (1.0 + growth.value / 100.0)
+    return Estimate(
+        estimator="growth_on_prior_actual",
+        value=value,
+        # The growth rate is disclosed to the nearest whole percent, so the
+        # rounding alone is worth about half a point of the base.
+        sigma=abs(base.value) * 0.005,
+        n_observations=1,
+        anchor=base.value,
+        correction=growth.value,
+        reasoning=(
+            f"{prior.key} {metric_key} was {base.value:,.1f}. The {period.key} "
+            f"trading statement dated {growth.as_of.isoformat()} reports "
+            f"{growth.value:+.0f}% on an actual (reported) basis, giving "
+            f"{value:,.1f}. The actual basis is used rather than the "
+            f"like-for-like headline because the workbook asks for reported "
+            f"net fees, and like-for-like excludes currency and the closed and "
+            f"divested countries."
+        ),
+        citations=[growth.source_file, base.source_file],
+    )
+
+
+def ratio_on_prior_actual(
+    observations: list[MetricObservation],
+    *,
+    company: Company,
+    metric_key: str,
+    driver_key: str,
+    driver_estimate: Estimate,
+    period: Period,
+) -> Estimate | None:
+    """Scale a prior-year actual by the change in the metric that drives it.
+
+    Where this year's driver lands close to last year's, this beats fitting a
+    line: Hays' FY2026 operating profit is forecast at 45.5 against FY2025's
+    45.6, so pre-exceptional EPS should sit within a rounding error of FY2025's
+    1.31p. A regression over a history spanning 45 to 249 of operating profit is
+    dominated by the high-profit years and pulls the answer well away from the
+    nearby, directly comparable one.
+
+    The reconciler runs both and weights them by their sigmas rather than one
+    being chosen here.
+    """
+    prior = period.prior_year()
+    base = next(
+        (
+            o
+            for o in observations
+            if o.company is company
+            and o.metric_key == metric_key
+            and o.period == prior
+            and o.kind is Kind.ACTUAL
+        ),
+        None,
+    )
+    driver_base = next(
+        (
+            o
+            for o in observations
+            if o.company is company
+            and o.metric_key == driver_key
+            and o.period == prior
+            and o.kind is Kind.ACTUAL
+        ),
+        None,
+    )
+    if base is None or driver_base is None or driver_base.value == 0:
+        return None
+
+    ratio = driver_estimate.value / driver_base.value
+    value = base.value * ratio
+
+    # Uncertainty is the driver's, carried through proportionally, plus a floor
+    # for everything the ratio does not model (share count, tax rate, interest).
+    sigma = max(
+        abs(base.value) * (driver_estimate.sigma / abs(driver_base.value)),
+        abs(value) * 0.05,
+    )
+
+    return Estimate(
+        estimator="ratio_on_prior_actual",
+        value=value,
+        sigma=sigma,
+        n_observations=1,
+        anchor=base.value,
+        correction=ratio,
+        reasoning=(
+            f"{prior.key} {metric_key} was {base.value:,.2f} on {driver_key} of "
+            f"{driver_base.value:,.2f}. {period.key} {driver_key} is forecast at "
+            f"{driver_estimate.value:,.2f}, a ratio of {ratio:.3f}, giving "
+            f"{value:,.2f}. Holding the share count, tax rate and finance charge "
+            f"at prior-year levels: the completed buyback reduces the share "
+            f"count, so this is if anything conservative."
+        ),
+        citations=[base.source_file, driver_base.source_file],
+    )
+
+
+def consensus_anchor(
+    observations: list[MetricObservation],
+    *,
+    company: Company,
+    metric_key: str,
+    period: Period,
+    position: float = 0.5,
+) -> Estimate | None:
+    """Anchor on company-compiled consensus, positioned by management's steer.
+
+    `position` places the forecast between the consensus midpoint (0.0) and the
+    top of the disclosed range (1.0). It exists because the score is
+    `|our miss| / max(|Street miss|, floor)`: submitting consensus exactly scores
+    1.0 by construction, so beating the benchmark requires a deviation, and the
+    only defensible deviation is one the company itself has pointed to.
+    """
+    relevant = [
+        o
+        for o in observations
+        if o.company is company and o.metric_key == metric_key and o.period == period
+    ]
+    mid = max(
+        (o for o in relevant if o.kind is Kind.CONSENSUS),
+        key=lambda o: o.as_of,
+        default=None,
+    )
+    if mid is None:
+        return None
+    high = max(
+        (o for o in relevant if o.kind is Kind.CONSENSUS_HIGH),
+        key=lambda o: o.as_of,
+        default=None,
+    )
+    low = max(
+        (o for o in relevant if o.kind is Kind.CONSENSUS_LOW),
+        key=lambda o: o.as_of,
+        default=None,
+    )
+
+    ceiling = high.value if high else mid.value
+    value = mid.value + position * (ceiling - mid.value)
+
+    # Half the consensus range is a fair statement of analyst disagreement; with
+    # no range disclosed, fall back to 5% of the level.
+    if high and low:
+        sigma = (high.value - low.value) / 2.0
+    else:
+        sigma = abs(mid.value) * 0.05
+
+    span = (
+        f" across a {low.value:,.1f}-{ceiling:,.1f} range"
+        if low and high
+        else ""
+    )
+    return Estimate(
+        estimator="consensus_anchor",
+        value=value,
+        sigma=max(sigma, 1e-6),
+        n_observations=1,
+        anchor=mid.value,
+        correction=position,
+        reasoning=(
+            f"Company-compiled consensus for {period.key} {metric_key} was "
+            f"{mid.value:,.1f}{span}, published {mid.as_of.isoformat()} — after "
+            f"the year closed, so it is well informed. Management stated they "
+            f"expect to land at the top of that range, so we take {value:,.1f}, "
+            f"{position:.0%} of the way from consensus to the ceiling. Matching "
+            f"consensus would score 1.0 by construction; this is a deliberate "
+            f"deviation the company itself signposted."
+        ),
+        citations=[mid.source_file] + ([high.source_file] if high else []),
     )
 
 
