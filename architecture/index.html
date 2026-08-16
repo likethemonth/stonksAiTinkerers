@@ -217,9 +217,9 @@
       <div class="shell">
         <figure class="diagram">
             <div class="diagram-scroll">
-              <svg viewBox="0 0 1280 572" role="img" aria-labelledby="diagram-title diagram-desc">
+              <svg viewBox="0 0 1280 706" role="img" aria-labelledby="diagram-title diagram-desc">
                 <title id="diagram-title">Three-Lens Meta-Forecaster data flow</title>
-                <desc id="diagram-desc">Evidence selected at the point-in-time cutoff feeds deterministic extractors and three forecasting engines, which are combined by a source-overlap-aware meta-forecaster into four workbooks, a JSON audit and a run log.</desc>
+                <desc id="diagram-desc">Evidence selected at the point-in-time cutoff feeds deterministic extractors and three forecasting engines, which are combined by a source-overlap-aware meta-forecaster into four workbooks, a JSON audit and a run log. The same path is replayed at 75 historical cutoffs and scored against the figures those companies actually reported.</desc>
                 <defs>
                   <marker id="d-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
                     <path d="M0 0 L10 5 L0 10 z" fill="#111112"></path>
@@ -345,9 +345,23 @@
                 <path class="d-line" d="M1050 275 H1076" marker-end="url(#d-arrow)"></path>
                 <path class="d-line" d="M1050 342 H1076" marker-end="url(#d-arrow)"></path>
                 <circle class="d-node" cx="1050" cy="275" r="3.5"></circle>
+
+                <text class="d-eyebrow" x="4" y="572">06 &#183; VALIDATION &#8212; THE SAME PATH, REPLAYED ON QUARTERS THAT ALREADY REPORTED</text>
+
+                <path class="d-line-dash" d="M1180 512 V544 H90 V544" marker-end="url(#d-arrow-muted)"></path>
+                <path class="d-line-dash" d="M90 544 V584"></path>
+
+                <rect class="d-chip" x="4" y="592" width="1272" height="104"></rect>
+                <text class="d-title" x="24" y="620">forecast.system_backtest</text>
+                <text class="d-body" x="24" y="644">Rewind the cutoff to the day before a closed quarter was reported, run everything above unchanged, and score</text>
+                <text class="d-body" x="24" y="662">the result against the figure the company actually published &#8212; competition formula, seasonal benchmark.</text>
+                <text class="d-mono" x="24" y="684">75 HELD-OUT CELLS &#183; MEAN 0.38 &#183; MEDIAN 0.15 &#183; BEAT THE BENCHMARK ON 68 &#183; 60 CELLS REFUSED &#183; DEERE ABSTAINS</text>
+                <text class="d-warn" x="800" y="620">MEASURED SKILL SHOULD SET ENGINE RELIABILITY</text>
+                <text class="d-warn" x="800" y="638">NOT WIRED &#8212; RELIABILITY IS STILL A CONSTANT</text>
+                <text class="d-mono" x="800" y="662">See 05 / Validation for the per-engine breakdown</text>
               </svg>
             </div>
-            <figcaption>Solid = forecast path · Dashed = outcomes resolved by the cutoff, fed back to score each Street source · Every engine returns value, sigma, citations and reliability, or abstains</figcaption>
+            <figcaption>Solid = forecast path · Dashed = outcomes resolved by the cutoff, fed back to score each Street source and to replay the whole path on history · Every engine returns value, sigma, citations and reliability, or abstains</figcaption>
           </figure>
           <ol class="sr-only">
             <li>Four evidence sources are selected only if dated at or before the cutoff: Street calls, the frozen 1,139-document corpus, physical driver snapshots and a Polymarket price snapshot.</li>
