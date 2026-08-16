@@ -50,9 +50,15 @@ def _find(lines: list[str], label: str) -> str | None:
 
 def _period(doc: Document) -> Period | None:
     match = _PERIOD_RE.search(doc.period_hint)
-    if match is None or "Quarter" not in doc.title:
-        return None
-    return Period(year=int(match.group("year")), quarter=int(match.group("quarter")))
+    if match is not None and "Quarter" in doc.title:
+        return Period(year=int(match.group("year")), quarter=int(match.group("quarter")))
+    # Deere's Q4 earnings releases are filed with an annual frontmatter hint
+    # ("FY 2025"), while the title and the result tables explicitly identify
+    # the fourth quarter. Deere labels fiscal years by their ending year, which
+    # is also the publication year for these November releases.
+    if re.search(r"\b(?:Fourth|4th) Quarter\b", doc.title, re.IGNORECASE):
+        return Period(year=doc.published_at.year, quarter=4)
+    return None
 
 
 def _observations(
@@ -112,7 +118,9 @@ def extract(
             (
                 index
                 for index, line in enumerate(lines)
-                if line.lstrip().startswith("| Production & Precision Agriculture")
+                if line.lstrip().startswith(
+                    ("| Production & Precision Agriculture", "| Production & Precision Ag")
+                )
             ),
             None,
         )

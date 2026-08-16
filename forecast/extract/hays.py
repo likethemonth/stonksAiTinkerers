@@ -53,12 +53,12 @@ _ROWS: tuple[tuple[str, str, Unit], ...] = (
     ("net_fees", r"Net fees", Unit.GBP_M),
     (
         "pre_exc_operating_profit",
-        r"(?:Operating profit \(before exceptional items\)|Pre-exceptional operating profit)",
+        r"(?:Operating profit \(before exceptional items\)|Pre-exceptional operating profit|Operating profit)",
         Unit.GBP_M,
     ),
     (
         "pre_exc_basic_eps",
-        r"Basic earnings per share \(before exceptional items\)",
+        r"(?:Basic earnings per share \(before exceptional items\)|Basic earnings per share)",
         Unit.GBP_PENCE,
     ),
 )
