@@ -15,6 +15,7 @@ from forecast.schema import (
     EngineContribution,
     Estimate,
     MetricForecast,
+    Period,
 )
 from forecast.street import street_contribution
 
@@ -70,15 +71,21 @@ def orchestrate(
     fundamental_metrics: list[MetricForecast],
     *,
     as_of: date | None = None,
+    period: Period | None = None,
 ) -> list[MetricForecast]:
-    """Return final metrics after all three engines and the meta-forecaster."""
+    """Return final metrics after all three engines and the meta-forecaster.
+
+    ``period`` is passed only by the historical replay, which needs the Street
+    engine to address a closed period rather than the submitted one. The
+    submitted run leaves it None and is unaffected.
+    """
     enriched = enrich_with_drivers(company, fundamental_metrics, as_of=as_of)
     by_label = {metric.label: metric for metric in enriched}
     final: list[MetricForecast] = []
     for metric_spec in submitted_specs(company):
         metric = by_label[metric_spec.label or ""]
         contributions = [
-            street_contribution(company, metric_spec, as_of=as_of),
+            street_contribution(company, metric_spec, as_of=as_of, period=period),
             _fundamental_contribution(company, metric),
             _prediction_contribution(company, metric_spec.key, as_of=as_of),
         ]

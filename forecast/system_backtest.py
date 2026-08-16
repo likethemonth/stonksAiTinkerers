@@ -197,7 +197,7 @@ def _run_company(company: Company, as_of: date, quarters: int) -> list[dict[str,
 
         try:
             metrics = forecaster(cutoff, silent, period=period)
-            final = orchestrate(company, metrics, as_of=cutoff)
+            final = orchestrate(company, metrics, as_of=cutoff, period=period)
         except Exception as exc:  # noqa: BLE001 - one slot must not kill the grid
             for spec, actual in resolved:
                 cells.append(

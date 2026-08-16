@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import json
 from datetime import date
 from functools import lru_cache
@@ -14,6 +15,7 @@ from forecast.schema import (
     Engine,
     EngineContribution,
     Estimate,
+    Period,
     Unit,
 )
 from forecasting.backtest import (
@@ -66,6 +68,51 @@ def _fallback_rows(cutoff: date) -> dict[tuple[str, str], dict]:
     return rows
 
 
+@lru_cache(maxsize=8)
+def _historical_rows(cutoff: date) -> dict[tuple[str, str, str], dict]:
+    """Point-in-time Street forecasts for *closed* periods, keyed by period.
+
+    ``_street_rows`` is period-blind: it keys on (company, metric) because the
+    current panel only ever describes the one period being submitted. That is
+    why the Street engine abstained on every historical cell of the system
+    backtest — not because no archive exists, but because nothing could address
+    it by period.
+
+    ``forecasting/data/historical_forecasts.csv`` is that archive: 39 consensus
+    rows, each stamped with the date it was published, one day before the
+    company reported. Every row targets a period that has since closed, so this
+    map can never serve a submitted period and cannot move a submitted number.
+    """
+    rows: dict[tuple[str, str, str], list[dict]] = {}
+    with HISTORICAL.open(encoding="utf-8") as handle:
+        for row in csv.DictReader(handle):
+            if row.get("source_type") not in STREET_SOURCE_TYPES:
+                continue
+            forecast_date = row.get("forecast_date")
+            if not forecast_date or date.fromisoformat(forecast_date) > cutoff:
+                continue
+            if not row.get("forecast"):
+                continue
+            key = (row["company"], row["metric"], row["period"])
+            rows.setdefault(key, []).append(row)
+
+    blended: dict[tuple[str, str, str], dict] = {}
+    for key, group in rows.items():
+        weights = [max(float(item.get("quality") or 0.5), 0.01) for item in group]
+        total = sum(weights)
+        value = sum(
+            float(item["forecast"]) * weight for item, weight in zip(group, weights)
+        ) / total
+        blended[key] = {
+            "value": value,
+            "n_sources": len(group),
+            "sources": sorted({item["source_name"] for item in group}),
+            "urls": sorted({item["source_url"] for item in group if item.get("source_url")}),
+            "as_of": max(item["forecast_date"] for item in group),
+        }
+    return blended
+
+
 def _sigma(value: float, units: Unit, components: list[dict]) -> float:
     if components:
         total = sum(float(component["weight"]) for component in components)
@@ -85,10 +132,43 @@ def street_contribution(
     metric: MetricSpec,
     *,
     as_of: date | None = None,
+    period: Period | None = None,
 ) -> EngineContribution:
-    """Return the exact-metric Street estimate, or an explicit abstention."""
+    """Return the exact-metric Street estimate, or an explicit abstention.
+
+    ``period`` is supplied only by the historical replay. Omitting it reproduces
+    the submitted run exactly, because the archive it unlocks contains no row
+    for any period still open.
+    """
     cutoff = as_of or date.today()
     key = (display_name(company), metric.label or "")
+
+    if period is not None:
+        archived = _historical_rows(cutoff).get(
+            (display_name(company), metric.label or "", period.key)
+        )
+        if archived is not None:
+            value = float(archived["value"])
+            return EngineContribution(
+                engine=Engine.STREET,
+                status=ContributionStatus.AVAILABLE,
+                estimate=Estimate(
+                    estimator="street_archived_consensus",
+                    value=value,
+                    sigma=_sigma(value, metric.units, []),
+                    n_observations=int(archived["n_sources"]),
+                    reasoning=(
+                        f"Archived point-in-time consensus for {period.key} from "
+                        f"{archived['n_sources']} source(s), published "
+                        f"{archived['as_of']}, quality-weighted."
+                    ),
+                    citations=list(archived["urls"]),
+                ),
+                reliability=min(0.9, 0.6 + 0.1 * int(archived["n_sources"])),
+                source_families=["public_consensus"],
+                note="archived exact-metric Street consensus for a closed period",
+            )
+
     row = _street_rows(cutoff).get(key)
     if row is not None:
         components = list(row.get("components", []))

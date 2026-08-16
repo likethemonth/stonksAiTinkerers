@@ -10,10 +10,10 @@
   "summary": {
     "overall": {
       "n": 75,
-      "meanScore": 0.3734774999560982,
-      "medianScore": 0.15087112845223516,
+      "meanScore": 0.3847328870265833,
+      "medianScore": 0.14779085769743583,
       "beat": 68,
-      "meanSystemError": 65.29108539687664,
+      "meanSystemError": 59.62578917252837,
       "meanBaselineError": 373.59836847449816
     },
     "byEngine": {
@@ -22,17 +22,25 @@
         "meanScoreAlone": 0.3734774999560982,
         "medianScoreAlone": 0.15087112845223516,
         "beatBenchmarkAlone": 68,
-        "meanScoreOfAggregateOnSameCells": 0.3734774999560982,
-        "aggregateBetterOnCells": 2
+        "meanScoreOfAggregateOnSameCells": 0.3847328870265833,
+        "aggregateBetterOnCells": 11
+      },
+      "street": {
+        "n": 27,
+        "meanScoreAlone": 0.4803223052520186,
+        "medianScoreAlone": 0.15349223743709794,
+        "beatBenchmarkAlone": 24,
+        "meanScoreOfAggregateOnSameCells": 0.4441342797623367,
+        "aggregateBetterOnCells": 20
       }
     },
     "byMetric": {
       "ADI \u00b7 Adjusted diluted EPS": {
         "n": 19,
-        "meanScore": 0.16096092751127927,
-        "medianScore": 0.11383628550777058,
+        "meanScore": 0.15525422065764083,
+        "medianScore": 0.12200789778138227,
         "beat": 19,
-        "meanSystemError": 0.07435606025225217,
+        "meanSystemError": 0.0762947140295914,
         "meanBaselineError": 0.8082361966527702
       },
       "ADI \u00b7 Adjusted gross margin": {
@@ -45,34 +53,34 @@
       },
       "ADI \u00b7 Revenue": {
         "n": 19,
-        "meanScore": 0.20461180830571737,
+        "meanScore": 0.15533138194672752,
         "medianScore": 0.09011462816827287,
-        "beat": 17,
-        "meanSystemError": 83.73656723595488,
+        "beat": 18,
+        "meanSystemError": 80.71220503232676,
         "meanBaselineError": 931.1125336175045
       },
       "HD \u00b7 Adjusted diluted EPS": {
         "n": 5,
-        "meanScore": 0.7642819841797677,
-        "medianScore": 0.9483523799866019,
-        "beat": 4,
-        "meanSystemError": 0.17524427812557936,
+        "meanScore": 1.178641570986604,
+        "medianScore": 0.5203164393379024,
+        "beat": 3,
+        "meanSystemError": 0.15420868472710642,
         "meanBaselineError": 2.288149970919648
       },
       "HD \u00b7 Comparable sales, total company": {
         "n": 5,
-        "meanScore": 0.5214810865247765,
+        "meanScore": 0.5371144697188364,
         "medianScore": 0.27646757549256185,
         "beat": 4,
-        "meanSystemError": 0.6212845563935043,
+        "meanSystemError": 0.6853814274891492,
         "meanBaselineError": 2.42
       },
       "HD \u00b7 Net sales": {
         "n": 5,
-        "meanScore": 0.9590690344413483,
-        "medianScore": 0.26267138603848034,
+        "meanScore": 0.9068579767057162,
+        "medianScore": 0.22824198767529347,
         "beat": 3,
-        "meanSystemError": 650.7834495018673,
+        "meanSystemError": 577.246154348379,
         "meanBaselineError": 2011.9304671213656
       },
       "LSE:HAS \u00b7 Net fees": {
@@ -1244,23 +1252,27 @@
       "actual": 1.58,
       "actual_published": "2024-08-21",
       "cutoff": "2024-08-20",
-      "system": 1.5560877011788714,
+      "system": 1.5424297151829425,
       "baseline": 2.698241071428572,
-      "system_error": 0.023912298821128664,
+      "system_error": 0.0375702848170576,
       "baseline_error": 1.1182410714285718,
-      "score": 0.02138384954022508,
+      "score": 0.03359766134243391,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 1.56 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 1.56.",
+      "system_reasoning": "Meta-forecast: street 1.50 (sigma 0.12, reliability 70%, overlap penalty 100%, weight 24%); fundamental 1.56 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 76%) -> 1.54.",
       "engine_values": {
+        "street": 1.5,
         "fundamental": 1.5560877011788714
       },
       "engine_errors": {
+        "street": 0.08000000000000007,
         "fundamental": 0.023912298821128664
       },
       "engine_scores": {
+        "street": 0.07154092444288308,
         "fundamental": 0.02138384954022508
       },
       "status": "scored",
@@ -1308,23 +1320,27 @@
       "actual": 2312.0,
       "actual_published": "2024-08-21",
       "cutoff": "2024-08-20",
-      "system": 2347.0124059272684,
+      "system": 2310.6687692965684,
       "baseline": 3209.777372951405,
-      "system_error": 35.012405927268446,
+      "system_error": 1.331230703431629,
       "baseline_error": 897.7773729514051,
-      "score": 0.0389989845836353,
+      "score": 0.0014828071452227232,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2,347.01 (sigma 189.17, reliability 85%, overlap penalty 100%, weight 100%) -> 2,347.01.",
+      "system_reasoning": "Meta-forecast: street 2,270.00 (sigma 181.60, reliability 70%, overlap penalty 100%, weight 47%); fundamental 2,347.01 (sigma 189.17, reliability 85%, overlap penalty 100%, weight 53%) -> 2,310.67.",
       "engine_values": {
+        "street": 2270.0,
         "fundamental": 2347.0124059272684
       },
       "engine_errors": {
+        "street": 42.0,
         "fundamental": 35.012405927268446
       },
       "engine_scores": {
+        "street": 0.04678219931287283,
         "fundamental": 0.0389989845836353
       },
       "status": "scored",
@@ -1340,23 +1356,27 @@
       "actual": 1.67,
       "actual_published": "2024-11-26",
       "cutoff": "2024-11-25",
-      "system": 1.6895113925578644,
+      "system": 1.6776841512545004,
       "baseline": 1.732980769230769,
-      "system_error": 0.019511392557864493,
+      "system_error": 0.007684151254500504,
       "baseline_error": 0.06298076923076912,
-      "score": 0.30979921007907035,
+      "score": 0.12200789778138227,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 1.69 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 1.69.",
+      "system_reasoning": "Meta-forecast: street 1.64 (sigma 0.13, reliability 70%, overlap penalty 100%, weight 24%); fundamental 1.69 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 76%) -> 1.68.",
       "engine_values": {
+        "street": 1.64,
         "fundamental": 1.6895113925578644
       },
       "engine_errors": {
+        "street": 0.030000000000000027,
         "fundamental": 0.019511392557864493
       },
       "engine_scores": {
+        "street": 0.4763358778625967,
         "fundamental": 0.30979921007907035
       },
       "status": "scored",
@@ -1404,23 +1424,27 @@
       "actual": 2443.0,
       "actual_published": "2024-11-26",
       "cutoff": "2024-11-25",
-      "system": 2479.135229716863,
+      "system": 2446.540845501602,
       "baseline": 2478.7226632664374,
-      "system_error": 36.135229716862796,
+      "system_error": 3.5408455016017797,
       "baseline_error": 35.722663266437394,
-      "score": 1.0115491515105768,
-      "beat_baseline": false,
+      "score": 0.09912042322243424,
+      "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2,479.14 (sigma 200.65, reliability 85%, overlap penalty 100%, weight 100%) -> 2,479.14.",
+      "system_reasoning": "Meta-forecast: street 2,410.00 (sigma 192.80, reliability 70%, overlap penalty 100%, weight 47%); fundamental 2,479.14 (sigma 200.65, reliability 85%, overlap penalty 100%, weight 53%) -> 2,446.54.",
       "engine_values": {
+        "street": 2410.0,
         "fundamental": 2479.135229716863
       },
       "engine_errors": {
+        "street": 33.0,
         "fundamental": 36.135229716862796
       },
       "engine_scores": {
+        "street": 0.9237833068007719,
         "fundamental": 1.0115491515105768
       },
       "status": "scored",
@@ -1436,23 +1460,27 @@
       "actual": 1.63,
       "actual_published": "2025-02-19",
       "cutoff": "2025-02-18",
-      "system": 1.5875457200225693,
+      "system": 1.5765565826241443,
       "baseline": 1.355549723907933,
-      "system_error": 0.042454279977430565,
+      "system_error": 0.05344341737585556,
       "baseline_error": 0.27445027609206685,
-      "score": 0.15468842145813289,
+      "score": 0.19472896197024586,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 1.59 (sigma 0.07, reliability 85%, overlap penalty 100%, weight 100%) -> 1.59.",
+      "system_reasoning": "Meta-forecast: street 1.54 (sigma 0.12, reliability 70%, overlap penalty 100%, weight 23%); fundamental 1.59 (sigma 0.07, reliability 85%, overlap penalty 100%, weight 77%) -> 1.58.",
       "engine_values": {
+        "street": 1.54,
         "fundamental": 1.5875457200225693
       },
       "engine_errors": {
+        "street": 0.08999999999999986,
         "fundamental": 0.042454279977430565
       },
       "engine_scores": {
+        "street": 0.32792825455132185,
         "fundamental": 0.15468842145813289
       },
       "status": "scored",
@@ -1500,23 +1528,27 @@
       "actual": 2423.0,
       "actual_published": "2025-02-19",
       "cutoff": "2025-02-18",
-      "system": 2386.4735393312935,
+      "system": 2385.4343585348574,
       "baseline": 2180.89628510487,
-      "system_error": 36.52646066870648,
+      "system_error": 37.56564146514256,
       "baseline_error": 242.10371489513,
-      "score": 0.15087112845223516,
+      "score": 0.15516342440847944,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2,386.47 (sigma 42.05, reliability 85%, overlap penalty 100%, weight 100%) -> 2,386.47.",
+      "system_reasoning": "Meta-forecast: street 2,360.00 (sigma 188.80, reliability 70%, overlap penalty 100%, weight 4%); fundamental 2,386.47 (sigma 42.05, reliability 85%, overlap penalty 100%, weight 96%) -> 2,385.43.",
       "engine_values": {
+        "street": 2360.0,
         "fundamental": 2386.4735393312935
       },
       "engine_errors": {
+        "street": 63.0,
         "fundamental": 36.52646066870648
       },
       "engine_scores": {
+        "street": 0.26021905540478457,
         "fundamental": 0.15087112845223516
       },
       "status": "scored",
@@ -1532,23 +1564,27 @@
       "actual": 1.85,
       "actual_published": "2025-05-22",
       "cutoff": "2025-05-21",
-      "system": 1.7407634976098947,
+      "system": 1.7317949903332963,
       "baseline": 1.0969766551856104,
-      "system_error": 0.1092365023901054,
+      "system_error": 0.11820500966670378,
       "baseline_error": 0.7530233448143897,
-      "score": 0.14506389893799476,
+      "score": 0.15697389792854263,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 1.74 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 1.74.",
+      "system_reasoning": "Meta-forecast: street 1.70 (sigma 0.14, reliability 70%, overlap penalty 100%, weight 22%); fundamental 1.74 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 78%) -> 1.73.",
       "engine_values": {
+        "street": 1.7,
         "fundamental": 1.7407634976098947
       },
       "engine_errors": {
+        "street": 0.15000000000000013,
         "fundamental": 0.1092365023901054
       },
       "engine_scores": {
+        "street": 0.19919701166365983,
         "fundamental": 0.14506389893799476
       },
       "status": "scored",
@@ -1596,23 +1632,27 @@
       "actual": 2640.0,
       "actual_published": "2025-05-22",
       "cutoff": "2025-05-21",
-      "system": 2538.6187166275913,
+      "system": 2537.1014486414474,
       "baseline": 1873.6789015286172,
-      "system_error": 101.38128337240869,
+      "system_error": 102.8985513585526,
       "baseline_error": 766.3210984713828,
-      "score": 0.1322960878600873,
+      "score": 0.13427602549872272,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2,538.62 (sigma 44.57, reliability 85%, overlap penalty 100%, weight 100%) -> 2,538.62.",
+      "system_reasoning": "Meta-forecast: street 2,500.00 (sigma 200.00, reliability 70%, overlap penalty 100%, weight 4%); fundamental 2,538.62 (sigma 44.57, reliability 85%, overlap penalty 100%, weight 96%) -> 2,537.10.",
       "engine_values": {
+        "street": 2500.0,
         "fundamental": 2538.6187166275913
       },
       "engine_errors": {
+        "street": 140.0,
         "fundamental": 101.38128337240869
       },
       "engine_scores": {
+        "street": 0.18269104201784953,
         "fundamental": 0.1322960878600873
       },
       "status": "scored",
@@ -1628,23 +1668,27 @@
       "actual": 2.05,
       "actual_published": "2025-08-20",
       "cutoff": "2025-08-19",
-      "system": 1.9828674536075082,
+      "system": 1.9779428747607808,
       "baseline": 1.238016510852332,
-      "system_error": 0.06713254639249167,
+      "system_error": 0.07205712523921903,
       "baseline_error": 0.8119834891476678,
-      "score": 0.08267723086704648,
+      "score": 0.08874210646186512,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 1.98 (sigma 0.07, reliability 85%, overlap penalty 100%, weight 100%) -> 1.98.",
+      "system_reasoning": "Meta-forecast: street 1.95 (sigma 0.16, reliability 70%, overlap penalty 100%, weight 15%); fundamental 1.98 (sigma 0.07, reliability 85%, overlap penalty 100%, weight 85%) -> 1.98.",
       "engine_values": {
+        "street": 1.9499999999999997,
         "fundamental": 1.9828674536075082
       },
       "engine_errors": {
+        "street": 0.10000000000000009,
         "fundamental": 0.06713254639249167
       },
       "engine_scores": {
+        "street": 0.12315521354377444,
         "fundamental": 0.08267723086704648
       },
       "status": "scored",
@@ -1692,23 +1736,27 @@
       "actual": 2880.0,
       "actual_published": "2025-08-20",
       "cutoff": "2025-08-19",
-      "system": 2791.6024370298464,
+      "system": 2790.501344701693,
       "baseline": 2006.4592961251333,
-      "system_error": 88.39756297015356,
+      "system_error": 89.49865529830686,
       "baseline_error": 873.5407038748667,
-      "score": 0.10119455519134729,
+      "score": 0.1024550486328882,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2,791.60 (sigma 46.23, reliability 85%, overlap penalty 100%, weight 100%) -> 2,791.60.",
+      "system_reasoning": "Meta-forecast: street 2,760.00 (sigma 220.80, reliability 70%, overlap penalty 100%, weight 3%); fundamental 2,791.60 (sigma 46.23, reliability 85%, overlap penalty 100%, weight 97%) -> 2,790.50.",
       "engine_values": {
+        "street": 2760.0,
         "fundamental": 2791.6024370298464
       },
       "engine_errors": {
+        "street": 120.0,
         "fundamental": 88.39756297015356
       },
       "engine_scores": {
+        "street": 0.13737196156710496,
         "fundamental": 0.10119455519134729
       },
       "status": "scored",
@@ -1724,23 +1772,27 @@
       "actual": 2.26,
       "actual_published": "2025-11-25",
       "cutoff": "2025-11-24",
-      "system": 2.2961361969283822,
+      "system": 2.284082850336789,
       "baseline": 1.3085364386856926,
-      "system_error": 0.036136196928382436,
+      "system_error": 0.024082850336789363,
       "baseline_error": 0.9514635613143072,
-      "score": 0.037979591019193196,
+      "score": 0.025311374303733127,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2.30 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 100%) -> 2.30.",
+      "system_reasoning": "Meta-forecast: street 2.22 (sigma 0.18, reliability 70%, overlap penalty 100%, weight 16%); fundamental 2.30 (sigma 0.08, reliability 85%, overlap penalty 100%, weight 84%) -> 2.28.",
       "engine_values": {
+        "street": 2.22,
         "fundamental": 2.2961361969283822
       },
       "engine_errors": {
+        "street": 0.03999999999999959,
         "fundamental": 0.036136196928382436
       },
       "engine_scores": {
+        "street": 0.042040495954196566,
         "fundamental": 0.037979591019193196
       },
       "status": "scored",
@@ -1788,23 +1840,27 @@
       "actual": 3076.0,
       "actual_published": "2025-11-25",
       "cutoff": "2025-11-24",
-      "system": 3050.255170193689,
+      "system": 3048.997122551341,
       "baseline": 2120.1470849626735,
-      "system_error": 25.744829806310918,
+      "system_error": 27.002877448659092,
       "baseline_error": 955.8529150373265,
-      "score": 0.02693388219180727,
+      "score": 0.02825003410446744,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 3,050.26 (sigma 55.45, reliability 85%, overlap penalty 100%, weight 100%) -> 3,050.26.",
+      "system_reasoning": "Meta-forecast: street 3,020.00 (sigma 241.60, reliability 70%, overlap penalty 100%, weight 4%); fundamental 3,050.26 (sigma 55.45, reliability 85%, overlap penalty 100%, weight 96%) -> 3,049.00.",
       "engine_values": {
+        "street": 3020.0,
         "fundamental": 3050.255170193689
       },
       "engine_errors": {
+        "street": 56.0,
         "fundamental": 25.744829806310918
       },
       "engine_scores": {
+        "street": 0.05858641964576022,
         "fundamental": 0.02693388219180727
       },
       "status": "scored",
@@ -1820,23 +1876,27 @@
       "actual": 2.46,
       "actual_published": "2026-02-18",
       "cutoff": "2026-02-17",
-      "system": 2.362577662403464,
+      "system": 2.3542857980504586,
       "baseline": 1.4450294768929917,
-      "system_error": 0.09742233759653596,
+      "system_error": 0.1057142019495414,
       "baseline_error": 1.0149705231070083,
-      "score": 0.09598538615516494,
+      "score": 0.1041549478953646,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2.36 (sigma 0.09, reliability 85%, overlap penalty 100%, weight 100%) -> 2.36.",
+      "system_reasoning": "Meta-forecast: street 2.31 (sigma 0.18, reliability 70%, overlap penalty 100%, weight 16%); fundamental 2.36 (sigma 0.09, reliability 85%, overlap penalty 100%, weight 84%) -> 2.35.",
       "engine_values": {
+        "street": 2.31,
         "fundamental": 2.362577662403464
       },
       "engine_errors": {
+        "street": 0.1499999999999999,
         "fundamental": 0.09742233759653596
       },
       "engine_scores": {
+        "street": 0.14778754317004478,
         "fundamental": 0.09598538615516494
       },
       "status": "scored",
@@ -1884,23 +1944,27 @@
       "actual": 3160.0,
       "actual_published": "2026-02-18",
       "cutoff": "2026-02-17",
-      "system": 3150.876747762237,
+      "system": 3148.7732737974998,
       "baseline": 2257.8371350421107,
-      "system_error": 9.123252237763154,
+      "system_error": 11.226726202500231,
       "baseline_error": 902.1628649578893,
-      "score": 0.010112644392860267,
+      "score": 0.012444234448759169,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 3,150.88 (sigma 56.75, reliability 85%, overlap penalty 100%, weight 100%) -> 3,150.88.",
+      "system_reasoning": "Meta-forecast: street 3,100.00 (sigma 248.00, reliability 70%, overlap penalty 100%, weight 4%); fundamental 3,150.88 (sigma 56.75, reliability 85%, overlap penalty 100%, weight 96%) -> 3,148.77.",
       "engine_values": {
+        "street": 3100.0,
         "fundamental": 3150.876747762237
       },
       "engine_errors": {
+        "street": 60.0,
         "fundamental": 9.123252237763154
       },
       "engine_scores": {
+        "street": 0.06650683854383727,
         "fundamental": 0.010112644392860267
       },
       "status": "scored",
@@ -1916,23 +1980,27 @@
       "actual": 3.09,
       "actual_published": "2026-05-20",
       "cutoff": "2026-05-19",
-      "system": 2.974079374353488,
+      "system": 2.9601964385597705,
       "baseline": 2.0716900197556156,
-      "system_error": 0.11592062564651195,
+      "system_error": 0.1298035614402293,
       "baseline_error": 1.0183099802443842,
-      "score": 0.11383628550777058,
+      "score": 0.12746959566190028,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2.97 (sigma 0.11, reliability 85%, overlap penalty 100%, weight 100%) -> 2.97.",
+      "system_reasoning": "Meta-forecast: street 2.89 (sigma 0.23, reliability 70%, overlap penalty 100%, weight 17%); fundamental 2.97 (sigma 0.11, reliability 85%, overlap penalty 100%, weight 83%) -> 2.96.",
       "engine_values": {
+        "street": 2.89,
         "fundamental": 2.974079374353488
       },
       "engine_errors": {
+        "street": 0.19999999999999973,
         "fundamental": 0.11592062564651195
       },
       "engine_scores": {
+        "street": 0.1964038493976085,
         "fundamental": 0.11383628550777058
       },
       "status": "scored",
@@ -1980,23 +2048,27 @@
       "actual": 3623.0,
       "actual_published": "2026-05-20",
       "cutoff": "2026-05-19",
-      "system": 3554.890361430904,
+      "system": 3553.096746578559,
       "baseline": 2886.8064185733947,
-      "system_error": 68.1096385690962,
+      "system_error": 69.90325342144115,
       "baseline_error": 736.1935814266053,
-      "score": 0.09251593641595256,
+      "score": 0.09495227231672101,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 3,554.89 (sigma 63.12, reliability 85%, overlap penalty 100%, weight 100%) -> 3,554.89.",
+      "system_reasoning": "Meta-forecast: street 3,510.00 (sigma 280.80, reliability 70%, overlap penalty 100%, weight 4%); fundamental 3,554.89 (sigma 63.12, reliability 85%, overlap penalty 100%, weight 96%) -> 3,553.10.",
       "engine_values": {
+        "street": 3510.0,
         "fundamental": 3554.8903614309042
       },
       "engine_errors": {
+        "street": 113.0,
         "fundamental": 68.10963856909575
       },
       "engine_scores": {
+        "street": 0.15349223743709794,
         "fundamental": 0.09251593641595193
       },
       "status": "scored",
@@ -3092,23 +3164,27 @@
       "actual": 3.45,
       "actual_published": "2025-05-20",
       "cutoff": "2025-05-19",
-      "system": 3.4785373409260387,
+      "system": 3.5521648566193713,
       "baseline": 3.4199085049731814,
-      "system_error": 0.028537340926038546,
+      "system_error": 0.10216485661937114,
       "baseline_error": 0.030091495026818738,
-      "score": 0.9483523799866019,
-      "beat_baseline": true,
+      "score": 3.395140604623258,
+      "beat_baseline": false,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 3.48 (sigma 0.44, reliability 85%, overlap penalty 100%, weight 100%) -> 3.48.",
+      "system_reasoning": "Meta-forecast: street 3.59 (sigma 0.29, reliability 70%, overlap penalty 100%, weight 66%); fundamental 3.48 (sigma 0.44, reliability 85%, overlap penalty 100%, weight 34%) -> 3.55.",
       "engine_values": {
+        "street": 3.59,
         "fundamental": 3.4785373409260387
       },
       "engine_errors": {
+        "street": 0.13999999999999968,
         "fundamental": 0.028537340926038546
       },
       "engine_scores": {
+        "street": 4.652477381905622,
         "fundamental": 0.9483523799866019
       },
       "status": "scored",
@@ -3156,23 +3232,27 @@
       "actual": 39856.0,
       "actual_published": "2025-05-20",
       "cutoff": "2025-05-19",
-      "system": 38749.54939932256,
+      "system": 38894.57634372803,
       "baseline": 35643.70029973745,
-      "system_error": 1106.450600677439,
+      "system_error": 961.423656271967,
       "baseline_error": 4212.299700262549,
-      "score": 0.26267138603848034,
+      "score": 0.22824198767529347,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 38,749.55 (sigma 2,241.44, reliability 85%, overlap penalty 100%, weight 100%) -> 38,749.55.",
+      "system_reasoning": "Meta-forecast: street 39,240.00 (sigma 3,139.20, reliability 70%, overlap penalty 100%, weight 30%); fundamental 38,749.55 (sigma 2,241.44, reliability 85%, overlap penalty 100%, weight 70%) -> 38,894.58.",
       "engine_values": {
+        "street": 39240.0,
         "fundamental": 38749.54939932256
       },
       "engine_errors": {
+        "street": 616.0,
         "fundamental": 1106.450600677439
       },
       "engine_scores": {
+        "street": 0.14623840748121633,
         "fundamental": 0.26267138603848034
       },
       "status": "scored",
@@ -3188,23 +3268,27 @@
       "actual": 4.58,
       "actual_published": "2025-08-20",
       "cutoff": "2025-08-18",
-      "system": 4.623528342293414,
+      "system": 4.639015411084511,
       "baseline": 4.371552507463978,
-      "system_error": 0.04352834229341429,
+      "system_error": 0.059015411084510916,
       "baseline_error": 0.20844749253602224,
-      "score": 0.20882161624415832,
+      "score": 0.2831188342278204,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 4.62 (sigma 0.23, reliability 85%, overlap penalty 100%, weight 100%) -> 4.62.",
+      "system_reasoning": "Meta-forecast: street 4.69 (sigma 0.38, reliability 70%, overlap penalty 100%, weight 23%); fundamental 4.62 (sigma 0.23, reliability 85%, overlap penalty 100%, weight 77%) -> 4.64.",
       "engine_values": {
+        "street": 4.69,
         "fundamental": 4.623528342293414
       },
       "engine_errors": {
+        "street": 0.11000000000000032,
         "fundamental": 0.04352834229341429
       },
       "engine_scores": {
+        "street": 0.5277108333696602,
         "fundamental": 0.20882161624415832
       },
       "status": "scored",
@@ -3220,23 +3304,27 @@
       "actual": 1.0,
       "actual_published": "2025-08-19",
       "cutoff": "2025-08-18",
-      "system": 0.9801962372850844,
+      "system": 1.3402881181931396,
       "baseline": -3.0999999999999996,
-      "system_error": 0.019803762714915574,
+      "system_error": 0.34028811819313964,
       "baseline_error": 4.1,
-      "score": 0.004830186028028189,
+      "score": 0.08299710199832674,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 0.98 (sigma 0.50, reliability 85%, overlap penalty 100%, weight 100%) -> 0.98.",
+      "system_reasoning": "Meta-forecast: street 1.50 (sigma 0.30, reliability 70%, overlap penalty 100%, weight 69%); fundamental 0.98 (sigma 0.50, reliability 85%, overlap penalty 100%, weight 31%) -> 1.34.",
       "engine_values": {
+        "street": 1.5,
         "fundamental": 0.9801962372850843
       },
       "engine_errors": {
+        "street": 0.5,
         "fundamental": 0.019803762714915685
       },
       "engine_scores": {
+        "street": 0.12195121951219513,
         "fundamental": 0.004830186028028216
       },
       "status": "scored",
@@ -3252,23 +3340,27 @@
       "actual": 45277.0,
       "actual_published": "2025-08-20",
       "cutoff": "2025-08-18",
-      "system": 45588.14405474878,
+      "system": 45574.94027983708,
       "baseline": 42873.4526655005,
-      "system_error": 311.14405474878004,
+      "system_error": 297.9402798370793,
       "baseline_error": 2403.547334499497,
-      "score": 0.12945201880684873,
+      "score": 0.12395856555873526,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 45,588.14 (sigma 1,208.78, reliability 85%, overlap penalty 100%, weight 100%) -> 45,588.14.",
+      "system_reasoning": "Meta-forecast: street 45,430.00 (sigma 3,634.40, reliability 70%, overlap penalty 100%, weight 8%); fundamental 45,588.14 (sigma 1,208.78, reliability 85%, overlap penalty 100%, weight 92%) -> 45,574.94.",
       "engine_values": {
+        "street": 45430.0,
         "fundamental": 45588.14405474878
       },
       "engine_errors": {
+        "street": 153.0,
         "fundamental": 311.14405474878004
       },
       "engine_scores": {
+        "street": 0.0636559129932259,
         "fundamental": 0.12945201880684873
       },
       "status": "scored",
@@ -3284,23 +3376,27 @@
       "actual": 3.62,
       "actual_published": "2025-11-18",
       "cutoff": "2025-11-17",
-      "system": 3.7983956329796746,
+      "system": 3.80131442204131,
       "baseline": 3.5115804429405,
-      "system_error": 0.17839563297967453,
+      "system_error": 0.18131442204130988,
       "baseline_error": 0.1084195570594999,
-      "score": 1.6454193119583789,
+      "score": 1.6723405532989382,
       "beat_baseline": false,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 3.80 (sigma 0.11, reliability 85%, overlap penalty 100%, weight 100%) -> 3.80.",
+      "system_reasoning": "Meta-forecast: street 3.83 (sigma 0.31, reliability 70%, overlap penalty 100%, weight 9%); fundamental 3.80 (sigma 0.11, reliability 85%, overlap penalty 100%, weight 91%) -> 3.80.",
       "engine_values": {
+        "street": 3.83,
         "fundamental": 3.798395632979675
       },
       "engine_errors": {
+        "street": 0.20999999999999996,
         "fundamental": 0.17839563297967498
       },
       "engine_scores": {
+        "street": 1.936919921972688,
         "fundamental": 1.645419311958383
       },
       "status": "scored",
@@ -3348,23 +3444,27 @@
       "actual": 41352.0,
       "actual_published": "2025-11-18",
       "cutoff": "2025-11-17",
-      "system": 40782.65587521699,
+      "system": 40796.46135252107,
       "baseline": 41317.349730816044,
-      "system_error": 569.3441247830124,
+      "system_error": 555.5386474789266,
       "baseline_error": 34.65026918395597,
-      "score": 2.7536473436980673,
+      "score": 2.6868768015038045,
       "beat_baseline": false,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 40,782.66 (sigma 828.46, reliability 85%, overlap penalty 100%, weight 100%) -> 40,782.66.",
+      "system_reasoning": "Meta-forecast: street 41,060.00 (sigma 3,284.80, reliability 70%, overlap penalty 100%, weight 5%); fundamental 40,782.66 (sigma 828.46, reliability 85%, overlap penalty 100%, weight 95%) -> 40,796.46.",
       "engine_values": {
+        "street": 41060.0,
         "fundamental": 40782.65587521699
       },
       "engine_errors": {
+        "street": 292.0,
         "fundamental": 569.3441247830124
       },
       "engine_scores": {
+        "street": 1.412265428516154,
         "fundamental": 2.7536473436980673
       },
       "status": "scored",
@@ -3380,23 +3480,27 @@
       "actual": 2.58,
       "actual_published": "2026-02-24",
       "cutoff": "2026-02-23",
-      "system": 2.9418385200110504,
+      "system": 2.7693651245156126,
       "baseline": 2.9439422286110695,
-      "system_error": 0.3618385200110503,
+      "system_error": 0.1893651245156125,
       "baseline_error": 0.3639422286110694,
-      "score": 0.9942196633568807,
+      "score": 0.5203164393379024,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 2.94 (sigma 0.18, reliability 85%, overlap penalty 100%, weight 100%) -> 2.94.",
+      "system_reasoning": "Meta-forecast: street 2.52 (sigma 0.20, reliability 70%, overlap penalty 100%, weight 41%); fundamental 2.94 (sigma 0.18, reliability 85%, overlap penalty 100%, weight 59%) -> 2.77.",
       "engine_values": {
+        "street": 2.52,
         "fundamental": 2.94183852001105
       },
       "engine_errors": {
+        "street": 0.06000000000000005,
         "fundamental": 0.3618385200110499
       },
       "engine_scores": {
+        "street": 0.16486133040669942,
         "fundamental": 0.9942196633568795
       },
       "status": "scored",
@@ -3444,23 +3548,27 @@
       "actual": 38198.0,
       "actual_published": "2026-02-24",
       "cutoff": "2026-02-23",
-      "system": 38935.64586656909,
+      "system": 38778.605730813506,
       "baseline": 41230.76725617491,
-      "system_error": 737.645866569088,
+      "system_error": 580.6057308135059,
       "baseline_error": 3032.767256174913,
-      "score": 0.24322534644463487,
+      "score": 0.19144420978278323,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 38,935.65 (sigma 1,514.61, reliability 85%, overlap penalty 100%, weight 100%) -> 38,935.65.",
+      "system_reasoning": "Meta-forecast: street 38,010.00 (sigma 3,040.80, reliability 70%, overlap penalty 100%, weight 17%); fundamental 38,935.65 (sigma 1,514.61, reliability 85%, overlap penalty 100%, weight 83%) -> 38,778.61.",
       "engine_values": {
+        "street": 38010.0,
         "fundamental": 38935.64586656909
       },
       "engine_errors": {
+        "street": 188.0,
         "fundamental": 737.645866569088
       },
       "engine_scores": {
+        "street": 0.061989590403688136,
         "fundamental": 0.24322534644463487
       },
       "status": "scored",
@@ -3476,23 +3584,27 @@
       "actual": 3.43,
       "actual_published": "2026-05-19",
       "cutoff": "2026-05-18",
-      "system": 3.6939215544177193,
+      "system": 3.669183609374728,
       "baseline": 14.159849081364829,
-      "system_error": 0.26392155441771914,
+      "system_error": 0.2391836093747277,
       "baseline_error": 10.72984908136483,
-      "score": 0.024596949352818715,
+      "score": 0.02229142344510066,
       "beat_baseline": true,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 3.69 (sigma 0.09, reliability 85%, overlap penalty 100%, weight 100%) -> 3.69.",
+      "system_reasoning": "Meta-forecast: street 3.41 (sigma 0.27, reliability 70%, overlap penalty 100%, weight 9%); fundamental 3.69 (sigma 0.09, reliability 85%, overlap penalty 100%, weight 91%) -> 3.67.",
       "engine_values": {
+        "street": 3.41,
         "fundamental": 3.6939215544177193
       },
       "engine_errors": {
+        "street": 0.020000000000000018,
         "fundamental": 0.26392155441771914
       },
       "engine_scores": {
+        "street": 0.0018639591152064957,
         "fundamental": 0.024596949352818715
       },
       "status": "scored",
@@ -3540,23 +3652,27 @@
       "actual": 41765.0,
       "actual_published": "2026-05-19",
       "cutoff": "2026-05-18",
-      "system": 41235.66739926898,
+      "system": 41274.27754265958,
       "baseline": 41388.61222451409,
-      "system_error": 529.332600731017,
+      "system_error": 490.72245734041644,
       "baseline_error": 376.38777548591315,
-      "score": 1.4063490772187102,
+      "score": 1.3037683190079652,
       "beat_baseline": false,
       "system_engines": [
+        "street",
         "fundamental"
       ],
-      "system_reasoning": "Meta-forecast: fundamental 41,235.67 (sigma 1,282.15, reliability 85%, overlap penalty 100%, weight 100%) -> 41,235.67.",
+      "system_reasoning": "Meta-forecast: street 41,590.00 (sigma 3,327.20, reliability 70%, overlap penalty 100%, weight 11%); fundamental 41,235.67 (sigma 1,282.15, reliability 85%, overlap penalty 100%, weight 89%) -> 41,274.28.",
       "engine_values": {
+        "street": 41590.0,
         "fundamental": 41235.66739926898
       },
       "engine_errors": {
+        "street": 175.0,
         "fundamental": 529.332600731017
       },
       "engine_scores": {
+        "street": 0.4649460248119818,
         "fundamental": 1.4063490772187102
       },
       "status": "scored",
