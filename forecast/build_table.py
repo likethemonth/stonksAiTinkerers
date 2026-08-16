@@ -20,7 +20,7 @@ from datetime import date
 
 from forecast.calibrate import calibrate
 from forecast.corpus import load
-from forecast.extract import adi
+from forecast.extract import adi, deere, hays, home_depot
 from forecast.metrics import verify_registry
 from forecast.schema import Company, Kind, MetricObservation
 from forecast.store import write_calibration_report, write_observations
@@ -28,7 +28,10 @@ from forecast.store import write_calibration_report, write_observations
 #: Company -> extractor. Companies without one yet are reported as pending rather
 #: than silently skipped, so a partial run is never mistaken for a complete one.
 EXTRACTORS = {
+    Company.HD: home_depot.extract,
     Company.ADI: adi.extract,
+    Company.HAS: hays.extract,
+    Company.DE: deere.extract,
 }
 
 

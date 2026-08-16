@@ -1,7 +1,7 @@
 {
   "company": "hays",
   "as_of": null,
-  "observation_count": 63,
+  "observation_count": 69,
   "rejected": [
     "FY2024 pre_exc_operating_profit: -5.8 outside [1.0, 5000.0] (hays/filings/2025-08-21__has-ln-20250821-h2-8k-2__671218.md)",
     "DISAGREEMENT FY2023 net_fees: documents report [225.7, 1294.6] \u2014 kept 1294.6 (reported by 3 of 4 extractions)",
@@ -68,6 +68,20 @@
     },
     {
       "company": "hays",
+      "metric_key": "net_fees_h1",
+      "period": "FY2019",
+      "value": 568.0,
+      "units": "GBPm",
+      "kind": "ACTUAL",
+      "as_of": "2020-02-20",
+      "source_file": "hays/filings/2020-02-20__has-ln-20200220-h1-8k__545729.md",
+      "doc_type": "FILING",
+      "excerpt": "| Net fees (1) | 553.1 | 568.0 | (3)% | (2)% |",
+      "extractor": "hays.half_year_net_fees",
+      "note": "prior-year H1 comparative"
+    },
+    {
+      "company": "hays",
       "metric_key": "pre_exc_basic_eps",
       "period": "FY2019",
       "value": 11.92,
@@ -107,6 +121,20 @@
       "excerpt": "| Net fees (1) | 918.1 | 996.2 | (8)% | (8)% |",
       "extractor": "hays.annual_results",
       "note": "prior-year comparative"
+    },
+    {
+      "company": "hays",
+      "metric_key": "net_fees_h1",
+      "period": "FY2020",
+      "value": 553.1,
+      "units": "GBPm",
+      "kind": "ACTUAL",
+      "as_of": "2021-02-18",
+      "source_file": "hays/filings/2021-02-18__has-ln-20210218-h1-8k__119751.md",
+      "doc_type": "FILING",
+      "excerpt": "| Net fees (1) | 422.8 | 553.1 | (24)% | (24)% |",
+      "extractor": "hays.half_year_net_fees",
+      "note": "prior-year H1 comparative"
     },
     {
       "company": "hays",
@@ -190,6 +218,20 @@
       "doc_type": "FILING",
       "excerpt": "On an actual basis, net fees decreased by 16%",
       "extractor": "hays.net_fee_growth",
+      "note": null
+    },
+    {
+      "company": "hays",
+      "metric_key": "net_fees_h1",
+      "period": "FY2021",
+      "value": 422.8,
+      "units": "GBPm",
+      "kind": "ACTUAL",
+      "as_of": "2021-02-18",
+      "source_file": "hays/filings/2021-02-18__has-ln-20210218-h1-8k__119751.md",
+      "doc_type": "FILING",
+      "excerpt": "| Net fees (1) | 422.8 | 553.1 | (24)% | (24)% |",
+      "extractor": "hays.half_year_net_fees",
       "note": null
     },
     {
@@ -572,6 +614,20 @@
     },
     {
       "company": "hays",
+      "metric_key": "net_fees_h1",
+      "period": "FY2025",
+      "value": 496.0,
+      "units": "GBPm",
+      "kind": "ACTUAL",
+      "as_of": "2026-02-27",
+      "source_file": "hays/filings/2026-02-27__has-ln-20260227-h1-8k__642921.md",
+      "doc_type": "FILING",
+      "excerpt": "| Net fees (2) | 453.3 | 496.0 | (9)% | (9)% |",
+      "extractor": "hays.half_year_net_fees",
+      "note": "prior-year H1 comparative"
+    },
+    {
+      "company": "hays",
       "metric_key": "pre_exc_basic_eps",
       "period": "FY2025",
       "value": 1.31,
@@ -625,6 +681,20 @@
       "excerpt": "consensus operating profit for FY25 is \u00a356.9",
       "extractor": "hays.consensus",
       "note": "company-compiled analyst consensus"
+    },
+    {
+      "company": "hays",
+      "metric_key": "disposed_country_net_fees",
+      "period": "FY2026",
+      "value": 15.0,
+      "units": "GBPm",
+      "kind": "ACTUAL",
+      "as_of": "2026-07-10",
+      "source_file": "hays/filings/2026-07-10__has-ln-20260710-q4-8k__1572805.md",
+      "doc_type": "FILING",
+      "excerpt": "contributed c.\u00a315m to reported group net fees in FY26",
+      "extractor": "hays.disposed_country_fees",
+      "note": "removed to align the challenge target with continuing operations"
     },
     {
       "company": "hays",
@@ -778,6 +848,20 @@
       "doc_type": "FILING",
       "excerpt": "Group net fees down 8%",
       "extractor": "hays.net_fee_growth",
+      "note": null
+    },
+    {
+      "company": "hays",
+      "metric_key": "net_fees_h1",
+      "period": "FY2026",
+      "value": 453.3,
+      "units": "GBPm",
+      "kind": "ACTUAL",
+      "as_of": "2026-02-27",
+      "source_file": "hays/filings/2026-02-27__has-ln-20260227-h1-8k__642921.md",
+      "doc_type": "FILING",
+      "excerpt": "| Net fees (2) | 453.3 | 496.0 | (9)% | (9)% |",
+      "extractor": "hays.half_year_net_fees",
       "note": null
     },
     {

@@ -48,6 +48,7 @@ from forecast.metrics import (
 from forecast.orchestrate import orchestrate
 from forecast.schema import Company, CompanyForecast, Estimate, Kind, MetricForecast, Period
 from forecast.store import write_calibration_report, write_observations
+from forecast.thesis import effective_adjustment, outcome_payload, run_theses
 from forecast.writer import write_workbook
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -375,6 +376,16 @@ def _forecast_deere(as_of: date | None, log: Log) -> list[MetricForecast]:
     ]
 
 
+#: Company -> extraction function, for passes that need the raw evidence table
+#: rather than a finished forecast (currently the thesis pass).
+EXTRACTORS = {
+    Company.HD: home_depot.extract,
+    Company.ADI: adi.extract,
+    Company.HAS: hays.extract,
+    Company.DE: deere.extract,
+}
+
+
 #: Companies with a real extractor and estimators. Anything absent falls back to
 #: the cited provisional baselines. Defined after the functions it references.
 FORECASTERS = {
@@ -429,6 +440,15 @@ def run_company(company: Company, as_of: date | None, log: Log) -> CompanyForeca
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "--theses",
+        action="store_true",
+        help=(
+            "Run the for/against thesis pass over each metric (needs OPENAI_API_KEY). "
+            "Advisory by default: arguments are recorded, numbers are not moved "
+            "unless THESIS_APPLY=1."
+        ),
+    )
+    parser.add_argument(
         "--as-of",
         type=date.fromisoformat,
         default=None,
@@ -458,6 +478,44 @@ def main() -> int:
                 log(f"    {line}")
             log()
 
+    # Thesis pass: argue both sides of each number against the evidence table.
+    # Runs after every forecast exists, so a model failure can never stop a
+    # workbook being written.
+    theses: dict[str, dict[str, object]] = {}
+    if args.theses:
+        log("=== for/against thesis pass ===")
+        for forecast in forecasts:
+            docs = load(forecast.company, as_of=args.as_of)
+            extractor = EXTRACTORS.get(forecast.company)
+            observations = extractor(docs, []) if extractor else []
+            observations.sort(key=lambda o: o.as_of, reverse=True)
+            for metric in forecast.metrics:
+                outcome = run_theses(
+                    label=metric.label,
+                    company=display_name(forecast.company),
+                    period=forecast.period.key,
+                    units=metric.units.value,
+                    anchor=metric.value,
+                    sigma=metric.sigma or abs(metric.value) * 0.02,
+                    reasoning=metric.reasoning,
+                    observations=observations,
+                )
+                theses.setdefault(forecast.ticker, {})[metric.label] = outcome_payload(
+                    outcome
+                )
+                shift = effective_adjustment(outcome)
+                if shift:
+                    metric.value += shift
+                    metric.warnings.append(f"thesis adjustment {shift:+,.4g} applied")
+                log(
+                    f"  {forecast.ticker} {metric.label}: "
+                    f"{len(outcome.theses)} theses, "
+                    f"computed {outcome.adjustment:+,.4g}, applied {shift:+,.4g}"
+                )
+                for note in outcome.notes:
+                    log(f"      {note}")
+        log()
+
     audit_path = REPO_ROOT / "submission" / "forecast-audit.json"
     audit_path.parent.mkdir(parents=True, exist_ok=True)
     audit_path.write_text(
@@ -466,6 +524,7 @@ def main() -> int:
                 "generated_at": datetime.now().isoformat(timespec="seconds"),
                 "as_of": (args.as_of or date.today()).isoformat(),
                 "forecasts": [forecast.model_dump(mode="json") for forecast in forecasts],
+                "theses": theses,
                 "failures": failures,
             },
             indent=2,
