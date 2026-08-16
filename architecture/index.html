@@ -164,7 +164,7 @@
       <div class="dimension"><strong>1,139</strong><span>frozen documents</span><small>filings · calls · slides</small></div>
       <div class="dimension"><strong>12</strong><span>forecast targets</span><small>equal-weight metrics</small></div>
       <div class="dimension"><strong>3</strong><span>explicit engines</span><small>estimate or abstention</small></div>
-      <div class="dimension"><strong>58</strong><span>passing tests</span><small>documented forecast suite</small></div>
+      <div class="dimension"><strong>61</strong><span>passing tests</span><small>documented forecast suite</small></div>
       <div class="dimension"><strong>4/4</strong><span>valid workbooks</span><small>submission checker</small></div>
     </div>
 
@@ -173,7 +173,7 @@
         <div class="section-number">01 / Architecture</div>
         <div>
           <h2>Independence is a data contract, not a prompt.</h2>
-          <p class="muted">Each top-level engine must return a value, predictive sigma, citations, evidence-family labels and reliability—or explicitly abstain. The driver nowcast is nested inside fundamental research, so it cannot masquerade as a fourth independent vote.</p>
+          <p class="muted">Each top-level engine must return a value, predictive sigma, citations, evidence-family labels and reliability—or explicitly abstain. Driver nowcasts and validation-gated classical ML are nested inside fundamental research, so neither can masquerade as a fourth independent vote.</p>
 
           <div class="engine-grid">
             <article class="engine">
@@ -185,7 +185,7 @@
             <article class="engine">
               <span class="engine-index">Engine B</span>
               <h3>Fundamental research</h3>
-              <p>Deterministic extractors turn repeating disclosure shapes into typed observations. Guidance calibration, seasonal models, regression bridges and post-guidance physical drivers produce the company forecast.</p>
+              <p>Deterministic extractors turn repeating disclosure shapes into typed observations. Guidance calibration, seasonal models, regression bridges, post-guidance physical drivers and validation-gated classical ML produce the company forecast.</p>
               <p><strong>Inputs:</strong> filings, transcripts, guidance, peer and macro driver snapshots.</p>
             </article>
             <article class="engine">
@@ -254,9 +254,9 @@
             <table>
               <thead><tr><th>Company</th><th>Metric</th><th>Final</th><th>Units</th><th>Engine weights</th></tr></thead>
               <tbody>
-                <tr class="company-row"><td>HD</td><td>Net sales</td><td class="num">47,002.15</td><td>USDm</td><td class="weights">Street 13% · Fundamental 87% · Market abstained</td></tr>
-                <tr><td>HD</td><td>Adjusted diluted EPS</td><td class="num">4.66</td><td>USD / share</td><td class="weights">Street 22% · Fundamental 61% · Market 17%</td></tr>
-                <tr><td>HD</td><td>Comparable sales, total company</td><td class="num">1.32</td><td>%</td><td class="weights">Street 72% · Fundamental 28% · Market abstained</td></tr>
+                <tr class="company-row"><td>HD</td><td>Net sales</td><td class="num">47,105.31</td><td>USDm</td><td class="weights">Street 10% · Fundamental 90% · Market abstained</td></tr>
+                <tr><td>HD</td><td>Adjusted diluted EPS</td><td class="num">4.64</td><td>USD / share</td><td class="weights">Street 19% · Fundamental 67% · Market 15%</td></tr>
+                <tr><td>HD</td><td>Comparable sales, total company</td><td class="num">1.22</td><td>%</td><td class="weights">Street 67% · Fundamental 33% · Market abstained</td></tr>
                 <tr class="company-row"><td>ADI</td><td>Revenue</td><td class="num">3,996.71</td><td>USDm</td><td class="weights">Street 4% · Fundamental 96% · Market abstained</td></tr>
                 <tr><td>ADI</td><td>Adjusted diluted EPS</td><td class="num">3.43</td><td>USD / share</td><td class="weights">Street 19% · Fundamental 79% · Market 3%</td></tr>
                 <tr><td>ADI</td><td>Adjusted gross margin</td><td class="num">73.15</td><td>%</td><td class="weights">Street 1% · Fundamental 99% · Market abstained</td></tr>
@@ -279,7 +279,7 @@
         <div>
           <h2>Metric-specific models, not one generic earnings prompt.</h2>
           <div class="two-up">
-            <article class="note"><span class="pill">Home Depot</span><h3>Housing and category demand</h3><p>Full-year guidance is divided by measured quarterly seasonality. Census NAICS 444 post-guidance data updates comparable sales through a calibrated category-to-company wedge.</p></article>
+            <article class="note"><span class="pill">Home Depot</span><h3>Housing, category demand and ML</h3><p>Full-year guidance is divided by measured quarterly seasonality. Census NAICS 444 updates comparable sales, while task-matched historical ML contributes only after beating a seasonal naive baseline; three-sample validation receives a wide uncertainty penalty.</p></article>
             <article class="note"><span class="pill">Analog Devices</span><h3>Guidance realization and mix</h3><p>Revenue and EPS guidance are corrected by walk-forward realization history. Gross margin is bridged from guided operating margin by a fitted relationship, with TXN read-through as a physical driver.</p></article>
             <article class="note"><span class="pill">Hays</span><h3>Closed-year reconstruction</h3><p>FY fees are H1 actual plus Q3/Q4 actual-basis growth on the prior H2 base, less disposed-country fees. Company-compiled consensus and the top-of-range management steer anchor profit.</p></article>
             <article class="note"><span class="pill">Deere</span><h3>Units → segments → EPS</h3><p>AEM machinery units, price, FX and a calibrated shipment residual produce PPA sales and profit. Segment revenue and margin bridges then reconstruct worldwide revenue and diluted EPS.</p></article>
@@ -293,7 +293,8 @@
         <div class="section-number">05 / Reproduce</div>
         <div>
           <h2>One final command, then structural validation.</h2>
-          <pre><code>python3 -m pip install -r requirements.txt
+          <pre><code>python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 npm ci
 
 npm run test:forecast
@@ -301,12 +302,13 @@ npm run forecast
 npm run check:forecasts
 
 git rev-parse HEAD</code></pre>
-          <p><code>npm run forecast</code> first materializes the Street backtest at the frozen cutoff, then invokes <code>python3 -m forecast.run --as-of 2026-08-16</code>. The runner writes four workbooks, a timestamped log, and <code>submission/forecast-audit.json</code>. Upload remains manual by challenge rule.</p>
+          <p><code>npm run forecast</code> regenerates the gated Home Depot ML artifact, materializes the Street backtest, and invokes the final orchestrator—all at the frozen cutoff. The runner writes four workbooks, a timestamped log, and <code>submission/forecast-audit.json</code>. Upload remains manual by challenge rule.</p>
 
           <h3>Known limits</h3>
           <ul>
             <li>The public exact-metric analyst panel is sparse for several operating metrics. Those Street reconstructions use a wider-sigma research fallback and lower reliability.</li>
             <li>Direct prediction markets exist only for three EPS targets. A binary beat price supplies one quantile, so its precision is deliberately discounted; all other targets abstain.</li>
+            <li>The Home Depot ML gate is task matched but has only three historical Q2 transitions. Its uncertainty is widened before it enters the fundamental engine, and the all-transition stress view remains visible in the artifact.</li>
             <li>Regex extractors depend on recurring issuer disclosure shapes. Magnitude checks and source excerpts turn format drift into an observable failure, but do not eliminate it.</li>
             <li>Source-overlap labels are declared families, not learned causal dependence. The penalty is conservative and auditable, but still an approximation.</li>
           </ul>

@@ -37,6 +37,7 @@ Output: agent/ml-prediction-forecast.json (+ stdout validation report)
 from __future__ import annotations
 
 import json
+import argparse
 from datetime import date
 from pathlib import Path
 
@@ -263,11 +264,19 @@ def comps_model(series: dict[int, float]) -> dict:
     }
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--as-of",
+        type=date.fromisoformat,
+        default=date.today(),
+        help="point-in-time date recorded in the generated artifact (YYYY-MM-DD)",
+    )
+    args = parser.parse_args(argv)
     target_t = period_index("FY2026Q2")
     report = {
         "generatedBy": "ML lens (scikit-learn) - forecast/ml_hd.py",
-        "asOf": date.today().isoformat(),
+        "asOf": args.as_of.isoformat(),
         "trainData": "data/observations/home-depot.json (reported actuals only)",
         "covid_exclusion": "targets in FY2020Q1..FY2021Q4 excluded from training/CV",
         "validation": {}, "prediction": {}, "gates": {},

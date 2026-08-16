@@ -73,7 +73,8 @@ Use `HD`, `ADI`, `HAS` or `DE` for the four challenge companies. The output cont
 This entry implements the approach in [agents-vs-wall-street-standalone-strategy.md](agents-vs-wall-street-standalone-strategy.md): a reconstructed Street estimate, an independent fundamental/driver model, and a prediction-market lens feed a source-overlap-aware meta-forecaster. Missing market coverage is an explicit abstention rather than a copied estimate.
 
 ```bash
-python3 -m pip install -r requirements.txt
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
 npm ci
 npm run test:forecast
 npm run forecast
@@ -82,7 +83,7 @@ npm run check:forecasts
 
 The single authoritative runner writes four workbooks and `submission/forecast-audit.json`, which retains every engine estimate, sigma, citation, abstention, source-overlap penalty, and realized weight. A timestamped narrative trail is written under `logs/`.
 
-The Street preparation step rejects look-ahead rows, scores only outcomes resolved by the cutoff, ranks exact-metric histories, corrects persistent signed bias, and shrinks sparse samples. The fundamental engine uses company-specific extractors and deterministic models; Uri's dated physical-driver nowcasts live inside this engine so they are not double-counted as an independent vote.
+The Street preparation step rejects look-ahead rows, scores only outcomes resolved by the cutoff, ranks exact-metric histories, corrects persistent signed bias, and shrinks sparse samples. The fundamental engine uses company-specific extractors and deterministic models; Uri's dated physical-driver nowcasts and validation-gated Home Depot classical-ML estimates live inside this engine so they are not double-counted as independent votes. The ML adapter widens uncertainty for its three-sample task-matched validation rather than letting a small historical win dominate current evidence.
 
 ## Repository map
 

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-16T13:01:03",
+  "generated_at": "2026-08-16T13:05:18",
   "as_of": "2026-08-16",
   "forecasts": [
     {
@@ -15,9 +15,9 @@
         {
           "label": "Net sales",
           "units": "USDm",
-          "value": 47002.14836446064,
-          "sigma": 807.523529905611,
-          "reasoning": "Meta-forecast: street 47,416.26 (sigma 2,107.84, reliability 90%, overlap penalty 100%, weight 13%); fundamental 46,939.12 (sigma 799.15, reliability 85%, overlap penalty 100%, weight 87%) -> 47,002.15.",
+          "value": 47105.30598541335,
+          "sigma": 702.6807057815287,
+          "reasoning": "Meta-forecast: street 47,416.26 (sigma 2,107.84, reliability 90%, overlap penalty 100%, weight 10%); fundamental 47,070.75 (sigma 682.89, reliability 85%, overlap penalty 100%, weight 90%) -> 47,105.31.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -36,15 +36,17 @@
             },
             {
               "estimator": "fundamental_engine",
-              "value": 46939.12208076868,
-              "sigma": 799.1492483174409,
-              "n_observations": 5,
+              "value": 47070.748160333795,
+              "sigma": 682.890186451642,
+              "n_observations": 8,
               "anchor": null,
               "correction": null,
-              "reasoning": "FY2025 net_sales was 164,683 summed across its four quarters. Guidance of +3.50% puts FY2026 at 170,447. Q2 took 27.54% of the year on average over 5 prior years (sd 0.39%), giving 46,939.12.",
+              "reasoning": "Inverse-variance combination of fundamental_core 46,939.12 (sigma 799.15, weight 73%); ml_q2_sequential_sales 47,427.00 (sigma 1,314.73, weight 27%) -> 47,070.75.",
               "observation_ids": [],
               "citations": [
-                "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+                "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+                "agent/ml-prediction-forecast.json",
+                "data/observations/home-depot.json"
               ]
             }
           ],
@@ -79,20 +81,24 @@
               "status": "available",
               "estimate": {
                 "estimator": "fundamental_engine",
-                "value": 46939.12208076868,
-                "sigma": 799.1492483174409,
-                "n_observations": 5,
+                "value": 47070.748160333795,
+                "sigma": 682.890186451642,
+                "n_observations": 8,
                 "anchor": null,
                 "correction": null,
-                "reasoning": "FY2025 net_sales was 164,683 summed across its four quarters. Guidance of +3.50% puts FY2026 at 170,447. Q2 took 27.54% of the year on average over 5 prior years (sd 0.39%), giving 46,939.12.",
+                "reasoning": "Inverse-variance combination of fundamental_core 46,939.12 (sigma 799.15, weight 73%); ml_q2_sequential_sales 47,427.00 (sigma 1,314.73, weight 27%) -> 47,070.75.",
                 "observation_ids": [],
                 "citations": [
-                  "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+                  "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+                  "agent/ml-prediction-forecast.json",
+                  "data/observations/home-depot.json"
                 ]
               },
               "reliability": 0.85,
               "source_families": [
-                "company_filings"
+                "company_filings",
+                "historical_actuals_ml",
+                "management_guidance"
               ],
               "note": "deterministic company model with compatible driver nowcasts"
             },
@@ -110,23 +116,25 @@
               "engine": "street",
               "raw_weight": 2.0256637591508765e-07,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.13209236925127854
+              "normalized_weight": 0.10001920907462102
             },
             {
               "engine": "fundamental",
-              "raw_weight": 1.3309542737883546e-06,
+              "raw_weight": 1.8227083467030404e-06,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.8679076307487215
+              "normalized_weight": 0.899980790925379
             }
           ],
           "citations": [
             "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
             "https://www.benzinga.com/quote/hd/earnings",
             "https://www.linkedin.com/company/beta-finch/posts/",
-            "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+            "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+            "agent/ml-prediction-forecast.json",
+            "data/observations/home-depot.json"
           ],
-          "plausible_low": 43772.0542448382,
-          "plausible_high": 50232.242484083086,
+          "plausible_low": 44294.583162287236,
+          "plausible_high": 49916.02880853947,
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],
@@ -135,9 +143,9 @@
         {
           "label": "Adjusted diluted EPS",
           "units": "USD / share",
-          "value": 4.662876704119718,
-          "sigma": 0.14474144092557492,
-          "reasoning": "Meta-forecast: street 4.77 (sigma 0.25, reliability 80%, overlap penalty 83%, weight 22%); fundamental 4.59 (sigma 0.17, reliability 85%, overlap penalty 100%, weight 61%); prediction_market 4.77 (sigma 0.06, reliability 3%, overlap penalty 83%, weight 17%) -> 4.66.",
+          "value": 4.6415518801485,
+          "sigma": 0.13350361342616685,
+          "reasoning": "Meta-forecast: street 4.77 (sigma 0.25, reliability 80%, overlap penalty 83%, weight 19%); fundamental 4.58 (sigma 0.15, reliability 85%, overlap penalty 100%, weight 67%); prediction_market 4.77 (sigma 0.06, reliability 3%, overlap penalty 83%, weight 15%) -> 4.64.",
           "estimates": [
             {
               "estimator": "street_reliability_blend",
@@ -155,15 +163,17 @@
             },
             {
               "estimator": "fundamental_engine",
-              "value": 4.593291334871073,
-              "sigma": 0.17077569993321343,
-              "n_observations": 5,
+              "value": 4.576933111557272,
+              "sigma": 0.15051584396691145,
+              "n_observations": 8,
               "anchor": null,
               "correction": null,
-              "reasoning": "FY2025 adj_eps was 14.69 as reported for the full year. Guidance of +2.00% puts FY2026 at 14.98. Q2 took 30.66% of the year on average over 5 prior years (sd 0.97%), giving 4.59. The share is measured on diluted_eps_gaap, which has the quarterly history adj_eps lacks and seasonalises almost identically.",
+              "reasoning": "Inverse-variance combination of fundamental_core 4.59 (sigma 0.17, weight 78%); ml_q2_sequential_eps_bridge 4.52 (sigma 0.32, weight 22%) -> 4.58.",
               "observation_ids": [],
               "citations": [
-                "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+                "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+                "agent/ml-prediction-forecast.json",
+                "data/observations/home-depot.json"
               ]
             },
             {
@@ -210,20 +220,24 @@
               "status": "available",
               "estimate": {
                 "estimator": "fundamental_engine",
-                "value": 4.593291334871073,
-                "sigma": 0.17077569993321343,
-                "n_observations": 5,
+                "value": 4.576933111557272,
+                "sigma": 0.15051584396691145,
+                "n_observations": 8,
                 "anchor": null,
                 "correction": null,
-                "reasoning": "FY2025 adj_eps was 14.69 as reported for the full year. Guidance of +2.00% puts FY2026 at 14.98. Q2 took 30.66% of the year on average over 5 prior years (sd 0.97%), giving 4.59. The share is measured on diluted_eps_gaap, which has the quarterly history adj_eps lacks and seasonalises almost identically.",
+                "reasoning": "Inverse-variance combination of fundamental_core 4.59 (sigma 0.17, weight 78%); ml_q2_sequential_eps_bridge 4.52 (sigma 0.32, weight 22%) -> 4.58.",
                 "observation_ids": [],
                 "citations": [
-                  "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md"
+                  "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+                  "agent/ml-prediction-forecast.json",
+                  "data/observations/home-depot.json"
                 ]
               },
               "reliability": 0.85,
               "source_families": [
-                "company_filings"
+                "company_filings",
+                "historical_actuals_ml",
+                "management_guidance"
               ],
               "note": "deterministic company model with compatible driver nowcasts"
             },
@@ -256,37 +270,39 @@
               "engine": "street",
               "raw_weight": 10.41228410076394,
               "overlap_penalty": 0.8333333333333334,
-              "normalized_weight": 0.2181382340523301
+              "normalized_weight": 0.18558037606408542
             },
             {
               "engine": "fundamental",
-              "raw_weight": 29.145182407784777,
+              "raw_weight": 37.51927947199328,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.6105940406582597
+              "normalized_weight": 0.6687141770896526
             },
             {
               "engine": "prediction_market",
               "raw_weight": 8.175037359920735,
               "overlap_penalty": 0.8333333333333334,
-              "normalized_weight": 0.17126772528941017
+              "normalized_weight": 0.14570544684626188
             }
           ],
           "citations": [
             "https://www.kiplinger.com/investing/stocks/17494/next-week-earnings-calendar-stocks",
             "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
+            "agent/ml-prediction-forecast.json",
+            "data/observations/home-depot.json",
             "https://polymarket.com/event/hd-quarterly-earnings-nongaap-eps-08-18-2026-4pt73"
           ],
-          "plausible_low": 4.083910940417418,
-          "plausible_high": 5.241842467822018,
+          "plausible_low": 4.107537426443832,
+          "plausible_high": 5.175566333853167,
           "warnings": [],
           "needs_review": false
         },
         {
           "label": "Comparable sales, total company",
           "units": "%",
-          "value": 1.316887413335493,
-          "sigma": 0.38050700804865917,
-          "reasoning": "Meta-forecast: street 1.30 (sigma 0.30, reliability 45%, overlap penalty 100%, weight 72%); fundamental 1.36 (sigma 0.67, reliability 85%, overlap penalty 100%, weight 28%) -> 1.32.",
+          "value": 1.2178441586321842,
+          "sigma": 0.36568881897560707,
+          "reasoning": "Meta-forecast: street 1.30 (sigma 0.30, reliability 45%, overlap penalty 100%, weight 67%); fundamental 1.05 (sigma 0.59, reliability 85%, overlap penalty 100%, weight 33%) -> 1.22.",
           "estimates": [
             {
               "estimator": "street_research_reconstruction",
@@ -303,17 +319,19 @@
             },
             {
               "estimator": "fundamental_engine",
-              "value": 1.3611703040847283,
-              "sigma": 0.6676684826399722,
-              "n_observations": 6,
+              "value": 1.0520635304500066,
+              "sigma": 0.5856958237316872,
+              "n_observations": 9,
               "anchor": null,
               "correction": null,
-              "reasoning": "Inverse-variance combination of fundamental_core 1.03 (sigma 0.85, weight 62%); driver_nowcast 1.90 (sigma 1.08, weight 38%) -> 1.36.",
+              "reasoning": "Inverse-variance combination of fundamental_core 1.03 (sigma 0.85, weight 48%); driver_nowcast 1.90 (sigma 1.08, weight 29%); ml_comp_lag_ridge 0.02 (sigma 1.22, weight 23%) -> 1.05.",
               "observation_ids": [],
               "citations": [
                 "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
                 "https://fred.stlouisfed.org/series/RSBMGESD",
-                "https://www.census.gov/retail/sales.html"
+                "https://www.census.gov/retail/sales.html",
+                "agent/ml-prediction-forecast.json",
+                "data/observations/home-depot.json"
               ]
             }
           ],
@@ -345,23 +363,26 @@
               "status": "available",
               "estimate": {
                 "estimator": "fundamental_engine",
-                "value": 1.3611703040847283,
-                "sigma": 0.6676684826399722,
-                "n_observations": 6,
+                "value": 1.0520635304500066,
+                "sigma": 0.5856958237316872,
+                "n_observations": 9,
                 "anchor": null,
                 "correction": null,
-                "reasoning": "Inverse-variance combination of fundamental_core 1.03 (sigma 0.85, weight 62%); driver_nowcast 1.90 (sigma 1.08, weight 38%) -> 1.36.",
+                "reasoning": "Inverse-variance combination of fundamental_core 1.03 (sigma 0.85, weight 48%); driver_nowcast 1.90 (sigma 1.08, weight 29%); ml_comp_lag_ridge 0.02 (sigma 1.22, weight 23%) -> 1.05.",
                 "observation_ids": [],
                 "citations": [
                   "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
                   "https://fred.stlouisfed.org/series/RSBMGESD",
-                  "https://www.census.gov/retail/sales.html"
+                  "https://www.census.gov/retail/sales.html",
+                  "agent/ml-prediction-forecast.json",
+                  "data/observations/home-depot.json"
                 ]
               },
               "reliability": 0.85,
               "source_families": [
                 "company_filings",
                 "external_drivers",
+                "historical_actuals_ml",
                 "management_guidance"
               ],
               "note": "deterministic company model with compatible driver nowcasts"
@@ -380,23 +401,25 @@
               "engine": "street",
               "raw_weight": 5.0,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.7239279158707118
+              "normalized_weight": 0.6686415616188716
             },
             {
               "engine": "fundamental",
-              "raw_weight": 1.906765011245903,
+              "raw_weight": 2.477848053438862,
               "overlap_penalty": 1.0,
-              "normalized_weight": 0.2760720841292882
+              "normalized_weight": 0.3313584383811284
             }
           ],
           "citations": [
             "agent/FableResearchRun1.md",
             "home-depot/filings/2026-05-19__hd-us-20260519-q1-8k__1038584.md",
             "https://fred.stlouisfed.org/series/RSBMGESD",
-            "https://www.census.gov/retail/sales.html"
+            "https://www.census.gov/retail/sales.html",
+            "agent/ml-prediction-forecast.json",
+            "data/observations/home-depot.json"
           ],
-          "plausible_low": -0.2051406188591436,
-          "plausible_high": 2.8389154455301298,
+          "plausible_low": -0.24491111727024406,
+          "plausible_high": 2.6805994345346127,
           "warnings": [
             "prediction_market abstained: no direct, point-in-time market with a defensible metric mapping"
           ],

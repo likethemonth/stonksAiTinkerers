@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "forecast": "python3 -m forecasting.backtest --as-of 2026-08-16 --street-only && python3 -m forecast.run --as-of 2026-08-16",
-    "test:forecast": "python3 -m pytest -q tests forecasting/test_backtest.py",
+    "forecast": ".venv/bin/python -m forecast.ml_hd --as-of 2026-08-16 && .venv/bin/python -m forecasting.backtest --as-of 2026-08-16 --street-only && .venv/bin/python -m forecast.run --as-of 2026-08-16",
+    "test:forecast": ".venv/bin/python -m pytest -q tests forecasting/test_backtest.py",
     "setup:entry": "node scripts/setup-entry.mjs",
     "check:entry": "node scripts/check-entry.mjs",
     "check:forecasts": "node scripts/check-forecasts.mjs submission",

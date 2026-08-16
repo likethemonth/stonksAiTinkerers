@@ -7,6 +7,7 @@ from datetime import date
 from forecast import drivers
 from forecast.estimators import reconcile
 from forecast.metrics import spec, submitted_specs
+from forecast.ml import hd_estimates
 from forecast.schema import Company, Estimate, MetricForecast
 
 
@@ -31,14 +32,21 @@ def enrich_with_drivers(
 ) -> list[MetricForecast]:
     """Reconcile compatible driver nowcasts inside the fundamental engine."""
     driver_by_target = _driver_estimates(as_of)
+    ml_by_target = hd_estimates(as_of or date.today())
     by_label = {metric.label: metric for metric in metrics}
     result: list[MetricForecast] = []
     for metric_spec in submitted_specs(company):
         current = by_label[metric_spec.label or ""]
         driver = driver_by_target.get((company, metric_spec.key))
-        if driver is None or any(
+        ml_estimate = ml_by_target.get((company, metric_spec.key))
+        extras: list[Estimate] = []
+        if driver is not None and not any(
             estimate.estimator == "driver_nowcast" for estimate in current.estimates
         ):
+            extras.append(driver)
+        if ml_estimate is not None:
+            extras.append(ml_estimate)
+        if not extras:
             result.append(current)
             continue
         core = Estimate(
@@ -49,7 +57,7 @@ def enrich_with_drivers(
             reasoning=current.reasoning,
             citations=current.citations,
         )
-        combined = reconcile(metric_spec.label or "", metric_spec.units, [core, driver])
+        combined = reconcile(metric_spec.label or "", metric_spec.units, [core, *extras])
         combined.needs_review = combined.needs_review or current.needs_review
         for warning in current.warnings:
             if warning not in combined.warnings:
@@ -68,6 +76,8 @@ def source_families(company: Company, metric: MetricForecast) -> list[str]:
         families.add("company_consensus")
     if "driver_nowcast" in names:
         families.add("external_drivers")
+    if any(name.startswith("ml_") for name in names):
+        families.add("historical_actuals_ml")
     # Touch the registry here so a mislabeled metric fails at the composition
     # boundary instead of silently producing an incomplete source declaration.
     matching = [item for item in submitted_specs(company) if item.label == metric.label]
